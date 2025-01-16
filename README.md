@@ -2,7 +2,81 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/23aaccaa-fe04-406f-b3b8-7ba5a2c8cd44
+**URL**: https://lovable.dev/projects/8bfef11f-dd98-4098-ac35-e5e102b19c55
+
+## Writing Content
+
+### MDX File Structure
+
+Each article should be placed in the `content/articles` directory and include the following frontmatter:
+
+```mdx
+---
+title: "Your Article Title"
+description: "Brief description of your article"
+date: "2024-03-14"
+author: "Your Name"
+category: "Article Category"
+coverVideo: "/path-to-video.mp4"  # Optional
+coverImage: "/path-to-image.jpg"  # Optional
+---
+```
+
+### Adding Media Content
+
+#### Local Images
+For images stored in the `public` folder:
+```mdx
+![Alt Text](/image-name.jpg)
+```
+
+#### External Images
+For images from external URLs:
+```mdx
+![Alt Text](https://example.com/image.jpg)
+```
+
+#### YouTube Videos
+To embed YouTube videos, use the YouTube component:
+```mdx
+<YouTube videoId="dQw4w9WgXcQ" />
+```
+The videoId can be found in the YouTube URL (e.g., youtube.com/watch?v=dQw4w9WgXcQ).
+
+#### Local Videos
+For videos stored in the `public` folder:
+```mdx
+<video src="/video-name.mp4" controls />
+```
+
+### Example Article
+
+Here's a complete example of an article using various media types:
+
+```mdx
+---
+title: "Understanding Cinema"
+description: "A deep dive into cinematography"
+date: "2024-03-14"
+author: "John Doe"
+category: "Film Analysis"
+coverVideo: "/intro-video.mp4"
+---
+
+# Understanding Cinema
+
+An introduction to the art of filmmaking.
+
+![Local Image Example](/cinematography.jpg)
+
+![External Image](https://example.com/film-camera.jpg)
+
+## Behind the Scenes
+<YouTube videoId="dQw4w9WgXcQ" />
+
+## On-Set Footage
+<video src="/behind-scenes.mp4" controls />
+```
 
 ## How can I edit this code?
 
@@ -10,7 +84,7 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/23aaccaa-fe04-406f-b3b8-7ba5a2c8cd44) and start prompting.
+Simply visit the [Lovable Project](https://lovable.dev/projects/8bfef11f-dd98-4098-ac35-e5e102b19c55) and start prompting.
 
 Changes made via Lovable will be committed automatically to this repo.
 
@@ -52,7 +126,7 @@ npm run dev
 
 ## What technologies are used for this project?
 
-This project is built with .
+This project is built with:
 
 - Vite
 - TypeScript
@@ -62,7 +136,7 @@ This project is built with .
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/23aaccaa-fe04-406f-b3b8-7ba5a2c8cd44) and click on Share -> Publish.
+Simply open [Lovable](https://lovable.dev/projects/8bfef11f-dd98-4098-ac35-e5e102b19c55) and click on Share -> Publish.
 
 ## I want to use a custom domain - is that possible?
 
