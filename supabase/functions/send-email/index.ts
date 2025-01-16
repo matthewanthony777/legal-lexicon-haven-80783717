@@ -15,7 +15,8 @@ interface EmailRequest {
   support: string;
 }
 
-const DEFAULT_FROM_EMAIL = "Trials and Tribulations Law <trialsandtribulationslaw@gmail.com>";
+const DEFAULT_FROM_EMAIL = "onboarding@resend.dev";
+const ADMIN_EMAIL = "trialsandtribulationslaw@gmail.com";
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -42,7 +43,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: DEFAULT_FROM_EMAIL,
-        to: [DEFAULT_FROM_EMAIL], // Send to your own email
+        to: [ADMIN_EMAIL], // Send to your admin email
         subject: `New Vision Shared by ${formData.name}`,
         html: emailHtml,
       }),
