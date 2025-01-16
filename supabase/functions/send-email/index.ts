@@ -9,11 +9,13 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  from: string;
+  from?: string;
   to: string[];
   subject: string;
   html: string;
 }
+
+const DEFAULT_FROM_EMAIL = "Trials and Tribulations Law <trialsandtribulationslaw@gmail.com>";
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -29,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: emailRequest.from,
+        from: emailRequest.from || DEFAULT_FROM_EMAIL,
         to: emailRequest.to,
         subject: emailRequest.subject,
         html: emailRequest.html,
