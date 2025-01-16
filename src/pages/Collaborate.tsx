@@ -22,11 +22,15 @@ const Collaborate = () => {
     const support = formData.get('support') as string;
 
     try {
+      console.log("Sending form data:", { name, email, vision, support });
       const { data, error } = await supabase.functions.invoke('send-email', {
         body: { name, email, vision, support }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
 
       toast({
         title: "Vision shared!",
