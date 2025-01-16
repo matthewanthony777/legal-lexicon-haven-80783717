@@ -1,4 +1,4 @@
-import { FileText, Users, Info, Menu, Home } from "lucide-react";
+import { FileText, Users, Info, Menu, Home, Briefcase } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import {
@@ -18,12 +18,12 @@ const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  // Check if we're on the home or about page
   const isHomeOrAbout = location.pathname === "/" || location.pathname === "/about";
 
   const menuItems = [
     { to: "/", label: "Home", icon: Home },
     { to: "/articles", label: "Articles", icon: FileText },
+    { to: "/career-insights", label: "Career Insights", icon: Briefcase },
     { to: "/collaborate", label: "Collaborate", icon: Users },
     { to: "/about", label: "About Us", icon: Info },
   ];
