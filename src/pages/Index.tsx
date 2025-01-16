@@ -23,9 +23,9 @@ const Index = () => {
               Your browser does not support the video tag.
             </video>
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white p-4">
-              <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center font-playfair">The Art of Cinema</h1>
+              <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center font-playfair">Legal Excellence & Career Growth</h1>
               <p className="text-lg md:text-2xl text-center px-4 font-playfair italic">
-                Discover the heartbeat behind every masterpiece, where cinematic dreams take flight
+                Expert legal commentary and career guidance for modern professionals
               </p>
             </div>
           </div>
