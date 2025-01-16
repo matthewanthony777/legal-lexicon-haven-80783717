@@ -1,48 +1,76 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getAllArticles, getAllTags } from '@/lib/articles';
-import ArticleCard from '@/components/ArticleCard';
-import { Badge } from '@/components/ui/badge';
+import Navigation from "@/components/Navigation";
+import { Youtube, Instagram } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import TikTokIcon from "@/components/icons/TikTokIcon";
+import Footer from "@/components/Footer";
 
 const Index = () => {
-  const { data: articles = [] } = useQuery({
-    queryKey: ['articles'],
-    queryFn: getAllArticles,
-  });
-
-  const { data: tags = [] } = useQuery({
-    queryKey: ['tags'],
-    queryFn: getAllTags,
-  });
-
   return (
-    <div className="container py-8 animate-fade-in">
-      <header className="text-center mb-12">
-        <h1 className="font-serif text-4xl font-bold mb-4">Legal Insights</h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Expert analysis and commentary on the latest legal developments
-        </p>
-      </header>
-
-      <section className="mb-12">
-        <h2 className="font-serif text-2xl font-semibold mb-4">Topics</h2>
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <Badge key={tag} variant="outline" className="text-sm">
-              {tag}
-            </Badge>
-          ))}
+    <div className="min-h-screen bg-background flex flex-col">
+      <Navigation />
+      <main className="relative flex-1">
+        <div className="relative h-screen">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 bg-black/40 z-10"></div>
+            <video 
+              className="w-full h-full object-cover"
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+            >
+              <source src="/chris-nolan-edit.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white p-4">
+              <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center font-playfair">The Art of Cinema</h1>
+              <p className="text-lg md:text-2xl text-center px-4 font-playfair italic">
+                Discover the heartbeat behind every masterpiece, where cinematic dreams take flight
+              </p>
+            </div>
+          </div>
+          <div className="absolute bottom-8 left-0 right-0 z-30">
+            <div className="flex justify-center gap-4">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-red-500 bg-black/20 hover:bg-black/30"
+                asChild
+              >
+                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Visit our YouTube channel">
+                  <Youtube className="h-5 w-5 md:h-6 md:w-6" />
+                </a>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-pink-500 bg-black/20 hover:bg-black/30"
+                asChild
+              >
+                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram">
+                  <Instagram className="h-5 w-5 md:h-6 md:w-6" />
+                </a>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:text-white bg-black/20 hover:bg-black/30"
+                asChild
+              >
+                <a 
+                  href="https://www.tiktok.com/@thescreenscholar" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  aria-label="Follow us on TikTok"
+                >
+                  <TikTokIcon className="h-5 w-5 md:h-6 md:w-6" />
+                </a>
+              </Button>
+            </div>
+          </div>
         </div>
-      </section>
-
-      <section>
-        <h2 className="font-serif text-2xl font-semibold mb-6">Latest Articles</h2>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
-            <ArticleCard key={article.slug} article={article} />
-          ))}
-        </div>
-      </section>
+      </main>
+      <Footer />
     </div>
   );
 };
