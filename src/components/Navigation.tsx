@@ -1,32 +1,73 @@
 import { Link } from "react-router-dom";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { ThemeToggle } from "./ThemeToggle";
-import { Home, BookOpen, GraduationCap, Users, User } from "lucide-react";
+import { Home, BookOpen, GraduationCap, Users, User, Menu } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-const MenuItem = ({ to, children, icon: Icon }: { to: string; children: React.ReactNode; icon: React.ComponentType<any> }) => (
-  <NavigationMenuItem>
-    <Link to={to} className="block">
-      <NavigationMenuLink className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 font-playfair italic">
-        <Icon className="mr-2 h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
-        {children}
-      </NavigationMenuLink>
-    </Link>
-  </NavigationMenuItem>
+const MenuItem = ({ to, children, icon: Icon, isMobile = false }: { 
+  to: string; 
+  children: React.ReactNode; 
+  icon: React.ComponentType<any>;
+  isMobile?: boolean;
+}) => {
+  const baseClasses = "group inline-flex items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 font-playfair italic";
+  const mobileClasses = "w-full justify-start";
+
+  return (
+    <NavigationMenuItem className={isMobile ? "w-full" : ""}>
+      <Link to={to} className={isMobile ? "w-full block" : "block"}>
+        <NavigationMenuLink className={`${baseClasses} ${isMobile ? mobileClasses : ""}`}>
+          <Icon className="mr-2 h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+          {children}
+        </NavigationMenuLink>
+      </Link>
+    </NavigationMenuItem>
+  );
+};
+
+const MobileMenu = () => (
+  <div className="space-y-4 mt-4">
+    <MenuItem to="/" icon={Home} isMobile>Home</MenuItem>
+    <MenuItem to="/articles" icon={BookOpen} isMobile>Articles</MenuItem>
+    <MenuItem to="/career-insights" icon={GraduationCap} isMobile>Career Insights</MenuItem>
+    <MenuItem to="/collaborate" icon={Users} isMobile>Collaborate</MenuItem>
+    <MenuItem to="/about" icon={User} isMobile>About</MenuItem>
+  </div>
 );
 
 const Navigation = () => {
+  const isMobile = useIsMobile();
+
   return (
     <nav className="border-b">
       <div className="container flex h-16 items-center px-4">
-        <NavigationMenu>
-          <NavigationMenuList>
-            <MenuItem to="/" icon={Home}>Home</MenuItem>
-            <MenuItem to="/articles" icon={BookOpen}>Articles</MenuItem>
-            <MenuItem to="/career-insights" icon={GraduationCap}>Career Insights</MenuItem>
-            <MenuItem to="/collaborate" icon={Users}>Collaborate</MenuItem>
-            <MenuItem to="/about" icon={User}>About</MenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        {isMobile ? (
+          <>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Toggle menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[240px] sm:w-[300px]">
+                <MobileMenu />
+              </SheetContent>
+            </Sheet>
+          </>
+        ) : (
+          <NavigationMenu>
+            <NavigationMenuList>
+              <MenuItem to="/" icon={Home}>Home</MenuItem>
+              <MenuItem to="/articles" icon={BookOpen}>Articles</MenuItem>
+              <MenuItem to="/career-insights" icon={GraduationCap}>Career Insights</MenuItem>
+              <MenuItem to="/collaborate" icon={Users}>Collaborate</MenuItem>
+              <MenuItem to="/about" icon={User}>About</MenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        )}
         <div className="ml-auto">
           <ThemeToggle />
         </div>
