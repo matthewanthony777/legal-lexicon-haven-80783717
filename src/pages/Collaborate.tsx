@@ -53,7 +53,7 @@ const Collaborate = () => {
       <main className="container mx-auto px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto space-y-12 mt-16">
           <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold">Join Our Film Community</h1>
+            <h1 className="text-4xl font-bold">Join Our Legal Community</h1>
             <p className="text-lg text-muted-foreground">
               Whether you're dreaming of a career in film, looking to develop your creative voice, or seeking to connect with fellow film enthusiasts - you've found your home.
             </p>
