@@ -22,7 +22,7 @@ const AboutUs = () => {
             </video>
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white p-4">
               <div className="max-w-3xl mx-auto prose dark:prose-invert">
-                <h1 className="text-4xl font-bold mb-6 font-playfair text-white">Screen Scholar</h1>
+                <h1 className="text-4xl font-bold mb-6 font-playfair text-white">Trials and Tribulations Law</h1>
                 <p className="text-lg mb-6 leading-relaxed text-white">
                   Screen Scholar is dedicated to exploring the depths of cinematic artistry, offering thoughtful analysis and insightful perspectives on films that shape our cultural landscape. Through our carefully curated content, we invite you to journey with us into the heart of storytelling through motion pictures.
                 </p>
