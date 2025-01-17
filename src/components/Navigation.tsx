@@ -28,13 +28,15 @@ const MenuItem = ({ to, children, icon: Icon, isMobile = false }: {
 };
 
 const MobileMenu = () => (
-  <div className="space-y-4 mt-4">
-    <MenuItem to="/" icon={Home} isMobile>Home</MenuItem>
-    <MenuItem to="/articles" icon={BookOpen} isMobile>Articles</MenuItem>
-    <MenuItem to="/career-insights" icon={GraduationCap} isMobile>Career Insights</MenuItem>
-    <MenuItem to="/collaborate" icon={Users} isMobile>Collaborate</MenuItem>
-    <MenuItem to="/about" icon={User} isMobile>About</MenuItem>
-  </div>
+  <NavigationMenu className="w-full">
+    <NavigationMenuList className="flex-col space-y-4 mt-4">
+      <MenuItem to="/" icon={Home} isMobile>Home</MenuItem>
+      <MenuItem to="/articles" icon={BookOpen} isMobile>Articles</MenuItem>
+      <MenuItem to="/career-insights" icon={GraduationCap} isMobile>Career Insights</MenuItem>
+      <MenuItem to="/collaborate" icon={Users} isMobile>Collaborate</MenuItem>
+      <MenuItem to="/about" icon={User} isMobile>About</MenuItem>
+    </NavigationMenuList>
+  </NavigationMenu>
 );
 
 const Navigation = () => {
