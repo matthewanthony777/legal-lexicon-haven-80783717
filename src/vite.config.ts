@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import { mdxDataPlugin } from "./src/plugins/mdx-loader";
+import { mdxDataPlugin } from "./plugins/mdx-loader";
 
 export default defineConfig(({ mode }) => ({
   server: {
