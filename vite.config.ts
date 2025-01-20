@@ -4,7 +4,6 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { mdxDataPlugin } from "./src/plugins/mdx-loader";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
@@ -29,4 +28,5 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
+  base: '/',
 }));
