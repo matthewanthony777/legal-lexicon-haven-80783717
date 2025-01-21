@@ -7,6 +7,8 @@ import { mdxDataPlugin } from "./src/plugins/mdx-loader";
 export default defineConfig(({ mode }) => ({
   server: {
     port: 8080,
+    strictPort: true,
+    host: true
   },
   plugins: [
     react(),
