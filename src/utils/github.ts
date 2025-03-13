@@ -1,5 +1,6 @@
 
 import matter from 'gray-matter';
+import { Base64 } from 'js-base64';
 import { Article, GitHubFile } from '@/types/article';
 import { GITHUB_CONFIG } from '@/config/github';
 
@@ -80,7 +81,8 @@ export async function fetchMdxFileContent(filename: string): Promise<string | nu
 
     const fileData: GitHubFile = await response.json();
     // GitHub API returns content as base64 encoded
-    return Buffer.from(fileData.content, 'base64').toString('utf-8');
+    // Use js-base64 instead of Buffer for browser compatibility
+    return Base64.decode(fileData.content);
   } catch (error) {
     console.error(`Error fetching MDX file content for ${filename}:`, error);
     return null;
@@ -143,7 +145,10 @@ export async function fetchAllArticles(): Promise<Article[]> {
     
     const articles: Article[] = [];
     
-    for (const filename of mdxFiles) {
+    // Filter out README.md files
+    const contentFiles = mdxFiles.filter(file => !file.toLowerCase().includes('readme'));
+    
+    for (const filename of contentFiles) {
       console.log(`Fetching content for ${filename}`);
       const content = await fetchMdxFileContent(filename);
       if (content) {
@@ -155,6 +160,7 @@ export async function fetchAllArticles(): Promise<Article[]> {
       }
     }
     
+    console.log(`Successfully processed ${articles.length} articles`);
     return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
     console.error('Error fetching all articles:', error);

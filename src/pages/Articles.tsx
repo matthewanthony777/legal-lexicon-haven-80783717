@@ -5,7 +5,7 @@ import { Article } from "@/types/article";
 import ArticleCard from "@/components/ArticleCard";
 import Navigation from "@/components/Navigation";
 import ArticleFilters from "@/components/ArticleFilters";
-import { Youtube, Instagram, AlertCircle } from "lucide-react";
+import { Youtube, Instagram, AlertCircle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
@@ -17,26 +17,26 @@ const Articles = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        console.log("Fetching articles in Articles component");
-        setLoading(true);
-        setError(null);
-        const fetchedArticles = await getAllArticles();
-        console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
-        setArticles(fetchedArticles);
-        if (fetchedArticles.length === 0) {
-          setError("No articles found. Please check your GitHub configuration.");
-        }
-      } catch (err) {
-        console.error("Error fetching articles:", err);
-        setError("Failed to load articles. Please check your GitHub configuration.");
-      } finally {
-        setLoading(false);
+  const fetchArticles = async () => {
+    try {
+      console.log("Fetching articles in Articles component");
+      setLoading(true);
+      setError(null);
+      const fetchedArticles = await getAllArticles();
+      console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
+      setArticles(fetchedArticles);
+      if (fetchedArticles.length === 0) {
+        setError("No articles found. Please check your GitHub configuration.");
       }
-    };
+    } catch (err) {
+      console.error("Error fetching articles:", err);
+      setError("Failed to load articles. Please check your GitHub configuration.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchArticles();
   }, []);
 
@@ -47,6 +47,10 @@ const Articles = () => {
     
     return matchesSearch;
   });
+
+  const handleRetry = () => {
+    fetchArticles();
+  };
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -67,22 +71,34 @@ const Articles = () => {
           {error && (
             <Alert variant="destructive" className="my-4">
               <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+              <AlertDescription className="flex items-center justify-between">
+                <span>{error}</span>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleRetry}
+                  className="ml-4"
+                >
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Retry
+                </Button>
+              </AlertDescription>
             </Alert>
           )}
 
           {loading ? (
-            <div className="text-center py-8">
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
               <p>Loading articles...</p>
             </div>
-          ) : filteredArticles.length === 0 ? (
+          ) : filteredArticles.length === 0 && !error ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">
                 {searchQuery ? "No articles found matching your criteria." : "No articles available."}
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-8">
               {filteredArticles.map((article) => (
                 <ArticleCard key={article.slug} article={article} />
               ))}
