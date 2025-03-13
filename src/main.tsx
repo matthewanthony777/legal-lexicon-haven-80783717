@@ -11,6 +11,10 @@ try {
     throw new Error("Root element not found");
   }
   
+  document.documentElement.style.backgroundColor = "black";
+  document.body.style.backgroundColor = "black";
+  document.body.style.color = "white";
+  
   createRoot(rootElement).render(<App />);
   
   console.log("Application successfully rendered");

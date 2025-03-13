@@ -10,19 +10,19 @@ interface ArticleContentProps {
 
 const ArticleContent: React.FC<ArticleContentProps> = ({ article }) => {
   return (
-    <article className="max-w-3xl mx-auto px-4 py-8 animate-fade-in bg-background text-foreground">
+    <article className="max-w-3xl mx-auto px-4 py-8 animate-fade-in bg-black text-white">
       <header className="mb-8">
-        <h1 className="font-serif text-4xl font-bold mb-4 text-foreground">{article.title}</h1>
+        <h1 className="font-serif text-4xl font-bold mb-4 text-white">{article.title}</h1>
         <div className="flex gap-2 mb-4">
           {article.tags.map((tag) => (
-            <Badge key={tag} variant="secondary">
+            <Badge key={tag} variant="secondary" className="bg-gray-800 text-white">
               {tag}
             </Badge>
           ))}
         </div>
-        <time className="text-muted-foreground">{article.date}</time>
+        <time className="text-gray-400">{article.date}</time>
       </header>
-      <div className="prose prose-lg max-w-none text-foreground">
+      <div className="prose prose-lg max-w-none text-white prose-headings:text-white prose-p:text-white prose-strong:text-white prose-a:text-blue-400">
         <ReactMarkdown>{article.content}</ReactMarkdown>
       </div>
     </article>

@@ -91,13 +91,20 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-black text-white;
+    color: white;
+    background-color: black;
+  }
+
+  html {
+    background-color: black;
+    color: white;
   }
 }
 
 /* Add specific styling for MDX content to ensure proper contrast */
 .prose {
-  @apply text-foreground;
+  @apply text-white;
 }
 
 .prose h1, 
@@ -106,26 +113,28 @@
 .prose h4, 
 .prose h5, 
 .prose h6 {
-  @apply text-foreground;
+  @apply text-white;
+  color: white;
 }
 
 .prose p,
 .prose ul,
 .prose ol,
 .prose li {
-  @apply text-foreground;
+  @apply text-white;
+  color: white;
 }
 
 .prose code {
-  @apply bg-secondary text-foreground;
+  @apply bg-gray-800 text-white;
 }
 
 .prose a {
-  @apply text-primary underline;
+  @apply text-blue-400 underline;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-secondary pl-4 text-foreground;
+  @apply border-l-4 border-gray-600 pl-4 text-white;
 }
 
 /* Add animation for page transitions */
@@ -140,4 +149,21 @@
 
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out;
+}
+
+/* Force black background and white text everywhere */
+.bg-background {
+  background-color: black !important;
+}
+
+.text-foreground {
+  color: white !important;
+}
+
+.bg-card {
+  background-color: black !important;
+}
+
+.card-foreground {
+  color: white !important;
 }
