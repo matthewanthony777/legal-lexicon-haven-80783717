@@ -22,17 +22,13 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    include: ['zwitch']
-  },
   build: {
     outDir: 'dist',
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
       },
-      external: ['zwitch']
     },
   },
-  base: './',
+  base: '',
 }));
