@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 
-// Add error handling to help with debugging
+// Add comprehensive error handling to help with debugging
 try {
   const rootElement = document.getElementById("root");
   
@@ -12,8 +12,10 @@ try {
   }
   
   createRoot(rootElement).render(<App />);
+  
+  console.log("Application successfully rendered");
 } catch (error) {
-  // Display errors on screen for easier debugging
+  // Display detailed errors on screen for easier debugging
   const errorElement = document.createElement('div');
   errorElement.style.background = 'black';
   errorElement.style.color = 'white';
@@ -21,7 +23,16 @@ try {
   errorElement.style.margin = '20px';
   errorElement.style.border = '1px solid red';
   errorElement.style.borderRadius = '4px';
-  errorElement.innerHTML = `<h1>Error during rendering:</h1><pre>${error instanceof Error ? error.message : String(error)}</pre>`;
+  errorElement.style.fontFamily = 'monospace';
+  errorElement.style.whiteSpace = 'pre-wrap';
+  errorElement.style.overflow = 'auto';
+  errorElement.style.maxHeight = '80vh';
+  
+  const errorDetails = error instanceof Error 
+    ? `${error.name}: ${error.message}\n\nStack trace:\n${error.stack}`
+    : String(error);
+  
+  errorElement.innerHTML = `<h1>Error during rendering:</h1><pre>${errorDetails}</pre>`;
   
   document.body.appendChild(errorElement);
   console.error("Rendering error:", error);
