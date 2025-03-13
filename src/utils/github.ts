@@ -12,6 +12,7 @@ const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${G
 export async function fetchMdxFilesList(): Promise<string[]> {
   try {
     console.log(`Fetching files from: ${GITHUB_API_BASE}`);
+    console.log(`Using GitHub config: owner=${GITHUB_CONFIG.owner}, repo=${GITHUB_CONFIG.repo}`);
     
     const headers: HeadersInit = {
       'Accept': 'application/vnd.github.v3+json',
@@ -20,6 +21,9 @@ export async function fetchMdxFilesList(): Promise<string[]> {
     // Add authorization if token is available
     if (GITHUB_CONFIG.token) {
       headers['Authorization'] = `token ${GITHUB_CONFIG.token}`;
+      console.log('Using GitHub token for authentication');
+    } else {
+      console.log('No GitHub token provided - using public access');
     }
     
     const response = await fetch(`${GITHUB_API_BASE}?ref=${GITHUB_CONFIG.branch}`, {
@@ -29,6 +33,7 @@ export async function fetchMdxFilesList(): Promise<string[]> {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error('GitHub API error:', response.status, response.statusText, errorData);
+      console.error(`Failed to fetch from ${GITHUB_API_BASE}`);
       throw new Error(`Failed to fetch files list: ${response.status} ${response.statusText}`);
     }
 
@@ -43,7 +48,7 @@ export async function fetchMdxFilesList(): Promise<string[]> {
       .filter((file: any) => file.name.endsWith('.md') || file.name.endsWith('.mdx'))
       .map((file: any) => file.name);
       
-    console.log(`Found ${mdxFiles.length} MDX files`);
+    console.log(`Found ${mdxFiles.length} MDX files:`, mdxFiles);
     return mdxFiles;
   } catch (error) {
     console.error('Error fetching MDX files list:', error);
@@ -139,6 +144,7 @@ export async function fetchAllArticles(): Promise<Article[]> {
     const articles: Article[] = [];
     
     for (const filename of mdxFiles) {
+      console.log(`Fetching content for ${filename}`);
       const content = await fetchMdxFileContent(filename);
       if (content) {
         const slug = filename.replace(/\.mdx?$/, '');
