@@ -33,9 +33,13 @@ try {
   `;
   document.head.appendChild(styleElement);
   
+  // Add console logs to check DOM structure
+  console.log("DOM structure before render:", document.body.innerHTML);
+  
   createRoot(rootElement).render(<App />);
   
   console.log("Application successfully rendered");
+  console.log("DOM structure after render:", document.body.innerHTML);
 } catch (error) {
   // Display detailed errors on screen for easier debugging
   const errorElement = document.createElement('div');

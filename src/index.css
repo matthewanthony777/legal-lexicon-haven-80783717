@@ -174,8 +174,9 @@
   background-color: black !important;
 }
 
-main, div, article, section, header, footer, aside {
+main, div, article, section, header, footer, aside, nav, a, button, input, textarea, select {
   background-color: black !important;
+  color: white !important;
 }
 
 /* Fix for any Tailwind dark mode conflicts */
@@ -185,4 +186,36 @@ main, div, article, section, header, footer, aside {
 
 .dark .dark\:text-white {
   color: white !important;
+}
+
+/* Force override any possible inline styles */
+[style*="background"] {
+  background-color: black !important;
+}
+
+[style*="color"] {
+  color: white !important;
+}
+
+/* Fix for the navigation menu styles */
+nav a, nav button {
+  color: white !important;
+}
+
+/* Fix SVG colors */
+svg {
+  color: white !important;
+  fill: white !important;
+}
+
+/* Override video backgrounds */
+video::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5) !important;
+  z-index: 1;
 }
