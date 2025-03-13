@@ -1,6 +1,6 @@
-
 import { Link } from "react-router-dom";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
+import { ThemeToggle } from "./ThemeToggle";
 import { Home, BookOpen, GraduationCap, Users, User, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ const MenuItem = ({ to, children, icon: Icon, isMobile = false }: {
   icon: React.ComponentType<any>;
   isMobile?: boolean;
 }) => {
-  const baseClasses = "group inline-flex items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 font-playfair";
+  const baseClasses = "group inline-flex items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-accent/50 data-[state=open]:bg-accent/50 font-playfair italic";
   const mobileClasses = "w-full justify-start";
 
   return (
@@ -70,6 +70,9 @@ const Navigation = () => {
             </NavigationMenuList>
           </NavigationMenu>
         )}
+        <div className="ml-auto">
+          <ThemeToggle />
+        </div>
       </div>
     </nav>
   );

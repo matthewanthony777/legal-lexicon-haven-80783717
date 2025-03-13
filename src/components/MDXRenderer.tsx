@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { MDXProvider } from '@mdx-js/react';
 import * as runtime from 'react/jsx-runtime';
@@ -9,22 +8,22 @@ import YouTubeEmbed from './YouTubeEmbed';
 
 const components = {
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 className={cn("text-4xl font-bold mt-8 mb-4 text-white", className)} {...props} />
+    <h1 className={cn("text-4xl font-bold mt-8 mb-4", className)} {...props} />
   ),
   h2: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 className={cn("text-3xl font-semibold mt-6 mb-3 text-white", className)} {...props} />
+    <h2 className={cn("text-3xl font-semibold mt-6 mb-3", className)} {...props} />
   ),
   h3: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 className={cn("text-2xl font-semibold mt-4 mb-2 text-white", className)} {...props} />
+    <h3 className={cn("text-2xl font-semibold mt-4 mb-2", className)} {...props} />
   ),
   p: ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className={cn("my-4 leading-7 text-white", className)} {...props} />
+    <p className={cn("my-4 leading-7", className)} {...props} />
   ),
   ul: ({ className, ...props }: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className={cn("list-disc list-inside my-4 space-y-2 text-white", className)} {...props} />
+    <ul className={cn("list-disc list-inside my-4 space-y-2", className)} {...props} />
   ),
   li: ({ className, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className={cn("ml-4 text-white", className)} {...props} />
+    <li className={cn("ml-4", className)} {...props} />
   ),
   img: ({ src, alt, className, ...props }: React.ImgHTMLAttributes<HTMLImageElement>) => {
     const isExternalUrl = src?.startsWith('http') || src?.startsWith('https');
@@ -53,10 +52,8 @@ const components = {
   pre: ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) => (
     <pre
       className={cn(
-        "mt-4 mb-4 overflow-x-auto rounded-lg",
-        "bg-zinc-900 p-4 shadow-lg",
-        "border-2 border-zinc-700",
-        "glass-card",
+        "mt-4 mb-4 overflow-x-auto rounded-lg bg-zinc-100 dark:bg-zinc-800 p-4",
+        "border border-zinc-200 dark:border-zinc-700",
         className
       )}
       {...props}
@@ -93,14 +90,14 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   }, [content]);
 
   if (!mdxModule) {
-    return <div className="text-white">Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   const MDXContent = mdxModule.default;
 
   return (
     <MDXProvider components={components}>
-      <div className="prose prose-lg max-w-none dark:prose-invert text-white">
+      <div className="prose prose-lg max-w-none dark:prose-invert">
         <MDXContent />
       </div>
     </MDXProvider>
