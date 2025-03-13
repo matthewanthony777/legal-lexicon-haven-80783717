@@ -5,11 +5,12 @@ import { Article } from "@/types/article";
 import ArticleCard from "@/components/ArticleCard";
 import Navigation from "@/components/Navigation";
 import ArticleFilters from "@/components/ArticleFilters";
-import { Youtube, Instagram, AlertCircle, RefreshCw } from "lucide-react";
+import { Youtube, Instagram, AlertCircle, RefreshCw, Book } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { toast } from "@/components/ui/use-toast";
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -22,15 +23,39 @@ const Articles = () => {
       console.log("Fetching articles in Articles component");
       setLoading(true);
       setError(null);
+      
+      // Show fetching toast
+      toast({
+        title: "Loading articles...",
+        description: "Fetching content from GitHub repository",
+      });
+      
       const fetchedArticles = await getAllArticles();
+      
       console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
       setArticles(fetchedArticles);
+      
       if (fetchedArticles.length === 0) {
-        setError("No articles found. Please check your GitHub configuration.");
+        setError("No articles found. Please check your GitHub repository to make sure it contains markdown files in the content/articles directory.");
+        toast({
+          variant: "destructive",
+          title: "No articles found",
+          description: "Check GitHub repository configuration",
+        });
+      } else {
+        toast({
+          title: "Articles loaded",
+          description: `Successfully loaded ${fetchedArticles.length} articles`,
+        });
       }
     } catch (err) {
       console.error("Error fetching articles:", err);
-      setError("Failed to load articles. Please check your GitHub configuration.");
+      setError("Failed to load articles. Check browser console for details.");
+      toast({
+        variant: "destructive",
+        title: "Error loading articles",
+        description: "See console for technical details",
+      });
     } finally {
       setLoading(false);
     }
@@ -90,12 +115,23 @@ const Articles = () => {
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
               <p>Loading articles...</p>
+              <p className="text-xs text-muted-foreground mt-2">Fetching content from GitHub...</p>
             </div>
           ) : filteredArticles.length === 0 && !error ? (
             <div className="text-center py-8">
+              <Book className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground">
                 {searchQuery ? "No articles found matching your criteria." : "No articles available."}
               </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleRetry}
+                className="mt-4"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refresh Articles
+              </Button>
             </div>
           ) : (
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-8">
