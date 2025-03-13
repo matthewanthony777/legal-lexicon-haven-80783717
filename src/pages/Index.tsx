@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import { Youtube, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ const Index = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       <main className="relative flex-1">
-        <div className="relative h-screen">
+        <div className="relative h-[70vh] md:h-[60vh] mx-auto max-w-5xl my-6 rounded-lg overflow-hidden">
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute inset-0 bg-black/40 z-10"></div>
             <video 
