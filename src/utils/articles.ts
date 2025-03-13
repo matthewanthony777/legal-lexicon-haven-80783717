@@ -11,8 +11,16 @@ export const getAllArticles = async (): Promise<Article[]> => {
     }
     
     try {
+        console.log('Fetching all articles from GitHub');
         const articles = await fetchAllArticles();
-        articlesCache = articles;
+        
+        if (articles.length > 0) {
+            console.log(`Successfully loaded ${articles.length} articles`);
+            articlesCache = articles;
+        } else {
+            console.warn('No articles were returned from GitHub');
+        }
+        
         return articles;
     } catch (error) {
         console.error('Error getting all articles:', error);

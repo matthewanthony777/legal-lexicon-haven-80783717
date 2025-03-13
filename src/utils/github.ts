@@ -11,6 +11,8 @@ const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${G
  */
 export async function fetchMdxFilesList(): Promise<string[]> {
   try {
+    console.log(`Fetching files from: ${GITHUB_API_BASE}`);
+    
     const headers: HeadersInit = {
       'Accept': 'application/vnd.github.v3+json',
     };
@@ -25,13 +27,24 @@ export async function fetchMdxFilesList(): Promise<string[]> {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch files list: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      console.error('GitHub API error:', response.status, response.statusText, errorData);
+      throw new Error(`Failed to fetch files list: ${response.status} ${response.statusText}`);
     }
 
     const files = await response.json();
-    return files
+    
+    if (!Array.isArray(files)) {
+      console.error('Unexpected response format:', files);
+      return [];
+    }
+    
+    const mdxFiles = files
       .filter((file: any) => file.name.endsWith('.md') || file.name.endsWith('.mdx'))
       .map((file: any) => file.name);
+      
+    console.log(`Found ${mdxFiles.length} MDX files`);
+    return mdxFiles;
   } catch (error) {
     console.error('Error fetching MDX files list:', error);
     return [];
@@ -104,6 +117,25 @@ export function processMdxContent(content: string, slug: string): Article | null
 export async function fetchAllArticles(): Promise<Article[]> {
   try {
     const mdxFiles = await fetchMdxFilesList();
+    
+    if (mdxFiles.length === 0) {
+      console.log('No MDX files found, falling back to local content');
+      
+      // Fallback to local content for development
+      return [
+        {
+          slug: 'sample-article',
+          title: 'Sample Article',
+          date: new Date().toISOString(),
+          author: 'The Screen Scholar',
+          description: 'This is a sample article for development.',
+          tags: ['sample', 'development'],
+          category: 'development',
+          content: '## This is a sample article\n\nThis content is shown when GitHub API requests fail.'
+        }
+      ];
+    }
+    
     const articles: Article[] = [];
     
     for (const filename of mdxFiles) {
