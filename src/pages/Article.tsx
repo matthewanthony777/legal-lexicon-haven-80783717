@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -15,11 +16,11 @@ const Article = () => {
   });
 
   if (isLoading) {
-    return <div className="container py-8">Loading...</div>;
+    return <div className="container py-8 text-white">Loading...</div>;
   }
 
   if (!article) {
-    return <div className="container py-8">Article not found</div>;
+    return <div className="container py-8 text-white">Article not found</div>;
   }
 
   return (

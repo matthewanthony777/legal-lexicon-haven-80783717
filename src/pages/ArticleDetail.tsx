@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { getArticleBySlug } from "@/utils/articles";
 import { Badge } from "@/components/ui/badge";
@@ -17,7 +18,7 @@ const ArticleDetail = () => {
       <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
         <div className="container mx-auto px-4 py-8 flex-1 text-center">
-          <h1 className="text-2xl font-bold">Article not found</h1>
+          <h1 className="text-2xl font-bold text-white">Article not found</h1>
           <Link to="/articles">
             <Button className="mt-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -43,7 +44,7 @@ const ArticleDetail = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
-      <article className="container mx-auto px-4 py-4 md:py-8 max-w-3xl mt-16 flex-1">
+      <article className="container mx-auto px-4 py-4 md:py-8 max-w-3xl mt-16 flex-1 text-white">
         <Link to="/articles">
           <Button variant="ghost" className="mb-4 md:mb-8">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -73,16 +74,16 @@ const ArticleDetail = () => {
           )}
           
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-muted-foreground" />
-              <time className="text-sm text-muted-foreground">
+            <div className="flex items-center space-x-2 text-white">
+              <Calendar className="w-4 h-4 text-white" />
+              <time className="text-sm text-white">
                 {new Date(article.date).toLocaleDateString()}
               </time>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold">{article.title}</h1>
-            <div className="flex items-center space-x-2">
-              <span className="text-muted-foreground">By</span>
-              <span className="font-medium">{article.author}</span>
+            <h1 className="text-2xl md:text-4xl font-bold text-white">{article.title}</h1>
+            <div className="flex items-center space-x-2 text-white">
+              <span className="text-white">By</span>
+              <span className="font-medium text-white">{article.author}</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {article.tags && article.tags.map(tag => (
@@ -93,7 +94,7 @@ const ArticleDetail = () => {
             </div>
           </div>
           
-          <div className="mt-8 prose dark:prose-invert max-w-none">
+          <div className="mt-8 prose dark:prose-invert max-w-none text-white">
             <MDXRenderer content={article.content} />
           </div>
         </div>
