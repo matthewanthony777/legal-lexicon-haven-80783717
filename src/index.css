@@ -113,3 +113,51 @@
   height: 100%;
   border-radius: 0.5rem;
 }
+
+/* Code block styling */
+pre {
+  background-color: hsl(220, 13%, 18%);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+  font-size: 0.9rem;
+}
+
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+}
+
+.inline-code {
+  background-color: hsl(220, 13%, 18%);
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+/* Add monospace font for code blocks */
+code, pre code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+}
+
+/* Custom styling for blockquotes */
+blockquote {
+  font-style: italic;
+  border-left: 4px solid hsl(var(--muted));
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+}
+
+/* Lists styling */
+ul.list-disc {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+ol.list-decimal {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
