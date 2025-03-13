@@ -93,7 +93,11 @@ export async function fetchMdxFileContent(filename: string): Promise<string | nu
     }
     
     // GitHub API returns content as base64 encoded
-    return Base64.decode(fileData.content);
+    const decodedContent = Base64.decode(fileData.content);
+    console.log(`Successfully decoded content for ${filename}, content length: ${decodedContent.length}`);
+    // Log the first 150 characters to help debug front matter issues
+    console.log(`Content preview: ${decodedContent.substring(0, 150)}...`);
+    return decodedContent;
   } catch (error) {
     console.error(`Error fetching MDX file content for ${filename}:`, error);
     return null;
@@ -106,53 +110,75 @@ export async function fetchMdxFileContent(filename: string): Promise<string | nu
  */
 export function processMdxContent(content: string, slug: string): Article | null {
   try {
-    // Browser-friendly front matter extraction
+    console.log(`Processing content for slug: ${slug}`);
+    
+    // Initialize with default values
     let frontMatter: Record<string, any> = {};
     let mdxContent = content;
     
-    // Simple front matter extraction for browser environment
+    // Check if content has valid front matter format (between --- markers)
     if (content.startsWith('---')) {
       const secondDelimiterIndex = content.indexOf('---', 4);
       if (secondDelimiterIndex !== -1) {
         const frontMatterText = content.substring(4, secondDelimiterIndex).trim();
         mdxContent = content.substring(secondDelimiterIndex + 3).trim();
         
+        console.log(`Found front matter for ${slug}, length: ${frontMatterText.length}`);
+        
         // Parse front matter text into object
         frontMatterText.split('\n').forEach(line => {
+          // Skip empty lines
+          if (!line.trim()) return;
+          
           const colonIndex = line.indexOf(':');
           if (colonIndex !== -1) {
             const key = line.substring(0, colonIndex).trim();
             let value = line.substring(colonIndex + 1).trim();
             
             // Remove quotes if present
-            if (value.startsWith('"') && value.endsWith('"')) {
+            if ((value.startsWith('"') && value.endsWith('"')) || 
+                (value.startsWith("'") && value.endsWith("'"))) {
               value = value.substring(1, value.length - 1);
             }
             
-            frontMatter[key] = value;
+            // Handle arrays (tags: [tag1, tag2])
+            if (value.startsWith('[') && value.endsWith(']')) {
+              const arrayContent = value.substring(1, value.length - 1);
+              frontMatter[key] = arrayContent
+                .split(',')
+                .map(item => item.trim())
+                .filter(item => item.length > 0);
+            } else {
+              frontMatter[key] = value;
+            }
           }
         });
+        
+        console.log(`Parsed front matter for ${slug}:`, frontMatter);
+      } else {
+        console.warn(`Malformed front matter in ${slug}: Missing closing delimiter`);
       }
     } else {
-      console.log(`No front matter found in ${slug}`);
+      console.warn(`No front matter found in ${slug}`);
     }
     
     // Extract and format front matter data
     const article: Article = {
       slug: slug,
-      title: frontMatter.title || 'Untitled',
+      title: frontMatter.title || 'Untitled Article',
       date: frontMatter.date || new Date().toISOString(),
-      author: frontMatter.author || 'Unknown',
-      description: frontMatter.description || '',
-      tags: frontMatter.tags ? 
-        (typeof frontMatter.tags === 'string' ? [frontMatter.tags] : frontMatter.tags) : 
-        (frontMatter.category ? [frontMatter.category] : []),
-      category: frontMatter.category || '',
-      coverImage: frontMatter.coverImage || undefined,
-      coverVideo: frontMatter.coverVideo || undefined,
+      author: frontMatter.author || 'Unknown Author',
+      description: frontMatter.description || 'No description available',
+      tags: Array.isArray(frontMatter.tags) ? frontMatter.tags : 
+        (typeof frontMatter.tags === 'string' ? [frontMatter.tags] : 
+        (frontMatter.category ? [frontMatter.category] : [])),
+      category: frontMatter.category || 'Uncategorized',
+      coverImage: frontMatter.coverImage || frontMatter.imageUrl || undefined,
+      coverVideo: frontMatter.coverVideo || frontMatter.videoUrl || undefined,
       content: mdxContent
     };
     
+    console.log(`Successfully processed article "${article.title}" with ${article.tags.length} tags`);
     return article;
   } catch (error) {
     console.error(`Error processing MDX content for ${slug}:`, error);

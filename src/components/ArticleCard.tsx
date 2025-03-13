@@ -1,8 +1,9 @@
+
 import { ArticleMetadata } from "@/types/article";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar } from "lucide-react";
+import { Calendar, AlertCircle } from "lucide-react";
 
 interface ArticleCardProps {
   article: ArticleMetadata;
@@ -32,9 +33,13 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
   const hasCoverMedia = article.coverVideo || article.coverImage;
   const coverVideo = article.coverVideo && isVideoFile(article.coverVideo) ? getMediaPath(article.coverVideo) : null;
   const coverImage = article.coverImage && isImageFile(article.coverImage) ? getMediaPath(article.coverImage) : null;
+  
+  // Check if article has minimal required metadata
+  const hasMinimalMetadata = article.title && article.title !== 'Untitled Article';
+  const warningMessage = hasMinimalMetadata ? null : "This article may have missing or incomplete metadata";
 
   return (
-    <Card className="group hover:shadow-lg transition-shadow duration-300">
+    <Card className={`group hover:shadow-lg transition-shadow duration-300 ${!hasMinimalMetadata ? 'border-yellow-400' : ''}`}>
       <Link to={`/articles/${article.slug}`}>
         <div className="w-full aspect-video rounded-t-lg overflow-hidden">
           {coverVideo ? (
@@ -56,7 +61,14 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
             />
           ) : (
             <div className="w-full h-full bg-muted flex items-center justify-center">
-              <span className="text-muted-foreground">No preview available</span>
+              {!hasMinimalMetadata ? (
+                <div className="flex flex-col items-center text-yellow-500 p-4 text-center">
+                  <AlertCircle className="w-8 h-8 mb-2" />
+                  <span>Front matter issues</span>
+                </div>
+              ) : (
+                <span className="text-muted-foreground">No preview available</span>
+              )}
             </div>
           )}
         </div>
@@ -70,19 +82,32 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
             </div>
             <h3 className="text-2xl font-semibold group-hover:text-primary transition-colors">
               {article.title}
+              {!hasMinimalMetadata && <span className="text-yellow-500 ml-2">⚠️</span>}
             </h3>
+            {warningMessage && (
+              <p className="text-xs text-yellow-500 flex items-center">
+                <AlertCircle className="w-3 h-3 mr-1" />
+                {warningMessage}
+              </p>
+            )}
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">{article.description}</p>
+          <p className="text-muted-foreground">
+            {article.description || "No description available"}
+          </p>
         </CardContent>
         <CardFooter>
           <div className="flex flex-wrap gap-2">
-            {article.tags && article.tags.map(tag => (
-              <Badge key={tag} variant="secondary">
-                {tag}
-              </Badge>
-            ))}
+            {article.tags && article.tags.length > 0 ? (
+              article.tags.map(tag => (
+                <Badge key={tag} variant="secondary">
+                  {tag}
+                </Badge>
+              ))
+            ) : (
+              <Badge variant="outline">Uncategorized</Badge>
+            )}
           </div>
         </CardFooter>
       </Link>
