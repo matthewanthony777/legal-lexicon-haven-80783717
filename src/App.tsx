@@ -12,29 +12,35 @@ import CareerInsights from "./pages/CareerInsights";
 import CareerInsightDetail from "./pages/CareerInsightDetail";
 import Collaborate from "./pages/Collaborate";
 import AboutUs from "./pages/AboutUs";
+import DebugRender from "./components/DebugRender";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/articles" element={<Articles />} />
-            <Route path="/articles/:slug" element={<ArticleDetail />} />
-            <Route path="/career-insights" element={<CareerInsights />} />
-            <Route path="/career-insights/:slug" element={<CareerInsightDetail />} />
-            <Route path="/collaborate" element={<Collaborate />} />
-            <Route path="/about" element={<AboutUs />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log("Rendering App component");
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
+        <TooltipProvider>
+          <DebugRender />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/articles" element={<Articles />} />
+              <Route path="/articles/:slug" element={<ArticleDetail />} />
+              <Route path="/career-insights" element={<CareerInsights />} />
+              <Route path="/career-insights/:slug" element={<CareerInsightDetail />} />
+              <Route path="/collaborate" element={<Collaborate />} />
+              <Route path="/about" element={<AboutUs />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import { Youtube, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -5,8 +6,9 @@ import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
 
 const Index = () => {
+  console.log("Rendering Index page");
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-black text-white" style={{backgroundColor: 'black', color: 'white'}}>
       <Navigation />
       <main className="relative flex-1">
         <div className="relative h-screen">
@@ -18,13 +20,14 @@ const Index = () => {
               loop 
               muted 
               playsInline
+              style={{opacity: 0.7}}
             >
               <source src="/lawyer-edit-homepage.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-white p-4">
-              <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center font-playfair">Legal Excellence & Career Growth</h1>
-              <p className="text-lg md:text-2xl text-center px-4 font-playfair italic">
+              <h1 className="text-3xl md:text-5xl font-bold mb-4 text-center font-playfair" style={{color: 'white'}}>Legal Excellence & Career Growth</h1>
+              <p className="text-lg md:text-2xl text-center px-4 font-playfair italic" style={{color: 'white'}}>
                 Expert legal commentary and career guidance for modern professionals
               </p>
             </div>
@@ -35,36 +38,30 @@ const Index = () => {
                 variant="ghost"
                 size="icon"
                 className="text-white hover:text-red-500 bg-black/20 hover:bg-black/30"
-                asChild
+                onClick={() => window.open("#", "_blank", "noopener,noreferrer")}
+                aria-label="Visit our YouTube channel"
               >
-                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Visit our YouTube channel">
-                  <Youtube className="h-5 w-5 md:h-6 md:w-6" />
-                </a>
+                <Youtube className="h-5 w-5 md:h-6 md:w-6" />
               </Button>
+              
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-white hover:text-pink-500 bg-black/20 hover:bg-black/30"
-                asChild
+                onClick={() => window.open("#", "_blank", "noopener,noreferrer")}
+                aria-label="Follow us on Instagram"
               >
-                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Follow us on Instagram">
-                  <Instagram className="h-5 w-5 md:h-6 md:w-6" />
-                </a>
+                <Instagram className="h-5 w-5 md:h-6 md:w-6" />
               </Button>
+              
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-white hover:text-white bg-black/20 hover:bg-black/30"
-                asChild
+                onClick={() => window.open("https://www.tiktok.com/@thescreenscholar", "_blank", "noopener,noreferrer")}
+                aria-label="Follow us on TikTok"
               >
-                <a 
-                  href="https://www.tiktok.com/@thescreenscholar" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label="Follow us on TikTok"
-                >
-                  <TikTokIcon className="h-5 w-5 md:h-6 md:w-6" />
-                </a>
+                <TikTokIcon className="h-5 w-5 md:h-6 md:w-6" />
               </Button>
             </div>
           </div>
