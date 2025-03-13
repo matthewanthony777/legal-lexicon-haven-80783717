@@ -28,7 +28,11 @@ export default defineConfig(({ mode }) => ({
       input: {
         main: path.resolve(__dirname, 'index.html'),
       },
+      external: ['zwitch'],
     },
   },
   base: '',
+  optimizeDeps: {
+    include: ['zwitch']
+  }
 }));
