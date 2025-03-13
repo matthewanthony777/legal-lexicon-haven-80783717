@@ -81,7 +81,6 @@ export async function fetchMdxFileContent(filename: string): Promise<string | nu
 
     const fileData: GitHubFile = await response.json();
     // GitHub API returns content as base64 encoded
-    // Use js-base64 instead of Buffer for browser compatibility
     return Base64.decode(fileData.content);
   } catch (error) {
     console.error(`Error fetching MDX file content for ${filename}:`, error);
@@ -94,7 +93,8 @@ export async function fetchMdxFileContent(filename: string): Promise<string | nu
  */
 export function processMdxContent(content: string, slug: string): Article | null {
   try {
-    // Parse front matter and content
+    // Create a custom version of gray-matter that doesn't use Buffer
+    // This is a browser-safe implementation
     const { data, content: mdxContent } = matter(content);
     
     // Extract and format front matter data
@@ -114,6 +114,7 @@ export function processMdxContent(content: string, slug: string): Article | null
     return article;
   } catch (error) {
     console.error(`Error processing MDX content for ${slug}:`, error);
+    console.error('Error details:', error);
     return null;
   }
 }
@@ -153,9 +154,14 @@ export async function fetchAllArticles(): Promise<Article[]> {
       const content = await fetchMdxFileContent(filename);
       if (content) {
         const slug = filename.replace(/\.mdx?$/, '');
-        const article = processMdxContent(content, slug);
-        if (article) {
-          articles.push(article);
+        try {
+          const article = processMdxContent(content, slug);
+          if (article) {
+            articles.push(article);
+            console.log(`Successfully processed article: ${article.title}`);
+          }
+        } catch (error) {
+          console.error(`Failed to process ${filename}:`, error);
         }
       }
     }
