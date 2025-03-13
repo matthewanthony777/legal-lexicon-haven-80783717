@@ -1,0 +1,147 @@
+
+import matter from 'gray-matter';
+import { Article, GitHubFile } from '@/types/article';
+import { GITHUB_CONFIG } from '@/config/github';
+
+// Base URL for GitHub API requests
+const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.articlesPath}`;
+
+/**
+ * Fetch a list of all MDX files in the specified GitHub repository directory
+ */
+export async function fetchMdxFilesList(): Promise<string[]> {
+  try {
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+json',
+    };
+    
+    // Add authorization if token is available
+    if (GITHUB_CONFIG.token) {
+      headers['Authorization'] = `token ${GITHUB_CONFIG.token}`;
+    }
+    
+    const response = await fetch(`${GITHUB_API_BASE}?ref=${GITHUB_CONFIG.branch}`, {
+      headers
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch files list: ${response.statusText}`);
+    }
+
+    const files = await response.json();
+    return files
+      .filter((file: any) => file.name.endsWith('.md') || file.name.endsWith('.mdx'))
+      .map((file: any) => file.name);
+  } catch (error) {
+    console.error('Error fetching MDX files list:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch a specific MDX file content from GitHub
+ */
+export async function fetchMdxFileContent(filename: string): Promise<string | null> {
+  try {
+    const headers: HeadersInit = {
+      'Accept': 'application/vnd.github.v3+json',
+    };
+    
+    // Add authorization if token is available
+    if (GITHUB_CONFIG.token) {
+      headers['Authorization'] = `token ${GITHUB_CONFIG.token}`;
+    }
+    
+    const response = await fetch(`${GITHUB_API_BASE}/${filename}?ref=${GITHUB_CONFIG.branch}`, {
+      headers
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch file content: ${response.statusText}`);
+    }
+
+    const fileData: GitHubFile = await response.json();
+    // GitHub API returns content as base64 encoded
+    return Buffer.from(fileData.content, 'base64').toString('utf-8');
+  } catch (error) {
+    console.error(`Error fetching MDX file content for ${filename}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Process MDX content to extract front matter and format content
+ */
+export function processMdxContent(content: string, slug: string): Article | null {
+  try {
+    // Parse front matter and content
+    const { data, content: mdxContent } = matter(content);
+    
+    // Extract and format front matter data
+    const article: Article = {
+      slug: slug,
+      title: data.title || 'Untitled',
+      date: data.date || new Date().toISOString(),
+      author: data.author || 'Unknown',
+      description: data.description || '',
+      tags: Array.isArray(data.tags) ? data.tags : (data.category ? [data.category] : []),
+      category: data.category || '',
+      coverImage: data.coverImage || undefined,
+      coverVideo: data.coverVideo || undefined,
+      content: mdxContent
+    };
+    
+    return article;
+  } catch (error) {
+    console.error(`Error processing MDX content for ${slug}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Fetch all articles from GitHub repository
+ */
+export async function fetchAllArticles(): Promise<Article[]> {
+  try {
+    const mdxFiles = await fetchMdxFilesList();
+    const articles: Article[] = [];
+    
+    for (const filename of mdxFiles) {
+      const content = await fetchMdxFileContent(filename);
+      if (content) {
+        const slug = filename.replace(/\.mdx?$/, '');
+        const article = processMdxContent(content, slug);
+        if (article) {
+          articles.push(article);
+        }
+      }
+    }
+    
+    return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  } catch (error) {
+    console.error('Error fetching all articles:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch a specific article by slug from GitHub repository
+ */
+export async function fetchArticleBySlug(slug: string): Promise<Article | null> {
+  try {
+    // Try both .md and .mdx extensions
+    let content = await fetchMdxFileContent(`${slug}.mdx`);
+    if (!content) {
+      content = await fetchMdxFileContent(`${slug}.md`);
+    }
+    
+    if (!content) {
+      return null;
+    }
+    
+    return processMdxContent(content, slug);
+  } catch (error) {
+    console.error(`Error fetching article for slug ${slug}:`, error);
+    return null;
+  }
+}

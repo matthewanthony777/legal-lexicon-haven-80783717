@@ -1,5 +1,7 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { getAllArticles } from "@/utils/articles";
+import { Article } from "@/types/article";
 import ArticleCard from "@/components/ArticleCard";
 import Navigation from "@/components/Navigation";
 import ArticleFilters from "@/components/ArticleFilters";
@@ -9,10 +11,29 @@ import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
 
 const Articles = () => {
-  const allArticles = getAllArticles();
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredArticles = allArticles.filter((article) => {
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        setLoading(true);
+        const fetchedArticles = await getAllArticles();
+        setArticles(fetchedArticles);
+      } catch (err) {
+        console.error("Error fetching articles:", err);
+        setError("Failed to load articles");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchArticles();
+  }, []);
+
+  const filteredArticles = articles.filter((article) => {
     const matchesSearch = 
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -36,7 +57,15 @@ const Articles = () => {
             onSearchChange={setSearchQuery}
           />
 
-          {filteredArticles.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-8">
+              <p>Loading articles...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-destructive">{error}</p>
+            </div>
+          ) : filteredArticles.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-muted-foreground">No articles found matching your criteria.</p>
             </div>

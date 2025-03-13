@@ -1,28 +1,60 @@
 
-import { articles } from 'virtual:mdx-data';
 import { Article } from '@/types/article';
+import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
 
-export const getAllArticles = (): Article[] => {
-    return articles || [];
+// In-memory cache for articles to avoid refetching
+let articlesCache: Article[] | null = null;
+
+export const getAllArticles = async (): Promise<Article[]> => {
+    if (articlesCache) {
+        return articlesCache;
+    }
+    
+    try {
+        const articles = await fetchAllArticles();
+        articlesCache = articles;
+        return articles;
+    } catch (error) {
+        console.error('Error getting all articles:', error);
+        return [];
+    }
 };
 
-export const getArticleBySlug = (slug: string): Article | undefined => {
-    return articles?.find(article => article.slug === slug);
+export const getArticleBySlug = async (slug: string): Promise<Article | undefined> => {
+    try {
+        // First check the cache
+        if (articlesCache) {
+            const cachedArticle = articlesCache.find(article => article.slug === slug);
+            if (cachedArticle) {
+                return cachedArticle;
+            }
+        }
+        
+        // If not in cache, fetch directly
+        const article = await fetchArticleBySlug(slug);
+        return article || undefined;
+    } catch (error) {
+        console.error(`Error getting article by slug ${slug}:`, error);
+        return undefined;
+    }
 };
 
-export const getLatestArticles = (count: number = 5): Article[] => {
-    return getAllArticles().slice(0, count);
+export const getLatestArticles = async (count: number = 5): Promise<Article[]> => {
+    const articles = await getAllArticles();
+    return articles.slice(0, count);
 };
 
-export const getArticlesByCategory = (category: string): Article[] => {
-    return getAllArticles().filter(article => 
+export const getArticlesByCategory = async (category: string): Promise<Article[]> => {
+    const articles = await getAllArticles();
+    return articles.filter(article => 
         article.category && article.category.toLowerCase() === category.toLowerCase()
     );
 };
 
-export const getAllCategories = (): string[] => {
+export const getAllCategories = async (): Promise<string[]> => {
+    const articles = await getAllArticles();
     const categories = new Set<string>();
-    getAllArticles().forEach(article => {
+    articles.forEach(article => {
         if (article.category) {
             categories.add(article.category);
         }
