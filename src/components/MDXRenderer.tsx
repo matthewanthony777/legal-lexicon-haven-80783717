@@ -9,7 +9,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   // Process content to handle custom components and markdown elements
   let processedContent = content;
   
-  // Handle YouTube embeds
+  // Handle YouTube embeds with consistent parsing
   processedContent = processedContent.replace(
     /<YouTube\s+videoId="([^"]+)"[^>]*\/>/g,
     (match, videoId) => {
@@ -27,6 +27,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   );
 
   // Handle code blocks with syntax highlighting - adding proper language tag
+  // Preserve exact whitespace and formatting
   processedContent = processedContent.replace(
     /```([a-z]*)\n([\s\S]*?)\n```/gim,
     (match, language, code) => {
@@ -38,21 +39,29 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
       
-      // Process Python comments specifically
-      const processedCode = language === 'python' || language === 'py' 
-        ? cleanedCode.replace(
-            /(#.+)$/gm, 
-            '<span class="code-comment">$1</span>'
-          ).replace(
-            /\/\/(.*)/g, 
-            '<span class="code-comment">// $1</span>'
-          )
-        : cleanedCode.replace(
-            /\/\/(.*)/g, 
-            '<span class="code-comment">// $1</span>'
-          );
+      // Apply consistent comment highlighting for all languages
+      let processedCode = cleanedCode;
       
-      // Add language indicator if available
+      // Process Python comments specifically
+      if (language === 'python' || language === 'py') {
+        processedCode = cleanedCode.replace(
+          /(#.+)$/gm, 
+          '<span class="code-comment">$1</span>'
+        );
+      }
+      
+      // Process JavaScript/TypeScript comments
+      if (language === 'javascript' || language === 'js' || language === 'typescript' || language === 'ts') {
+        processedCode = processedCode.replace(
+          /\/\/(.*)/g, 
+          '<span class="code-comment">// $1</span>'
+        ).replace(
+          /\/\*[\s\S]*?\*\//g,
+          match => `<span class="code-comment">${match}</span>`
+        );
+      }
+      
+      // Add consistent language indicator with standardized styling
       const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
       
       return `<div class="code-block-wrapper">
@@ -62,7 +71,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     }
   );
 
-  // Handle inline code
+  // Handle inline code with consistent styling
   processedContent = processedContent.replace(
     /`([^`]+)`/g,
     (match, code) => {
@@ -70,7 +79,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     }
   );
 
-  // Handle headings (h1, h2, h3, h4, h5, h6)
+  // Standardized handling for all heading levels
   processedContent = processedContent.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-8 font-playfair">$1</h1>');
   processedContent = processedContent.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-6 font-playfair">$1</h2>');
   processedContent = processedContent.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-5 font-playfair">$1</h3>');
@@ -78,41 +87,32 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   processedContent = processedContent.replace(/^##### (.*$)/gim, '<h5 class="text-base md:text-lg font-bold mb-2 mt-4 font-playfair">$1</h5>');
   processedContent = processedContent.replace(/^###### (.*$)/gim, '<h6 class="text-sm md:text-base font-bold mb-2 mt-4 font-playfair">$1</h6>');
 
-  // Handle bold text
+  // Consistent formatting for text styling
   processedContent = processedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  
-  // Handle italic text
   processedContent = processedContent.replace(/\*(.*?)\*/g, '<em>$1</em>');
 
-  // Handle links
+  // Standardized link formatting
   processedContent = processedContent.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
     '<a href="$2" class="text-primary underline hover:text-opacity-80 transition-colors">$1</a>'
   );
 
-  // Handle unordered lists
+  // Lists with consistent formatting
   processedContent = processedContent.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
   processedContent = processedContent.replace(/^- (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
-  
-  // Handle ordered lists
   processedContent = processedContent.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-6 mb-4"><li>$1</li></ol>');
   
   // Fix consecutive list items
   processedContent = processedContent.replace(/<\/ul>\s*<ul[^>]*>/g, '');
   processedContent = processedContent.replace(/<\/ol>\s*<ol[^>]*>/g, '');
 
-  // Handle blockquotes
+  // Blockquotes with consistent styling
   processedContent = processedContent.replace(/^> (.*$)/gim, '<blockquote class="pl-4 border-l-4 border-muted italic my-4">$1</blockquote>');
 
-  // Handle horizontal rules
+  // Horizontal rules
   processedContent = processedContent.replace(/^---$/gim, '<hr class="my-6 border-t border-muted" />');
 
-  // Process emojis - preserve as is, since React can render them natively
-  
-  // Handle diagrams/ASCII art by preserving whitespace in code blocks
-  // This is already handled by the code block processing above
-
-  // Handle paragraphs (must come last to avoid interfering with other elements)
+  // Handle paragraphs with consistent formatting (must come last)
   processedContent = processedContent.replace(
     /^([^<].*)\s*$/gim, 
     (match, text) => {

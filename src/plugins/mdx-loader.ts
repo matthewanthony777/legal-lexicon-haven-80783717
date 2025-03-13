@@ -8,6 +8,19 @@ import { Article } from '../types/article';
 const articlesDirectory = path.join(process.cwd(), 'content/articles');
 const careerInsightsDirectory = path.join(process.cwd(), 'content/career-insights');
 
+/**
+ * Standardized function to safely extract YAML front matter fields
+ * Ensures consistent processing across all MDX files
+ */
+function extractFrontMatter(rawFrontMatter: Record<string, any>, field: string, defaultValue: any): any {
+  if (rawFrontMatter && field in rawFrontMatter) {
+    const value = rawFrontMatter[field];
+    return value !== undefined && value !== null ? value : defaultValue;
+  }
+  console.log(`Front matter field '${field}' not found, using default: ${defaultValue}`);
+  return defaultValue;
+}
+
 function processMarkdown(content: string): string {
   // Process code blocks first to prevent other transformations from affecting them
   content = content.replace(/```([a-z]*)\n([\s\S]*?)\n```/gim, (match, language, code) => {
@@ -19,16 +32,27 @@ function processMarkdown(content: string): string {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
     
-    // Process Python comments
-    const processedCode = language === 'python' || language === 'py'
-      ? cleanedCode.replace(
-          /(#.+)$/gm, 
-          '<span class="code-comment">$1</span>'
-        )
-      : cleanedCode.replace(
-          /\/\/(.*)/g, 
-          '<span class="code-comment">// $1</span>'
-        );
+    // Apply consistent comment highlighting for all languages
+    let processedCode = cleanedCode;
+    
+    // Process Python comments specifically
+    if (language === 'python' || language === 'py') {
+      processedCode = cleanedCode.replace(
+        /(#.+)$/gm, 
+        '<span class="code-comment">$1</span>'
+      );
+    }
+    
+    // Process JavaScript/TypeScript comments
+    if (language === 'javascript' || language === 'js' || language === 'typescript' || language === 'ts') {
+      processedCode = processedCode.replace(
+        /\/\/(.*)/g, 
+        '<span class="code-comment">// $1</span>'
+      ).replace(
+        /\/\*[\s\S]*?\*\//g,
+        match => `<span class="code-comment">${match}</span>`
+      );
+    }
     
     // Add language label
     const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
@@ -42,7 +66,7 @@ function processMarkdown(content: string): string {
   // Inline code
   content = content.replace(/`([^`]+)`/gim, '<code class="inline-code">$1</code>');
   
-  // Process headings
+  // Process headings with consistent classes
   content = content.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-5 font-playfair">$1</h3>');
   content = content.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-6 font-playfair">$1</h2>');
   content = content.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-8 font-playfair">$1</h1>');
@@ -109,19 +133,23 @@ function getAllArticlesData(): Article[] {
       const slug = fileName.replace(/\.(mdx|md)$/, '');
       const fullPath = path.join(articlesDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
+      
+      // Use consistent front matter parsing
       const { data, content } = matter(fileContents);
 
+      // Use standardized extraction for all fields
       return {
         slug,
         content: processMarkdown(content),
-        title: data.title || 'Untitled',
-        date: data.date || new Date().toISOString(),
-        author: data.author || 'Unknown',
-        description: data.description || '',
-        tags: data.category ? [data.category] : [],
-        category: data.category || '',
-        coverVideo: data.coverVideo || null,
-        coverImage: data.coverImage || null,
+        title: extractFrontMatter(data, 'title', 'Untitled'),
+        date: extractFrontMatter(data, 'date', new Date().toISOString()),
+        author: extractFrontMatter(data, 'author', 'Unknown'),
+        description: extractFrontMatter(data, 'description', ''),
+        tags: extractFrontMatter(data, 'tags', 
+              data.category ? [data.category] : []),
+        category: extractFrontMatter(data, 'category', ''),
+        coverVideo: extractFrontMatter(data, 'coverVideo', null),
+        coverImage: extractFrontMatter(data, 'coverImage', null),
       } as Article;
     });
 
@@ -129,19 +157,23 @@ function getAllArticlesData(): Article[] {
       const slug = fileName.replace(/\.(mdx|md)$/, '');
       const fullPath = path.join(careerInsightsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
+      
+      // Use consistent front matter parsing
       const { data, content } = matter(fileContents);
 
+      // Use standardized extraction for all fields
       return {
         slug,
         content: processMarkdown(content),
-        title: data.title || 'Untitled',
-        date: data.date || new Date().toISOString(),
-        author: data.author || 'Unknown',
-        description: data.description || '',
-        tags: data.category ? [data.category] : [],
+        title: extractFrontMatter(data, 'title', 'Untitled'),
+        date: extractFrontMatter(data, 'date', new Date().toISOString()),
+        author: extractFrontMatter(data, 'author', 'Unknown'),
+        description: extractFrontMatter(data, 'description', ''),
+        tags: extractFrontMatter(data, 'tags', 
+              data.category ? [data.category] : []),
         category: 'career',
-        coverVideo: data.coverVideo || null,
-        coverImage: data.coverImage || null,
+        coverVideo: extractFrontMatter(data, 'coverVideo', null),
+        coverImage: extractFrontMatter(data, 'coverImage', null),
       } as Article;
     });
 
