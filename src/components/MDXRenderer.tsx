@@ -30,14 +30,22 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   processedContent = processedContent.replace(
     /```([a-z]*)\n([\s\S]*?)\n```/gim,
     (match, language, code) => {
-      return `<pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${
-        code
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;')
-      }</code></pre>`;
+      // Clean up and properly format the code
+      const cleanedCode = code
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/\/\/(.*)/g, '<span class="code-comment">// $1</span>');
+      
+      // Add language indicator if available
+      const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
+      
+      return `<div class="code-block-wrapper">
+        ${langLabel}
+        <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${cleanedCode}</code></pre>
+      </div>`;
     }
   );
 

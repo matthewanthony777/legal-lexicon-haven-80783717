@@ -1,3 +1,4 @@
+
 ---
 title: "Tenet - Temporal Inversion "
 description: "Python Based Project"
@@ -8,8 +9,8 @@ coverVideo: "/tenet-edit.MP4"
 ---
 
 Unlock time travel with this Python-based simulation! 🕰⏳🪐💫
-Imagine capturing a moment on video and then watching it unfold in reverse, as if you’re peering into a world where time flows backward. 
-Inspired by the concepts of Christopher Nolan’s "Tenet," this project helps you to explore the magic of temporal inversion in a way that's both playful and profound. 
+Imagine capturing a moment on video and then watching it unfold in reverse, as if you're peering into a world where time flows backward. 
+Inspired by the concepts of Christopher Nolan's "Tenet," this project helps you to explore the magic of temporal inversion in a way that's both playful and profound. 
 
 
 ## Features 
@@ -50,7 +51,7 @@ The code below includes descriptions and explanations for each component and fun
 If you've got questions or need a hand with your temporal simualator, hit the contact button up top!
 
 ```python
-// Import required Libraries
+# Import required Libraries
 import cv2
 import numpy as np
 import time
@@ -75,7 +76,7 @@ class TenetRecorder:
             ret, frame = self.cap.read()
             if ret:
                 self.frames.append(frame.copy())
-                // Add recording indicator
+                # Add recording indicator
                 cv2.circle(frame, (30, 30), 10, (0, 0, 255), -1)
                 cv2.putText(frame, "RECORDING", (50, 40), 
                            cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
@@ -88,32 +89,32 @@ class TenetRecorder:
         """Create and save both normal and inverted sequences"""
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
-        // Set up video writers
+        # Set up video writers
         fourcc = cv2.VideoWriter_fourcc(*'XVID')
         frame_size = (int(self.cap.get(3)), int(self.cap.get(4)))
         fps = 30
         
-        // Original sequence
+        # Original sequence
         original_file = os.path.join(self.output_dir, f'original_{timestamp}.avi')
         original_writer = cv2.VideoWriter(original_file, fourcc, fps, frame_size)
         
-        // Inverted sequence
+        # Inverted sequence
         inverted_file = os.path.join(self.output_dir, f'inverted_{timestamp}.avi')
         inverted_writer = cv2.VideoWriter(inverted_file, fourcc, fps, frame_size)
         
-        // Save original sequence
+        # Save original sequence
         print("Saving original sequence...")
         for frame in self.frames:
             original_writer.write(frame)
             
-        // Create and save inverted sequence
+        # Create and save inverted sequence
         print("Creating and saving inverted sequence...")
         for frame in reversed(self.frames):
             inverted_writer.write(frame)
             cv2.imshow('Inverted Playback', frame)
             cv2.waitKey(33)  # ~30fps playback
             
-        // Clean up
+        # Clean up
         original_writer.release()
         inverted_writer.release()
         cv2.destroyAllWindows()
@@ -123,14 +124,14 @@ class TenetRecorder:
     def run_full_sequence(self):
         """Run the complete recording and inversion process"""
         try:
-            // Step 1: Record original footage
+            # Step 1: Record original footage
             self.record_original()
             
             if len(self.frames) == 0:
                 print("No frames were recorded!")
                 return
                 
-            // Step 2: Create and save sequences
+            # Step 2: Create and save sequences
             original_file, inverted_file = self.create_inverted_sequence()
             print(f"\nRecording complete!")
             print(f"Original footage saved as: {original_file}")

@@ -115,14 +115,34 @@
 }
 
 /* Code block styling */
-pre {
-  background-color: hsl(220, 13%, 18%);
-  border-radius: 0.5rem;
-  padding: 1rem;
+.code-block-wrapper {
+  position: relative;
   margin: 1.5rem 0;
+}
+
+.code-language-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #2d2d2d;
+  color: #e0e0e0;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  border-top-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+  z-index: 1;
+}
+
+pre {
+  background-color: #1a1a1a;
+  border-radius: 0.5rem;
+  padding: 1.5rem 1rem 1rem;
+  margin: 0;
   overflow-x: auto;
   font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
   font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 code {
@@ -130,15 +150,40 @@ code {
 }
 
 .inline-code {
-  background-color: hsl(220, 13%, 18%);
+  background-color: #1a1a1a;
   padding: 0.2rem 0.4rem;
   border-radius: 0.25rem;
   font-size: 0.9em;
 }
 
-/* Add monospace font for code blocks */
-code, pre code {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
+/* Python specific syntax highlighting */
+.language-python .code-comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.language-python .keyword {
+  color: #569cd6;
+}
+
+.language-python .function {
+  color: #dcdcaa;
+}
+
+.language-python .string {
+  color: #ce9178;
+}
+
+.language-python .number {
+  color: #b5cea8;
+}
+
+.language-python .operator {
+  color: #d4d4d4;
+}
+
+.language-python .class-name {
+  color: #4ec9b0;
 }
 
 /* Custom styling for blockquotes */
