@@ -9,6 +9,12 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   // Process content to handle custom components and markdown elements
   let processedContent = content;
   
+  // Extract and remove front matter if present to avoid rendering it
+  processedContent = processedContent.replace(
+    /^---\s*[\s\S]*?---\s*/m,
+    '' // Remove front matter completely
+  );
+  
   // Handle YouTube embeds with consistent parsing
   processedContent = processedContent.replace(
     /<YouTube\s+videoId="([^"]+)"[^>]*\/>/g,
@@ -27,7 +33,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   );
 
   // Handle code blocks with syntax highlighting - adding proper language tag
-  // Preserve exact whitespace and formatting
+  // Preserve exact whitespace and formatting with minimal spacing
   processedContent = processedContent.replace(
     /```([a-z]*)\n([\s\S]*?)\n```/gim,
     (match, language, code) => {
@@ -125,7 +131,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   );
 
   return (
-    <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-playfair prose-p:font-playfair">
+    <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-playfair prose-p:font-playfair prose-pre:p-0 prose-pre:leading-tight">
       <div dangerouslySetInnerHTML={{ __html: processedContent }} />
     </div>
   );
