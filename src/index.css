@@ -1,87 +1,93 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 100%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 0% 10%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 0 0% 100%;
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
+    --background: 220 16% 13%;
+    --foreground: 220 10% 97%;
 
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
+    --card: 220 16% 13%;
+    --card-foreground: 220 10% 97%;
 
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 220 16% 13%;
+    --popover-foreground: 220 10% 97%;
 
-    --primary: 0 0% 100%;
-    --primary-foreground: 0 0% 0%;
+    --primary: 220 10% 97%;
+    --primary-foreground: 220 16% 13%;
 
-    --secondary: 0 0% 10%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 14% 22%;
+    --secondary-foreground: 220 10% 97%;
 
-    --muted: 0 0% 10%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 220 14% 22%;
+    --muted-foreground: 220 10% 80%;
 
-    --accent: 0 0% 10%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 220 14% 22%;
+    --accent-foreground: 220 10% 97%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 220 10% 97%;
 
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 100%;
+    --border: 220 14% 22%;
+    --input: 220 14% 22%;
+    --ring: 220 14% 85%;
 
-    --sidebar-background: 0 0% 0%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 0 0% 10%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 10%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 20%;
-    --sidebar-ring: 0 0% 100%;
+    --sidebar-background: 220 16% 13%;
+    --sidebar-foreground: 220 10% 97%;
+    --sidebar-primary: 220 14% 22%;
+    --sidebar-primary-foreground: 220 10% 97%;
+    --sidebar-accent: 220 14% 18%;
+    --sidebar-accent-foreground: 220 10% 97%;
+    --sidebar-border: 220 14% 18%;
+    --sidebar-ring: 220 14% 85%;
   }
 }
 
@@ -91,131 +97,6 @@
   }
 
   body {
-    @apply bg-black text-white;
-    color: white !important;
-    background-color: black !important;
+    @apply bg-background text-foreground;
   }
-
-  html {
-    background-color: black !important;
-    color: white !important;
-  }
-}
-
-/* Add specific styling for MDX content to ensure proper contrast */
-.prose {
-  @apply text-white;
-  color: white !important;
-}
-
-.prose h1, 
-.prose h2, 
-.prose h3, 
-.prose h4, 
-.prose h5, 
-.prose h6 {
-  @apply text-white;
-  color: white !important;
-}
-
-.prose p,
-.prose ul,
-.prose ol,
-.prose li {
-  @apply text-white;
-  color: white !important;
-}
-
-.prose code {
-  @apply bg-gray-800 text-white;
-}
-
-.prose a {
-  @apply text-blue-400 underline;
-}
-
-.prose blockquote {
-  @apply border-l-4 border-gray-600 pl-4 text-white;
-}
-
-/* Add animation for page transitions */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
-}
-
-/* Force black background and white text everywhere */
-.bg-background {
-  background-color: black !important;
-}
-
-.text-foreground {
-  color: white !important;
-}
-
-.bg-card {
-  background-color: black !important;
-}
-
-.card-foreground {
-  color: white !important;
-}
-
-/* Additional fixes for any potential elements overriding the background */
-#root {
-  background-color: black !important;
-}
-
-main, div, article, section, header, footer, aside, nav, a, button, input, textarea, select {
-  background-color: black !important;
-  color: white !important;
-}
-
-/* Fix for any Tailwind dark mode conflicts */
-.dark .dark\:bg-black {
-  background-color: black !important;
-}
-
-.dark .dark\:text-white {
-  color: white !important;
-}
-
-/* Force override any possible inline styles */
-[style*="background"] {
-  background-color: black !important;
-}
-
-[style*="color"] {
-  color: white !important;
-}
-
-/* Fix for the navigation menu styles */
-nav a, nav button {
-  color: white !important;
-}
-
-/* Fix SVG colors */
-svg {
-  color: white !important;
-  fill: white !important;
-}
-
-/* Override video backgrounds */
-video::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0,0,0,0.5) !important;
-  z-index: 1;
 }

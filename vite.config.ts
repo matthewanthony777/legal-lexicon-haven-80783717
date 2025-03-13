@@ -28,8 +28,7 @@ export default defineConfig(({ mode }) => ({
       input: {
         main: path.resolve(__dirname, 'index.html'),
       },
-      external: ['zwitch'] // Add zwitch as external dependency
     },
   },
-  base: '', // Make sure the base path is correct for assets
+  base: '',
 }));

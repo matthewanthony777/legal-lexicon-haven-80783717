@@ -1,11 +1,8 @@
-
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  background-color: black !important;
-  color: white !important;
 }
 
 .logo {
@@ -38,16 +35,8 @@
 
 .card {
   padding: 2em;
-  background-color: black !important;
-  color: white !important;
 }
 
 .read-the-docs {
-  color: white !important;
-}
-
-/* Add important black background rules for all major elements */
-body, html, div, main, section, article, header, footer, aside {
-  background-color: black !important;
-  color: white !important;
+  color: #888;
 }
