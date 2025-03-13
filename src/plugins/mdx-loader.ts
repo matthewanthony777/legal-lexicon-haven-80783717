@@ -7,6 +7,37 @@ import { Article } from '../types/article';
 const articlesDirectory = path.join(process.cwd(), 'content/articles');
 const careerInsightsDirectory = path.join(process.cwd(), 'content/career-insights');
 
+function processMarkdown(content: string): string {
+  // Simple heading processing
+  content = content.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+  content = content.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+  content = content.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+  
+  // List processing 
+  content = content.replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>');
+  content = content.replace(/^- (.*$)/gim, '<ul><li>$1</li></ul>');
+  
+  // Fix consecutive list items
+  content = content.replace(/<\/ul>\s*<ul>/g, '');
+  
+  // Image processing
+  content = content.replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" class="w-full rounded-lg my-4" />');
+  
+  // Paragraphs
+  content = content.replace(/^([^<].*)\s*$/gim, '<p>$1</p>');
+  
+  // Code blocks
+  content = content.replace(/```(.*)\n([\s\S]*?)\n```/gim, '<pre><code class="language-$1">$2</code></pre>');
+  
+  // Inline code
+  content = content.replace(/`([^`]+)`/gim, '<code>$1</code>');
+  
+  // Fix multiple consecutive paragraphs
+  content = content.replace(/<\/p>\s*<p>/g, '</p>\n<p>');
+  
+  return content;
+}
+
 function getAllArticlesData(): Article[] {
   const articleFiles = fs.readdirSync(articlesDirectory)
     .filter(fileName => fileName.endsWith('.mdx'));
@@ -22,7 +53,7 @@ function getAllArticlesData(): Article[] {
 
     return {
       slug,
-      content,
+      content: processMarkdown(content),
       title: data.title,
       date: data.date,
       author: data.author,
@@ -40,7 +71,7 @@ function getAllArticlesData(): Article[] {
 
     return {
       slug,
-      content,
+      content: processMarkdown(content),
       title: data.title,
       date: data.date,
       author: data.author,
