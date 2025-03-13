@@ -27,11 +27,10 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   );
 
   // Handle code blocks with syntax highlighting - adding proper language tag
-  // Modified to better preserve whitespace and prevent adding extra lines
   processedContent = processedContent.replace(
     /```([a-z]*)\n([\s\S]*?)\n```/gim,
     (match, language, code) => {
-      // Preserve whitespace exactly and properly escape HTML entities
+      // Preserve whitespace and properly escape HTML entities
       const cleanedCode = code
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
@@ -39,7 +38,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
       
-      // Process Python comments specifically, being careful not to add extra elements
+      // Process Python comments specifically
       const processedCode = language === 'python' || language === 'py' 
         ? cleanedCode.replace(
             /(#.+)$/gm, 
@@ -58,7 +57,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
       
       return `<div class="code-block-wrapper">
         ${langLabel}
-        <pre><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
+        <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
       </div>`;
     }
   );

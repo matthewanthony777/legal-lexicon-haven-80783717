@@ -11,7 +11,7 @@ const careerInsightsDirectory = path.join(process.cwd(), 'content/career-insight
 function processMarkdown(content: string): string {
   // Process code blocks first to prevent other transformations from affecting them
   content = content.replace(/```([a-z]*)\n([\s\S]*?)\n```/gim, (match, language, code) => {
-    // Clean code and escape HTML entities while preserving whitespace exactly
+    // Clean code and escape HTML entities while preserving whitespace
     const cleanedCode = code
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -19,7 +19,7 @@ function processMarkdown(content: string): string {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
     
-    // Process Python comments without adding extra space
+    // Process Python comments
     const processedCode = language === 'python' || language === 'py'
       ? cleanedCode.replace(
           /(#.+)$/gm, 
@@ -35,7 +35,7 @@ function processMarkdown(content: string): string {
     
     return `<div class="code-block-wrapper">
       ${langLabel}
-      <pre><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
+      <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
     </div>`;
   });
   

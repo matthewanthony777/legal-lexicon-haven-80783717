@@ -145,19 +145,13 @@ pre {
   overflow-x: auto;
   font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
   font-size: 0.9rem;
-  line-height: 1.2; /* Changed from 1.6 to 1.2 for tighter line spacing */
-  white-space: pre; /* Changed from pre-wrap to pre to preserve exact spacing */
+  line-height: 1.6;
+  white-space: pre-wrap;
   word-break: keep-all;
 }
 
 code {
   font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
-}
-
-pre code {
-  line-height: 1.2; /* Explicitly set line-height for code inside pre */
-  padding: 0; /* Remove any potential padding */
-  margin: 0; /* Remove any potential margin */
 }
 
 .inline-code {
@@ -166,7 +160,6 @@ pre code {
   border-radius: 0.25rem;
   font-size: 0.9em;
   border: 1px solid #333;
-  line-height: 1.2; /* Consistent with code blocks */
 }
 
 /* Python specific syntax highlighting */
@@ -265,16 +258,4 @@ ol.list-decimal {
   padding: 1rem;
   border-radius: 0.5rem;
   border: 1px solid #333;
-}
-
-/* Fix for multi-line code blocks to maintain consistent spacing */
-pre code span {
-  line-height: 1.2 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Remove any extra space that might be added by the syntax highlighter */
-pre code * {
-  line-height: inherit !important;
 }
