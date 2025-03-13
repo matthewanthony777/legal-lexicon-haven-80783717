@@ -1,5 +1,5 @@
+
 import React from 'react';
-import ReactMarkdown from 'react-markdown';
 import { Badge } from '@/components/ui/badge';
 import { Article } from '@/lib/articles';
 
@@ -22,7 +22,7 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ article }) => {
         <time className="text-muted-foreground">{article.date}</time>
       </header>
       <div className="prose prose-lg max-w-none">
-        <ReactMarkdown>{article.content}</ReactMarkdown>
+        <div dangerouslySetInnerHTML={{ __html: article.content }} />
       </div>
     </article>
   );
