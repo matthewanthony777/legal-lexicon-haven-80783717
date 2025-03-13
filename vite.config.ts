@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => ({
       external: ['zwitch'],
     },
   },
-  base: '',
+  base: './',
   optimizeDeps: {
     include: ['zwitch']
   }
