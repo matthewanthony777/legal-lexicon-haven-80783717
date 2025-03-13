@@ -11,9 +11,27 @@ try {
     throw new Error("Root element not found");
   }
   
+  // Apply black background and white text to HTML and body elements
   document.documentElement.style.backgroundColor = "black";
   document.body.style.backgroundColor = "black";
   document.body.style.color = "white";
+  
+  // Reset any potential conflicting styles
+  document.documentElement.classList.add('dark');
+  
+  // Apply styles to ensure no element overrides the black background
+  const styleElement = document.createElement('style');
+  styleElement.textContent = `
+    html, body {
+      background-color: black !important;
+      color: white !important;
+    }
+    * {
+      --background: 0 0% 0%;
+      --foreground: 0 0% 100%;
+    }
+  `;
+  document.head.appendChild(styleElement);
   
   createRoot(rootElement).render(<App />);
   
