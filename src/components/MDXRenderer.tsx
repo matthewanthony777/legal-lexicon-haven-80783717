@@ -1,6 +1,5 @@
 
 import React from 'react';
-import YouTubeEmbed from './YouTubeEmbed';
 
 interface MDXRendererProps {
   content: string;
@@ -28,7 +27,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   );
 
   return (
-    <div className="prose prose-lg max-w-none dark:prose-invert">
+    <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-playfair prose-p:font-playfair">
       <div dangerouslySetInnerHTML={{ __html: processedContent }} />
     </div>
   );

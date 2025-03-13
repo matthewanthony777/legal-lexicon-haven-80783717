@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -92,7 +93,25 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						a: {
+							color: 'hsl(var(--primary))',
+							'&:hover': {
+								color: 'hsl(var(--primary))',
+							},
+						},
+						'h1,h2,h3,h4,h5,h6': {
+							fontFamily: 'Playfair Display, serif',
+						},
+						p: {
+							fontFamily: 'Playfair Display, serif',
+						},
+					},
+				},
+			},
 		}
 	},
 	plugins: [
