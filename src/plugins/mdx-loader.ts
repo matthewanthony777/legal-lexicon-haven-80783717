@@ -11,7 +11,7 @@ const careerInsightsDirectory = path.join(process.cwd(), 'content/career-insight
 function processMarkdown(content: string): string {
   // Process code blocks first to prevent other transformations from affecting them
   content = content.replace(/```([a-z]*)\n([\s\S]*?)\n```/gim, (match, language, code) => {
-    // Clean code and escape HTML entities
+    // Clean code and escape HTML entities while preserving whitespace
     const cleanedCode = code
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
@@ -19,12 +19,23 @@ function processMarkdown(content: string): string {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
     
+    // Process Python comments
+    const processedCode = language === 'python' || language === 'py'
+      ? cleanedCode.replace(
+          /(#.+)$/gm, 
+          '<span class="code-comment">$1</span>'
+        )
+      : cleanedCode.replace(
+          /\/\/(.*)/g, 
+          '<span class="code-comment">// $1</span>'
+        );
+    
     // Add language label
     const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
     
     return `<div class="code-block-wrapper">
       ${langLabel}
-      <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${cleanedCode}</code></pre>
+      <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
     </div>`;
   });
   
@@ -79,52 +90,68 @@ function processMarkdown(content: string): string {
 }
 
 function getAllArticlesData(): Article[] {
-  const articleFiles = fs.readdirSync(articlesDirectory)
-    .filter(fileName => fileName.endsWith('.mdx'));
-  
-  const careerInsightFiles = fs.readdirSync(careerInsightsDirectory)
-    .filter(fileName => fileName.endsWith('.mdx'));
+  try {
+    // Check if articles directory exists
+    if (!fs.existsSync(articlesDirectory)) {
+      console.warn('Articles directory not found at:', articlesDirectory);
+      return [];
+    }
+    
+    const articleFiles = fs.readdirSync(articlesDirectory)
+      .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'));
+    
+    const careerInsightFiles = fs.existsSync(careerInsightsDirectory) 
+      ? fs.readdirSync(careerInsightsDirectory)
+        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
+      : [];
 
-  const articles = articleFiles.map(fileName => {
-    const slug = fileName.replace(/\.mdx$/, '');
-    const fullPath = path.join(articlesDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data, content } = matter(fileContents);
+    const articles = articleFiles.map(fileName => {
+      const slug = fileName.replace(/\.(mdx|md)$/, '');
+      const fullPath = path.join(articlesDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
 
-    return {
-      slug,
-      content: processMarkdown(content),
-      title: data.title,
-      date: data.date,
-      author: data.author,
-      description: data.description,
-      tags: data.category ? [data.category] : [],
-      coverVideo: data.coverVideo,
-    } as Article;
-  });
+      return {
+        slug,
+        content: processMarkdown(content),
+        title: data.title || 'Untitled',
+        date: data.date || new Date().toISOString(),
+        author: data.author || 'Unknown',
+        description: data.description || '',
+        tags: data.category ? [data.category] : [],
+        category: data.category || '',
+        coverVideo: data.coverVideo || null,
+        coverImage: data.coverImage || null,
+      } as Article;
+    });
 
-  const careerInsights = careerInsightFiles.map(fileName => {
-    const slug = fileName.replace(/\.mdx$/, '');
-    const fullPath = path.join(careerInsightsDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
-    const { data, content } = matter(fileContents);
+    const careerInsights = careerInsightFiles.map(fileName => {
+      const slug = fileName.replace(/\.(mdx|md)$/, '');
+      const fullPath = path.join(careerInsightsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const { data, content } = matter(fileContents);
 
-    return {
-      slug,
-      content: processMarkdown(content),
-      title: data.title,
-      date: data.date,
-      author: data.author,
-      description: data.description,
-      tags: data.category ? [data.category] : [],
-      coverVideo: data.coverVideo,
-      category: 'career', // Mark as career insight
-    } as Article;
-  });
+      return {
+        slug,
+        content: processMarkdown(content),
+        title: data.title || 'Untitled',
+        date: data.date || new Date().toISOString(),
+        author: data.author || 'Unknown',
+        description: data.description || '',
+        tags: data.category ? [data.category] : [],
+        category: 'career',
+        coverVideo: data.coverVideo || null,
+        coverImage: data.coverImage || null,
+      } as Article;
+    });
 
-  return [...articles, ...careerInsights].sort((a, b) => 
-    new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+    return [...articles, ...careerInsights].sort((a, b) => 
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  } catch (error) {
+    console.error('Error loading articles:', error);
+    return [];
+  }
 }
 
 export function mdxDataPlugin(): Plugin {

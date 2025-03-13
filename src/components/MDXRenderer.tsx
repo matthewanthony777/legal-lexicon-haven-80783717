@@ -26,25 +26,38 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     }
   );
 
-  // Handle code blocks with syntax highlighting
+  // Handle code blocks with syntax highlighting - adding proper language tag
   processedContent = processedContent.replace(
     /```([a-z]*)\n([\s\S]*?)\n```/gim,
     (match, language, code) => {
-      // Clean up and properly format the code
+      // Preserve whitespace and properly escape HTML entities
       const cleanedCode = code
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;')
-        .replace(/\/\/(.*)/g, '<span class="code-comment">// $1</span>');
+        .replace(/'/g, '&#039;');
+      
+      // Process Python comments specifically
+      const processedCode = language === 'python' || language === 'py' 
+        ? cleanedCode.replace(
+            /(#.+)$/gm, 
+            '<span class="code-comment">$1</span>'
+          ).replace(
+            /\/\/(.*)/g, 
+            '<span class="code-comment">// $1</span>'
+          )
+        : cleanedCode.replace(
+            /\/\/(.*)/g, 
+            '<span class="code-comment">// $1</span>'
+          );
       
       // Add language indicator if available
       const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
       
       return `<div class="code-block-wrapper">
         ${langLabel}
-        <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${cleanedCode}</code></pre>
+        <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
       </div>`;
     }
   );
@@ -93,6 +106,11 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
 
   // Handle horizontal rules
   processedContent = processedContent.replace(/^---$/gim, '<hr class="my-6 border-t border-muted" />');
+
+  // Process emojis - preserve as is, since React can render them natively
+  
+  // Handle diagrams/ASCII art by preserving whitespace in code blocks
+  // This is already handled by the code block processing above
 
   // Handle paragraphs (must come last to avoid interfering with other elements)
   processedContent = processedContent.replace(
