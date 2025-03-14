@@ -2,6 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Article } from '@/lib/articles';
+import MDXRenderer from './MDXRenderer';
 
 interface ArticleContentProps {
   article: Article;
@@ -22,7 +23,7 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ article }) => {
         <time className="text-muted-foreground">{article.date}</time>
       </header>
       <div className="prose prose-lg max-w-none">
-        <div dangerouslySetInnerHTML={{ __html: article.content }} />
+        <MDXRenderer content={article.content} />
       </div>
     </article>
   );
