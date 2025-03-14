@@ -1,4 +1,3 @@
-
 import Navigation from "@/components/Navigation";
 import { Youtube, Instagram, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,7 @@ const Index = () => {
             {/* Left side - Text content */}
             <div className="space-y-6 order-2 md:order-1">
               <h1 className="text-3xl md:text-5xl font-bold font-playfair leading-tight">
-                Legal Excellence & Career Growth
+                Where Law Meets Tomorrow's Technology
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground font-playfair italic">
                 Expert legal commentary and career guidance for modern professionals
