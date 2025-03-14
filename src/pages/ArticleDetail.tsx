@@ -121,10 +121,10 @@ const ArticleDetail = () => {
                 {new Date(article.date).toLocaleDateString()}
               </time>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold font-archivo">{article.title}</h1>
+            <h1 className="text-2xl md:text-4xl font-bold">{article.title}</h1>
             <div className="flex items-center space-x-2">
-              <span className="text-muted-foreground font-playfair">By</span>
-              <span className="font-medium font-playfair">{article.author}</span>
+              <span className="text-muted-foreground">By</span>
+              <span className="font-medium">{article.author}</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {article.tags && article.tags.map(tag => (
@@ -135,7 +135,7 @@ const ArticleDetail = () => {
             </div>
           </div>
           
-          <div className="mt-6 markdown-content">
+          <div className="mt-8 prose dark:prose-invert max-w-none">
             <MDXRenderer content={article.content} />
           </div>
         </div>

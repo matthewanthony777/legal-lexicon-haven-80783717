@@ -1,4 +1,3 @@
-
 import path from 'path';
 import fs from 'fs';
 
@@ -42,7 +41,7 @@ export function processMarkdown(content: string): string {
     // Add language label
     const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
     
-    return `<div class="code-block-wrapper my-6">
+    return `<div class="code-block-wrapper">
       ${langLabel}
       <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
     </div>`;
@@ -51,26 +50,26 @@ export function processMarkdown(content: string): string {
   // Inline code
   content = content.replace(/`([^`]+)`/gim, '<code class="inline-code">$1</code>');
   
-  // Process headings with consistent classes, spacing and Archivo font
-  content = content.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-4 font-archivo">$1</h3>');
-  content = content.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-5 font-archivo">$1</h2>');
-  content = content.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-6 font-archivo">$1</h1>');
+  // Process headings with consistent classes and Archivo font
+  content = content.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-5 font-archivo">$1</h3>');
+  content = content.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-6 font-archivo">$1</h2>');
+  content = content.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-8 font-archivo">$1</h1>');
   
   // Bold and italic
   content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
   
-  // List processing with consistent spacing
-  content = content.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  content = content.replace(/^- (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  content = content.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-5 mb-3"><li class="mb-1">$1</li></ol>');
+  // List processing 
+  content = content.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
+  content = content.replace(/^- (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
+  content = content.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-6 mb-4"><li>$1</li></ol>');
   
   // Fix consecutive list items
   content = content.replace(/<\/ul>\s*<ul[^>]*>/g, '');
   content = content.replace(/<\/ol>\s*<ol[^>]*>/g, '');
   
-  // Image processing with consistent spacing
-  content = content.replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" class="w-full rounded-lg my-5" />');
+  // Image processing
+  content = content.replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" class="w-full rounded-lg my-4" />');
   
   // Links
   content = content.replace(
@@ -78,16 +77,16 @@ export function processMarkdown(content: string): string {
     '<a href="$2" class="text-primary underline hover:text-opacity-80 transition-colors">$1</a>'
   );
   
-  // Blockquotes with consistent spacing
-  content = content.replace(/^> (.*$)/gim, '<blockquote class="pl-4 border-l-4 border-muted italic my-4 py-1">$1</blockquote>');
+  // Blockquotes
+  content = content.replace(/^> (.*$)/gim, '<blockquote class="pl-4 border-l-4 border-muted italic my-4">$1</blockquote>');
   
-  // Horizontal rules with consistent spacing
+  // Horizontal rules
   content = content.replace(/^---$/gim, '<hr class="my-6 border-t border-muted" />');
   
-  // Paragraphs (must come last) with consistent spacing and line height
+  // Paragraphs (must come last)
   content = content.replace(/^([^<].*)\s*$/gim, (match: string, text: string) => {
     if (text.trim().length > 0 && !text.includes('<')) {
-      return `<p class="mb-3 font-roboto leading-relaxed">${text}</p>`;
+      return `<p class="mb-4 font-roboto">${text}</p>`;
     }
     return match;
   });

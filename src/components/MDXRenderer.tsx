@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface MDXRendererProps {
@@ -19,7 +18,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   processedContent = processedContent.replace(
     /<YouTube\s+videoId="([^"]+)"[^>]*\/>/g,
     (match, videoId) => {
-      return `<div class="youtube-embed-container my-6">
+      return `<div class="youtube-embed-container">
         <iframe 
           width="100%" 
           height="400" 
@@ -70,7 +69,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
       // Add consistent language indicator with standardized styling
       const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
       
-      return `<div class="code-block-wrapper my-6">
+      return `<div class="code-block-wrapper">
         ${langLabel}
         <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
       </div>`;
@@ -85,13 +84,13 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     }
   );
 
-  // Standardized handling for all heading levels with archivo font and consistent spacing
-  processedContent = processedContent.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-6 font-archivo">$1</h1>');
-  processedContent = processedContent.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-5 font-archivo">$2</h2>');
-  processedContent = processedContent.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-4 font-archivo">$1</h3>');
+  // Standardized handling for all heading levels with archivo font
+  processedContent = processedContent.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-8 font-archivo">$1</h1>');
+  processedContent = processedContent.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-6 font-archivo">$1</h2>');
+  processedContent = processedContent.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-5 font-archivo">$1</h3>');
   processedContent = processedContent.replace(/^#### (.*$)/gim, '<h4 class="text-lg md:text-xl font-bold mb-2 mt-4 font-archivo">$1</h4>');
-  processedContent = processedContent.replace(/^##### (.*$)/gim, '<h5 class="text-base md:text-lg font-bold mb-2 mt-3 font-archivo">$1</h5>');
-  processedContent = processedContent.replace(/^###### (.*$)/gim, '<h6 class="text-sm md:text-base font-bold mb-2 mt-3 font-archivo">$1</h6>');
+  processedContent = processedContent.replace(/^##### (.*$)/gim, '<h5 class="text-base md:text-lg font-bold mb-2 mt-4 font-archivo">$1</h5>');
+  processedContent = processedContent.replace(/^###### (.*$)/gim, '<h6 class="text-sm md:text-base font-bold mb-2 mt-4 font-archivo">$1</h6>');
 
   // Consistent formatting for text styling
   processedContent = processedContent.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -103,19 +102,19 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     '<a href="$2" class="text-primary underline hover:text-opacity-80 transition-colors">$1</a>'
   );
 
-  // Lists with consistent formatting and reduced spacing
-  processedContent = processedContent.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  processedContent = processedContent.replace(/^- (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  processedContent = processedContent.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-5 mb-3"><li class="mb-1">$1</li></ol>');
+  // Lists with consistent formatting
+  processedContent = processedContent.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
+  processedContent = processedContent.replace(/^- (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
+  processedContent = processedContent.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-6 mb-4"><li>$1</li></ol>');
   
   // Fix consecutive list items
   processedContent = processedContent.replace(/<\/ul>\s*<ul[^>]*>/g, '');
   processedContent = processedContent.replace(/<\/ol>\s*<ol[^>]*>/g, '');
 
-  // Blockquotes with consistent styling and spacing
-  processedContent = processedContent.replace(/^> (.*$)/gim, '<blockquote class="pl-4 border-l-4 border-muted italic my-4 py-1">$1</blockquote>');
+  // Blockquotes with consistent styling
+  processedContent = processedContent.replace(/^> (.*$)/gim, '<blockquote class="pl-4 border-l-4 border-muted italic my-4">$1</blockquote>');
 
-  // Horizontal rules with consistent spacing
+  // Horizontal rules
   processedContent = processedContent.replace(/^---$/gim, '<hr class="my-6 border-t border-muted" />');
 
   // Handle paragraphs with consistent formatting (must come last)
@@ -124,14 +123,14 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     (match, text) => {
       // Avoid wrapping already processed elements in paragraph tags
       if (text.trim().length > 0 && !text.includes('<')) {
-        return `<p class="mb-3 font-roboto leading-relaxed">$1</p>`;
+        return `<p class="mb-4 font-roboto">${text}</p>`;
       }
       return match;
     }
   );
 
   return (
-    <div className="markdown-content prose prose-lg max-w-none dark:prose-invert prose-headings:font-archivo prose-p:font-roboto prose-p:mb-3 prose-p:leading-relaxed prose-pre:p-0 prose-pre:leading-tight">
+    <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-archivo prose-p:font-roboto prose-pre:p-0 prose-pre:leading-tight">
       <div dangerouslySetInnerHTML={{ __html: processedContent }} />
     </div>
   );
