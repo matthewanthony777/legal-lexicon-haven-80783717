@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { getAllArticles } from "@/utils/articles";
 import { Article } from "@/types/article";
@@ -23,10 +24,10 @@ const Articles = () => {
       setLoading(true);
       setError(null);
       
-      // Show loading toast without mentioning GitHub
+      // Show fetching toast
       toast({
         title: "Loading articles...",
-        description: "Please wait while content loads",
+        description: "Fetching content from GitHub repository",
       });
       
       const fetchedArticles = await getAllArticles();
@@ -35,11 +36,11 @@ const Articles = () => {
       setArticles(fetchedArticles);
       
       if (fetchedArticles.length === 0) {
-        setError("No articles found. Please check back later.");
+        setError("No articles found. Please check your GitHub repository to make sure it contains markdown files in the content/articles directory.");
         toast({
           variant: "destructive",
           title: "No articles found",
-          description: "Please check back later",
+          description: "Check GitHub repository configuration",
         });
       } else {
         toast({
@@ -49,11 +50,11 @@ const Articles = () => {
       }
     } catch (err) {
       console.error("Error fetching articles:", err);
-      setError("Failed to load articles. Please try again later.");
+      setError("Failed to load articles. Check browser console for details.");
       toast({
         variant: "destructive",
         title: "Error loading articles",
-        description: "Please try again later",
+        description: "See console for technical details",
       });
     } finally {
       setLoading(false);
@@ -114,6 +115,7 @@ const Articles = () => {
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
               <p>Loading articles...</p>
+              <p className="text-xs text-muted-foreground mt-2">Fetching content from GitHub...</p>
             </div>
           ) : filteredArticles.length === 0 && !error ? (
             <div className="text-center py-8">
@@ -139,6 +141,7 @@ const Articles = () => {
             </div>
           )}
 
+          {/* Social Media Links Section */}
           <div className="mt-16 border-t pt-8">
             <div className="text-center space-y-6">
               <h2 className="text-2xl font-semibold">Follow Us</h2>
