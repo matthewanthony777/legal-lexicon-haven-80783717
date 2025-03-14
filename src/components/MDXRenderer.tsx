@@ -32,6 +32,10 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     }
   );
 
+  // First, normalize line breaks to prevent unwanted paragraph breaks
+  // Join lines that are part of the same paragraph without empty line between them
+  processedContent = processedContent.replace(/([^\n])\n([^\n])/g, '$1 $2');
+
   // Handle code blocks with syntax highlighting - adding proper language tag
   // Preserve exact whitespace and formatting with minimal spacing
   processedContent = processedContent.replace(
@@ -104,9 +108,9 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   );
 
   // Lists with improved spacing
-  processedContent = processedContent.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  processedContent = processedContent.replace(/^- (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  processedContent = processedContent.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-5 mb-3"><li class="mb-1">$1</li></ol>');
+  processedContent = processedContent.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-5 mb-2"><li class="mb-1">$1</li></ul>');
+  processedContent = processedContent.replace(/^- (.*$)/gim, '<ul class="list-disc pl-5 mb-2"><li class="mb-1">$1</li></ul>');
+  processedContent = processedContent.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-5 mb-2"><li class="mb-1">$1</li></ol>');
   
   // Fix consecutive list items
   processedContent = processedContent.replace(/<\/ul>\s*<ul[^>]*>/g, '');
@@ -124,7 +128,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
     (match, text) => {
       // Avoid wrapping already processed elements in paragraph tags
       if (text.trim().length > 0 && !text.includes('<')) {
-        return `<p class="mb-3 font-roboto">${text}</p>`;
+        return `<p class="mb-2 font-roboto">${text}</p>`;
       }
       return match;
     }

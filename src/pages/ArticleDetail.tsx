@@ -134,7 +134,7 @@ const ArticleDetail = () => {
             </div>
           </div>
           
-          <div className="mt-8 prose dark:prose-invert max-w-none leading-relaxed">
+          <div className="mt-8 prose dark:prose-invert max-w-none leading-relaxed markdown-content">
             <MDXRenderer content={article.content} />
           </div>
         </div>

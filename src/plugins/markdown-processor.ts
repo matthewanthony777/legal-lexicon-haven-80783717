@@ -7,6 +7,10 @@ import fs from 'fs';
  * with consistent styling classes
  */
 export function processMarkdown(content: string): string {
+  // First, normalize line breaks to prevent unwanted paragraph breaks
+  // Join lines that are part of the same paragraph without empty line between them
+  content = content.replace(/([^\n])\n([^\n])/g, '$1 $2');
+  
   // Process code blocks first to prevent other transformations from affecting them
   content = content.replace(/```([a-z]*)\n([\s\S]*?)\n```/gim, (match: string, language: string, code: string) => {
     // Clean code and escape HTML entities while preserving whitespace
@@ -87,7 +91,7 @@ export function processMarkdown(content: string): string {
   // Paragraphs (must come last) - reduce spacing
   content = content.replace(/^([^<].*)\s*$/gim, (match: string, text: string) => {
     if (text.trim().length > 0 && !text.includes('<')) {
-      return `<p class="mb-3 font-roboto">$1</p>`;
+      return `<p class="mb-2 font-roboto">$1</p>`;
     }
     return match;
   });
