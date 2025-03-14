@@ -64,7 +64,7 @@ const CareerInsightDetail = () => {
             </div>
           </div>
           
-          <div className="mt-8 prose dark:prose-invert max-w-none">
+          <div className="mt-8 prose dark:prose-invert max-w-none leading-relaxed">
             <MDXRenderer content={insight.content} />
           </div>
         </div>

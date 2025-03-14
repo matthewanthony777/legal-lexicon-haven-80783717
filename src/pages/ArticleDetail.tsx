@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getArticleBySlug } from "@/utils/articles";
@@ -135,7 +134,7 @@ const ArticleDetail = () => {
             </div>
           </div>
           
-          <div className="mt-8 prose dark:prose-invert max-w-none">
+          <div className="mt-8 prose dark:prose-invert max-w-none leading-relaxed">
             <MDXRenderer content={article.content} />
           </div>
         </div>

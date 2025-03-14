@@ -1,3 +1,4 @@
+
 import path from 'path';
 import fs from 'fs';
 
@@ -51,25 +52,25 @@ export function processMarkdown(content: string): string {
   content = content.replace(/`([^`]+)`/gim, '<code class="inline-code">$1</code>');
   
   // Process headings with consistent classes and Archivo font
-  content = content.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-5 font-archivo">$1</h3>');
-  content = content.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-6 font-archivo">$1</h2>');
-  content = content.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-8 font-archivo">$1</h1>');
+  content = content.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-2 mt-4 font-archivo">$1</h3>');
+  content = content.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-2 mt-5 font-archivo">$1</h2>');
+  content = content.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-3 mt-6 font-archivo">$1</h1>');
   
   // Bold and italic
   content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
   
-  // List processing 
-  content = content.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
-  content = content.replace(/^- (.*$)/gim, '<ul class="list-disc pl-6 mb-4"><li>$1</li></ul>');
-  content = content.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-6 mb-4"><li>$1</li></ol>');
+  // List processing with tighter spacing
+  content = content.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
+  content = content.replace(/^- (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
+  content = content.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-5 mb-3"><li class="mb-1">$1</li></ol>');
   
   // Fix consecutive list items
   content = content.replace(/<\/ul>\s*<ul[^>]*>/g, '');
   content = content.replace(/<\/ol>\s*<ol[^>]*>/g, '');
   
   // Image processing
-  content = content.replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" class="w-full rounded-lg my-4" />');
+  content = content.replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" class="w-full rounded-lg my-3" />');
   
   // Links
   content = content.replace(
@@ -77,16 +78,16 @@ export function processMarkdown(content: string): string {
     '<a href="$2" class="text-primary underline hover:text-opacity-80 transition-colors">$1</a>'
   );
   
-  // Blockquotes
-  content = content.replace(/^> (.*$)/gim, '<blockquote class="pl-4 border-l-4 border-muted italic my-4">$1</blockquote>');
+  // Blockquotes with reduced spacing
+  content = content.replace(/^> (.*$)/gim, '<blockquote class="pl-4 border-l-4 border-muted italic my-3">$1</blockquote>');
   
   // Horizontal rules
-  content = content.replace(/^---$/gim, '<hr class="my-6 border-t border-muted" />');
+  content = content.replace(/^---$/gim, '<hr class="my-4 border-t border-muted" />');
   
-  // Paragraphs (must come last)
+  // Paragraphs (must come last) - reduce spacing
   content = content.replace(/^([^<].*)\s*$/gim, (match: string, text: string) => {
     if (text.trim().length > 0 && !text.includes('<')) {
-      return `<p class="mb-4 font-roboto">${text}</p>`;
+      return `<p class="mb-3 font-roboto">$1</p>`;
     }
     return match;
   });

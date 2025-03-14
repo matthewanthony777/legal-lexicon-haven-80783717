@@ -106,7 +106,7 @@
   height: 0;
   overflow: hidden;
   max-width: 100%;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
 .youtube-embed-container iframe {
@@ -121,7 +121,7 @@
 /* Code block styling */
 .code-block-wrapper {
   position: relative;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   overflow: hidden;
   border-radius: 0.5rem;
   background-color: #1a1a1a;
@@ -233,7 +233,7 @@ blockquote {
   font-style: italic;
   border-left: 4px solid hsl(var(--muted));
   padding-left: 1rem;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 0.25rem;
 }
@@ -242,13 +242,19 @@ blockquote {
 ul.list-disc {
   list-style-type: disc;
   padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 ol.list-decimal {
   list-style-type: decimal;
   padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Make list items more compact */
+ul.list-disc li,
+ol.list-decimal li {
+  margin-bottom: 0.25rem;
 }
 
 /* ASCII diagram support */
@@ -262,4 +268,77 @@ ol.list-decimal {
   padding: 1rem;
   border-radius: 0.5rem;
   border: 1px solid #333;
+}
+
+/* Markdown content specific styling */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.markdown-content p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-content li > p {
+  margin-bottom: 0.25rem;
+}
+
+.markdown-content pre {
+  margin: 1rem 0;
+}
+
+.markdown-content blockquote p {
+  margin-bottom: 0;
+}
+
+.prose {
+  line-height: 1.6;
+}
+
+.prose p {
+  margin-bottom: 0.75rem;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose ul,
+.prose ol {
+  margin-bottom: 0.75rem;
+}
+
+.prose li {
+  margin-bottom: 0.25rem;
+}
+
+.prose pre {
+  margin: 1rem 0;
+}
+
+.prose blockquote {
+  margin: 1rem 0;
+}
+
+.prose blockquote p {
+  margin-bottom: 0;
 }
