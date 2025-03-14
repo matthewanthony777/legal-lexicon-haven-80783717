@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
 import { ThemeToggle } from "./ThemeToggle";
@@ -43,7 +44,7 @@ const Navigation = () => {
   const isMobile = useIsMobile();
 
   return (
-    <nav className="border-b">
+    <nav className="border-b shadow-sm shadow-[#0000001a]">
       <div className="container flex h-16 items-center px-4">
         {isMobile ? (
           <>
