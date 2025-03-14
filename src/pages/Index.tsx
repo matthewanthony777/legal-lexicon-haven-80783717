@@ -4,6 +4,7 @@ import { Youtube, Instagram, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   return (
@@ -22,9 +23,11 @@ const Index = () => {
                 Expert legal commentary and career guidance for modern professionals
               </p>
               <div className="pt-4">
-                <Button className="group" size="lg">
-                  Explore Articles
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <Button className="group" size="lg" asChild>
+                  <Link to="/articles">
+                    Explore Articles
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
                 </Button>
               </div>
               
