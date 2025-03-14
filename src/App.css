@@ -40,3 +40,65 @@
 .read-the-docs {
   color: #888;
 }
+
+/* Markdown content styling */
+.markdown-content pre {
+  background-color: #1a1a1a !important;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0 !important;
+  padding: 1rem !important;
+  overflow-x: auto;
+}
+
+.markdown-content code {
+  font-family: 'Fira Code', Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.markdown-content pre code {
+  color: #e6e6e6;
+  display: block;
+  padding: 0;
+  white-space: pre !important;
+  word-break: normal;
+  word-wrap: normal;
+}
+
+.markdown-content .code-comment {
+  color: #6a9955;
+  font-style: italic;
+}
+
+.markdown-content .inline-code {
+  font-family: 'Fira Code', Menlo, Monaco, Consolas, monospace;
+  background: rgba(30, 30, 30, 0.9);
+  color: #e6e6e6;
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.3rem;
+  font-size: 0.9em;
+}
+
+.markdown-content .code-block-wrapper {
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.markdown-content .code-language-label {
+  background: #1a1a1a;
+  color: #f8f8f8;
+  font-family: monospace;
+  font-size: 0.8rem;
+  padding: 0.3rem 1rem;
+  border-bottom: 1px solid #333;
+}
+
+/* Fix code block line breaks in Python code */
+.markdown-content pre code.language-python,
+.markdown-content pre code.language-bash,
+.markdown-content pre code.language-sh {
+  white-space: pre !important;
+  word-break: normal;
+  word-wrap: normal;
+}

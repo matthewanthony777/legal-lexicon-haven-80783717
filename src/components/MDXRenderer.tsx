@@ -71,12 +71,20 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
         );
       }
       
+      // Process bash/shell scripts
+      if (language === 'bash' || language === 'sh') {
+        processedCode = processedCode.replace(
+          /^(#.+)$/gm,
+          '<span class="code-comment">$1</span>'
+        );
+      }
+      
       // Add consistent language indicator with standardized styling
       const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
       
-      return `<div class="code-block-wrapper my-3">
+      return `<div class="code-block-wrapper my-3 rounded-lg overflow-hidden">
         ${langLabel}
-        <pre class="language-${language || 'plaintext'}"><code class="language-${language || 'plaintext'}">${processedCode}</code></pre>
+        <pre class="language-${language || 'plaintext'} p-4 bg-black bg-opacity-90 overflow-x-auto"><code class="language-${language || 'plaintext'} whitespace-pre">${processedCode}</code></pre>
       </div>`;
     }
   );
@@ -85,7 +93,7 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   processedContent = processedContent.replace(
     /`([^`]+)`/g,
     (match, code) => {
-      return `<code class="inline-code">${code}</code>`;
+      return `<code class="inline-code px-1.5 py-0.5 bg-black bg-opacity-80 rounded text-gray-100">${code}</code>`;
     }
   );
 
@@ -137,6 +145,54 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   return (
     <div className="prose prose-lg max-w-none dark:prose-invert prose-headings:font-archivo prose-p:font-roboto prose-pre:p-0 prose-pre:leading-tight markdown-content">
       <div dangerouslySetInnerHTML={{ __html: processedContent }} />
+      <style jsx global>{`
+        .code-block-wrapper {
+          margin: 1.5rem 0;
+          border-radius: 0.5rem;
+          overflow: hidden;
+        }
+        .code-language-label {
+          background: #1a1a1a;
+          color: #f8f8f8;
+          font-family: monospace;
+          font-size: 0.8rem;
+          padding: 0.3rem 1rem;
+          border-bottom: 1px solid #333;
+        }
+        pre {
+          margin: 0 !important;
+          padding: 1rem !important;
+          background: #121212 !important;
+          border-radius: 0 0 0.5rem 0.5rem;
+          overflow-x: auto;
+        }
+        code {
+          font-family: 'Fira Code', Menlo, Monaco, Consolas, monospace;
+          font-size: 0.9rem;
+          line-height: 1.5 !important;
+          white-space: pre !important;
+          word-break: normal;
+          word-wrap: normal;
+        }
+        .code-comment {
+          color: #6a9955;
+          font-style: italic;
+        }
+        .markdown-content pre code {
+          display: block;
+          padding: 0;
+          overflow-x: auto;
+          background: transparent;
+        }
+        .inline-code {
+          font-family: 'Fira Code', Menlo, Monaco, Consolas, monospace;
+          background: rgba(30, 30, 30, 0.9);
+          color: #e6e6e6;
+          border-radius: 0.25rem;
+          padding: 0.1rem 0.3rem;
+          font-size: 0.9em;
+        }
+      `}</style>
     </div>
   );
 };

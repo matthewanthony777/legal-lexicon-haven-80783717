@@ -43,6 +43,14 @@ export function processMarkdown(content: string): string {
       );
     }
     
+    // Process bash/shell scripts
+    if (language === 'bash' || language === 'sh') {
+      processedCode = processedCode.replace(
+        /^(#.+)$/gm,
+        '<span class="code-comment">$1</span>'
+      );
+    }
+    
     // Add language label
     const langLabel = language ? `<div class="code-language-label">${language}</div>` : '';
     
@@ -65,9 +73,9 @@ export function processMarkdown(content: string): string {
   content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
   
   // List processing with tighter spacing
-  content = content.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  content = content.replace(/^- (.*$)/gim, '<ul class="list-disc pl-5 mb-3"><li class="mb-1">$1</li></ul>');
-  content = content.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-5 mb-3"><li class="mb-1">$1</li></ol>');
+  content = content.replace(/^\* (.*$)/gim, '<ul class="list-disc pl-5 mb-2"><li class="mb-1">$1</li></ul>');
+  content = content.replace(/^- (.*$)/gim, '<ul class="list-disc pl-5 mb-2"><li class="mb-1">$1</li></ul>');
+  content = content.replace(/^\d+\. (.*$)/gim, '<ol class="list-decimal pl-5 mb-2"><li class="mb-1">$1</li></ol>');
   
   // Fix consecutive list items
   content = content.replace(/<\/ul>\s*<ul[^>]*>/g, '');
