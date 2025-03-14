@@ -1,6 +1,6 @@
+
 import { Link } from "react-router-dom";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
-import { ThemeToggle } from "./ThemeToggle";
 import { Home, BookOpen, GraduationCap, Users, User, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -70,9 +70,6 @@ const Navigation = () => {
             </NavigationMenuList>
           </NavigationMenu>
         )}
-        <div className="ml-auto">
-          <ThemeToggle />
-        </div>
       </div>
     </nav>
   );
