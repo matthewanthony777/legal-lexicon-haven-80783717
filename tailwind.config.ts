@@ -20,7 +20,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				playfair: ['Playfair Display', 'serif'],
+				archivo: ['Archivo Black', 'sans-serif'],
+				roboto: ['Roboto', 'sans-serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
@@ -104,10 +105,10 @@ export default {
 							},
 						},
 						'h1,h2,h3,h4,h5,h6': {
-							fontFamily: 'Playfair Display, serif',
+							fontFamily: 'Archivo Black, sans-serif',
 						},
 						p: {
-							fontFamily: 'Playfair Display, serif',
+							fontFamily: 'Roboto, sans-serif',
 						},
 					},
 				},

@@ -1,4 +1,3 @@
-
 import path from 'path';
 import fs from 'fs';
 
@@ -51,10 +50,10 @@ export function processMarkdown(content: string): string {
   // Inline code
   content = content.replace(/`([^`]+)`/gim, '<code class="inline-code">$1</code>');
   
-  // Process headings with consistent classes
-  content = content.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-5 font-playfair">$1</h3>');
-  content = content.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-6 font-playfair">$1</h2>');
-  content = content.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-8 font-playfair">$1</h1>');
+  // Process headings with consistent classes and Archivo font
+  content = content.replace(/^### (.*$)/gim, '<h3 class="text-xl md:text-2xl font-bold mb-3 mt-5 font-archivo">$1</h3>');
+  content = content.replace(/^## (.*$)/gim, '<h2 class="text-2xl md:text-3xl font-bold mb-3 mt-6 font-archivo">$1</h2>');
+  content = content.replace(/^# (.*$)/gim, '<h1 class="text-3xl md:text-4xl font-bold mb-4 mt-8 font-archivo">$1</h1>');
   
   // Bold and italic
   content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
@@ -87,7 +86,7 @@ export function processMarkdown(content: string): string {
   // Paragraphs (must come last)
   content = content.replace(/^([^<].*)\s*$/gim, (match: string, text: string) => {
     if (text.trim().length > 0 && !text.includes('<')) {
-      return `<p class="mb-4 font-playfair">${text}</p>`;
+      return `<p class="mb-4 font-roboto">${text}</p>`;
     }
     return match;
   });
