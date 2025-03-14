@@ -22,6 +22,7 @@ export default {
 			fontFamily: {
 				archivo: ['Archivo Black', 'sans-serif'],
 				roboto: ['Roboto', 'sans-serif'],
+				playfair: ['Playfair Display', 'serif'],
 			},
 			colors: {
 				border: 'hsl(var(--border))',
