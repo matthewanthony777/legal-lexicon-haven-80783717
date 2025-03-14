@@ -19,7 +19,7 @@ const Index = () => {
               <h1 className="text-3xl md:text-5xl font-bold font-playfair leading-tight">
                 Where Law Meets Tomorrow's Technology
               </h1>
-              <h2 className="text-xl md:text-2xl font-medium text-primary/80">
+              <h2 className="text-xl md:text-2xl font-playfair text-primary/80">
                 Helping legal professionals navigate and thrive in an AI-transformed landscape
               </h2>
               <div className="pt-4 flex flex-wrap gap-3">
