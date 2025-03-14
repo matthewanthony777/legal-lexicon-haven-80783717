@@ -1,3 +1,4 @@
+
 import Navigation from "@/components/Navigation";
 import { Youtube, Instagram, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,9 @@ const Index = () => {
               <h1 className="text-3xl md:text-5xl font-bold font-playfair leading-tight">
                 Where Law Meets Tomorrow's Technology
               </h1>
+              <h2 className="text-xl md:text-2xl font-medium text-primary">
+                Helping legal professionals navigate and thrive in an AI-transformed landscape
+              </h2>
               <p className="text-lg md:text-xl text-muted-foreground font-playfair italic">
                 Expert legal commentary and career guidance for modern professionals
               </p>
