@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Roboto:wght@300;400;500;700&display=swap');
 @tailwind base;
 @tailwind components;
@@ -99,6 +100,44 @@
   }
 }
 
+/* Markdown content container styling */
+.markdown-content {
+  @apply text-foreground max-w-none;
+}
+
+.markdown-content h1 {
+  @apply text-3xl md:text-4xl font-bold mb-4 mt-6 font-archivo;
+}
+
+.markdown-content h2 {
+  @apply text-2xl md:text-3xl font-bold mb-3 mt-5 font-archivo;
+}
+
+.markdown-content h3 {
+  @apply text-xl md:text-2xl font-bold mb-3 mt-4 font-archivo;
+}
+
+.markdown-content p {
+  @apply mb-3 font-roboto leading-relaxed;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  @apply pl-5 mb-3 space-y-1;
+}
+
+.markdown-content li {
+  @apply mb-1;
+}
+
+.markdown-content blockquote {
+  @apply pl-4 border-l-4 border-muted italic my-4 py-1;
+}
+
+.markdown-content hr {
+  @apply my-6 border-t border-muted;
+}
+
 /* YouTube embed styling */
 .youtube-embed-container {
   position: relative;
@@ -106,7 +145,7 @@
   height: 0;
   overflow: hidden;
   max-width: 100%;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
 .youtube-embed-container iframe {
@@ -149,7 +188,7 @@ pre {
   overflow-x: auto;
   font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
   font-size: 0.9rem;
-  line-height: 1.6;
+  line-height: 1.5;
   white-space: pre-wrap;
   word-break: keep-all;
 }
@@ -233,7 +272,7 @@ blockquote {
   font-style: italic;
   border-left: 4px solid hsl(var(--muted));
   padding-left: 1rem;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 0.25rem;
 }
@@ -242,13 +281,13 @@ blockquote {
 ul.list-disc {
   list-style-type: disc;
   padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 ol.list-decimal {
   list-style-type: decimal;
   padding-left: 1.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 /* ASCII diagram support */
