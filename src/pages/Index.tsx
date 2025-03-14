@@ -1,6 +1,6 @@
 
 import Navigation from "@/components/Navigation";
-import { Youtube, Instagram, ArrowRight } from "lucide-react";
+import { Youtube, Instagram, ArrowRight, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
@@ -22,12 +22,16 @@ const Index = () => {
               <p className="text-lg md:text-xl text-muted-foreground font-playfair italic">
                 Expert legal commentary and career guidance for modern professionals
               </p>
-              <div className="pt-4">
+              <div className="pt-4 flex flex-wrap gap-3">
                 <Button className="group" size="lg" asChild>
                   <Link to="/articles">
                     Explore Articles
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
+                </Button>
+                <Button variant="outline" size="lg" className="group">
+                  Newsletter
+                  <Mail className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
                 </Button>
               </div>
               
