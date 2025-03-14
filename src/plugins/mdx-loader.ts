@@ -23,7 +23,7 @@ function extractFrontMatter(rawFrontMatter: Record<string, any>, field: string, 
 
 function processMarkdown(content: string): string {
   // Process code blocks first to prevent other transformations from affecting them
-  content = content.replace(/```([a-z]*)\n([\s\S]*?)\n```/gim, (match, language, code) => {
+  content = content.replace(/```([a-z]*)\n([\s\S]*?)\n```/gim, (match: string, language: string, code: string) => {
     // Clean code and escape HTML entities while preserving whitespace
     const cleanedCode = code
       .replace(/&/g, '&amp;')
@@ -50,7 +50,7 @@ function processMarkdown(content: string): string {
         '<span class="code-comment">// $1</span>'
       ).replace(
         /\/\*[\s\S]*?\*\//g,
-        match => `<span class="code-comment">${match}</span>`
+        (match: string) => `<span class="code-comment">${match}</span>`
       );
     }
     
@@ -100,7 +100,7 @@ function processMarkdown(content: string): string {
   content = content.replace(/^---$/gim, '<hr class="my-6 border-t border-muted" />');
   
   // Paragraphs (must come last)
-  content = content.replace(/^([^<].*)\s*$/gim, (match, text) => {
+  content = content.replace(/^([^<].*)\s*$/gim, (match: string, text: string) => {
     if (text.trim().length > 0 && !text.includes('<')) {
       return `<p class="mb-4 font-playfair">${text}</p>`;
     }
