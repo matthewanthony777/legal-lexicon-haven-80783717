@@ -9,6 +9,16 @@ interface ArticleContentProps {
 }
 
 const ArticleContent: React.FC<ArticleContentProps> = ({ article }) => {
+  // Convert any potential MDX-specific syntax to more standard markdown
+  // This helps with the transition from MDX to regular markdown
+  const prepareContent = (content: string) => {
+    // Handle imports (remove them as they're not needed in react-markdown)
+    const withoutImports = content.replace(/import.*from\s+['"].*['"];?\n?/g, '');
+    
+    // Handle JSX component syntax that might appear in MDX files
+    return withoutImports;
+  };
+
   return (
     <article className="max-w-3xl mx-auto px-4 py-8 animate-fade-in">
       <header className="mb-8">
@@ -23,7 +33,7 @@ const ArticleContent: React.FC<ArticleContentProps> = ({ article }) => {
         <time className="text-muted-foreground">{article.date}</time>
       </header>
       <div className="prose prose-lg max-w-none">
-        <MDXRenderer content={article.content} />
+        <MDXRenderer content={prepareContent(article.content)} />
       </div>
     </article>
   );

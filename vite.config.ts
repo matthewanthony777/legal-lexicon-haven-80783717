@@ -28,25 +28,12 @@ export default defineConfig(({ mode }) => ({
       input: {
         main: path.resolve(__dirname, 'index.html'),
       },
-      // Define a comprehensive list of external dependencies that might cause issues
-      external: [
-        'zwitch',
-        'hast-util-to-estree',
-        'unified',
-        'remark-parse',
-        'remark-rehype',
-        'rehype-stringify'
-      ]
     },
   },
   optimizeDeps: {
-    // Include key MDX dependencies for optimization
     include: [
-      '@mdx-js/react',
-      '@mdx-js/mdx'
+      'react-markdown'
     ],
-    // Exclude problematic packages from optimization
-    exclude: ['zwitch', 'hast-util-to-estree']
   },
   base: '',
 }));
