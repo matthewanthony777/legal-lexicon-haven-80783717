@@ -28,11 +28,25 @@ export default defineConfig(({ mode }) => ({
       input: {
         main: path.resolve(__dirname, 'index.html'),
       },
-      external: ['zwitch'] // Add zwitch as an external dependency
+      // Define a comprehensive list of external dependencies that might cause issues
+      external: [
+        'zwitch',
+        'hast-util-to-estree',
+        'unified',
+        'remark-parse',
+        'remark-rehype',
+        'rehype-stringify'
+      ]
     },
   },
   optimizeDeps: {
-    include: ['zwitch'] // Explicitly include zwitch for optimization
+    // Include key MDX dependencies for optimization
+    include: [
+      '@mdx-js/react',
+      '@mdx-js/mdx'
+    ],
+    // Exclude problematic packages from optimization
+    exclude: ['zwitch', 'hast-util-to-estree']
   },
   base: '',
 }));

@@ -1,13 +1,11 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { MDXProvider } from '@mdx-js/react';
 import * as runtime from 'react/jsx-runtime';
-import { compile } from '@mdx-js/mdx';
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from 'react';
 import YouTubeEmbed from './YouTubeEmbed';
 
-// Make sure all components are properly defined
+// Define MDX components
 const components = {
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1 className={cn("text-4xl font-bold mt-8 mb-4", className)} {...props} />
@@ -70,31 +68,56 @@ interface MDXRendererProps {
 
 const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   const [mdxModule, setMdxModule] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const compileMDX = async () => {
+    // Dynamically import the compile function to avoid bundling issues
+    const loadAndCompile = async () => {
       try {
-        // Configure MDX compilation with explicit options to avoid issues with zwitch
+        // Import MDX compile function dynamically
+        const { compile } = await import('@mdx-js/mdx');
+        
+        // Compile the MDX content
         const compiled = await compile(content, {
           outputFormat: 'function-body',
           development: false,
+          // Force JSX pragma to use React
+          pragma: 'React.createElement',
+          pragmaFrag: 'React.Fragment',
           jsxImportSource: 'react'
         });
         
+        // Convert compiled result to string and create a function
         const code = String(compiled);
-        const func = new Function('React', 'jsx', '_components', '_props', code);
-        const module = func(runtime, runtime.jsx, components, {});
-        setMdxModule(module);
-      } catch (error) {
-        console.error('Error compiling MDX:', error);
+        
+        // Create a safe execution context for the MDX content
+        try {
+          const func = new Function('React', 'jsx', 'jsxs', '_components', 'Fragment', code);
+          const module = func(runtime, runtime.jsx, runtime.jsxs, components, runtime.Fragment);
+          setMdxModule(module);
+        } catch (execError) {
+          console.error('Error executing MDX code:', execError);
+          setError('Failed to render content. Please check console for details.');
+        }
+      } catch (compileError) {
+        console.error('Error compiling MDX:', compileError);
+        setError('Failed to compile content. Please check console for details.');
       }
     };
 
-    compileMDX();
+    if (content) {
+      loadAndCompile();
+    } else {
+      setError('No content provided');
+    }
   }, [content]);
 
+  if (error) {
+    return <div className="text-red-500 p-4 border border-red-300 rounded">{error}</div>;
+  }
+
   if (!mdxModule) {
-    return <div>Loading...</div>;
+    return <div className="p-4">Loading content...</div>;
   }
 
   const MDXContent = mdxModule.default;
