@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { getAllArticles } from "@/utils/articles";
 import { Article } from "@/types/article";
@@ -24,10 +23,9 @@ const Articles = () => {
       setLoading(true);
       setError(null);
       
-      // Show fetching toast
+      // Show simpler loading toast
       toast({
         title: "Loading articles...",
-        description: "Fetching content from GitHub repository",
       });
       
       const fetchedArticles = await getAllArticles();
@@ -115,7 +113,6 @@ const Articles = () => {
             <div className="text-center py-12">
               <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
               <p>Loading articles...</p>
-              <p className="text-xs text-muted-foreground mt-2">Fetching content from GitHub...</p>
             </div>
           ) : filteredArticles.length === 0 && !error ? (
             <div className="text-center py-8">
