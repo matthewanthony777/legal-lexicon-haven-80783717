@@ -28,11 +28,7 @@ export default defineConfig(({ mode }) => ({
       input: {
         main: path.resolve(__dirname, 'index.html'),
       },
-      external: ['zwitch'] // Add zwitch as an external dependency
     },
-  },
-  optimizeDeps: {
-    include: ['zwitch'] // Explicitly include zwitch for optimization
   },
   base: '',
 }));
