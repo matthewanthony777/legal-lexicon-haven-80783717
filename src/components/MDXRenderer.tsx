@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from 'react';
 import YouTubeEmbed from './YouTubeEmbed';
 
+// Make sure all components are properly defined
 const components = {
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1 className={cn("text-4xl font-bold mt-8 mb-4", className)} {...props} />
@@ -73,9 +74,11 @@ const MDXRenderer: React.FC<MDXRendererProps> = ({ content }) => {
   useEffect(() => {
     const compileMDX = async () => {
       try {
+        // Configure MDX compilation with explicit options to avoid issues with zwitch
         const compiled = await compile(content, {
           outputFormat: 'function-body',
-          development: false
+          development: false,
+          jsxImportSource: 'react'
         });
         
         const code = String(compiled);
