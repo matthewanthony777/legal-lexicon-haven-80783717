@@ -1,15 +1,16 @@
+
 import { useState, useEffect } from "react";
 import { getAllArticles } from "@/utils/articles";
 import { Article } from "@/types/article";
 import ArticleCard from "@/components/ArticleCard";
 import Navigation from "@/components/Navigation";
 import ArticleFilters from "@/components/ArticleFilters";
-import { Youtube, Instagram, AlertCircle, RefreshCw, Book } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/components/ui/use-toast";
+import ArticleLoadingState from "@/components/ArticleLoadingState";
+import ArticleErrorState from "@/components/ArticleErrorState";
+import ArticleEmptyState from "@/components/ArticleEmptyState";
+import SocialMediaLinks from "@/components/SocialMediaLinks";
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -91,45 +92,12 @@ const Articles = () => {
             onSearchChange={setSearchQuery}
           />
 
-          {error && (
-            <Alert variant="destructive" className="my-4">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription className="flex items-center justify-between">
-                <span>{error}</span>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleRetry}
-                  className="ml-4"
-                >
-                  <RefreshCw className="w-4 h-4 mr-2" />
-                  Retry
-                </Button>
-              </AlertDescription>
-            </Alert>
-          )}
+          {error && <ArticleErrorState error={error} onRetry={handleRetry} />}
 
           {loading ? (
-            <div className="text-center py-12">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
-              <p>Loading articles...</p>
-            </div>
+            <ArticleLoadingState />
           ) : filteredArticles.length === 0 && !error ? (
-            <div className="text-center py-8">
-              <Book className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">
-                {searchQuery ? "No articles found matching your criteria." : "No articles available."}
-              </p>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={handleRetry}
-                className="mt-4"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh Articles
-              </Button>
-            </div>
+            <ArticleEmptyState searchQuery={searchQuery} onRetry={handleRetry} />
           ) : (
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-8">
               {filteredArticles.map((article) => (
@@ -138,73 +106,7 @@ const Articles = () => {
             </div>
           )}
 
-          {/* Social Media Links Section */}
-          <div className="mt-16 border-t pt-8">
-            <div className="text-center space-y-6">
-              <h2 className="text-2xl font-semibold">Follow Us</h2>
-              <div className="flex justify-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-12 h-12 rounded-full hover:bg-muted"
-                  asChild
-                >
-                  <a
-                    href="https://www.tiktok.com/@thescreenscholar"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-transform hover:scale-110"
-                  >
-                    <TikTokIcon className="w-6 h-6" />
-                    <span className="sr-only">TikTok</span>
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-12 h-12 rounded-full hover:bg-muted"
-                  asChild
-                >
-                  <a
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-transform hover:scale-110"
-                  >
-                    <Instagram className="w-6 h-6" />
-                    <span className="sr-only">Instagram</span>
-                  </a>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="w-12 h-12 rounded-full hover:bg-muted"
-                  asChild
-                >
-                  <a
-                    href="#"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="transition-transform hover:scale-110"
-                  >
-                    <Youtube className="w-6 h-6" />
-                    <span className="sr-only">YouTube</span>
-                  </a>
-                </Button>
-              </div>
-              <div className="mt-4">
-                <Button
-                  variant="outline"
-                  className="rounded-full px-8"
-                  asChild
-                >
-                  <a href="#" className="font-medium">
-                    Subscribe
-                  </a>
-                </Button>
-              </div>
-            </div>
-          </div>
+          <SocialMediaLinks />
         </div>
       </main>
       <Footer />
