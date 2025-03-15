@@ -82,9 +82,9 @@ const Articles = () => {
       <main className="container mx-auto px-4 py-8 flex-1">
         <div className="space-y-4">
           <div className="text-center space-y-2 mt-16">
-            <h1 className="text-2xl md:text-4xl font-bold font-playfair">The Cinema Vault</h1>
+            <h1 className="text-2xl md:text-4xl font-bold font-playfair">The Legal Frontier</h1>
             <p className="text-sm md:text-base text-muted-foreground font-playfair">
-              Unraveling film's mysteries from script to screen and beyond
+              Inside knowledge that separates future legal innovators from those who will be replaced
             </p>
           </div>
           
