@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
-import { Home, BookOpen, GraduationCap, Users, User, Menu } from "lucide-react";
+import { Home, BookOpen, Users, User, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -32,7 +32,6 @@ const MobileMenu = () => (
     <NavigationMenuList className="flex-col space-y-4 mt-4">
       <MenuItem to="/" icon={Home} isMobile>Home</MenuItem>
       <MenuItem to="/articles" icon={BookOpen} isMobile>Articles</MenuItem>
-      <MenuItem to="/career-insights" icon={GraduationCap} isMobile>Future-Proof Your Career</MenuItem>
       <MenuItem to="/collaborate" icon={Users} isMobile>Collaborate</MenuItem>
       <MenuItem to="/about" icon={User} isMobile>About</MenuItem>
     </NavigationMenuList>
@@ -64,7 +63,6 @@ const Navigation = () => {
             <NavigationMenuList>
               <MenuItem to="/" icon={Home}>Home</MenuItem>
               <MenuItem to="/articles" icon={BookOpen}>Articles</MenuItem>
-              <MenuItem to="/career-insights" icon={GraduationCap}>Future-Proof Your Career</MenuItem>
               <MenuItem to="/collaborate" icon={Users}>Collaborate</MenuItem>
               <MenuItem to="/about" icon={User}>About</MenuItem>
             </NavigationMenuList>

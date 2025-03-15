@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,8 +8,6 @@ import { ThemeProvider } from "next-themes";
 import Index from "./pages/Index";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
-import CareerInsights from "./pages/CareerInsights";
-import CareerInsightDetail from "./pages/CareerInsightDetail";
 import Collaborate from "./pages/Collaborate";
 import AboutUs from "./pages/AboutUs";
 
@@ -25,8 +24,6 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/articles" element={<Articles />} />
             <Route path="/articles/:slug" element={<ArticleDetail />} />
-            <Route path="/career-insights" element={<CareerInsights />} />
-            <Route path="/career-insights/:slug" element={<CareerInsightDetail />} />
             <Route path="/collaborate" element={<Collaborate />} />
             <Route path="/about" element={<AboutUs />} />
           </Routes>
