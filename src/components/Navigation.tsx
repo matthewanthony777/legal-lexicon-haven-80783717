@@ -31,7 +31,7 @@ const MobileMenu = () => (
   <NavigationMenu className="w-full">
     <NavigationMenuList className="flex-col space-y-4 mt-4">
       <MenuItem to="/" icon={Home} isMobile>Home</MenuItem>
-      <MenuItem to="/articles" icon={BookOpen} isMobile>Articles</MenuItem>
+      <MenuItem to="/articles" icon={BookOpen} isMobile>Future-Insights</MenuItem>
       <MenuItem to="/collaborate" icon={Users} isMobile>Collaborate</MenuItem>
       <MenuItem to="/about" icon={User} isMobile>About</MenuItem>
     </NavigationMenuList>
@@ -62,7 +62,7 @@ const Navigation = () => {
           <NavigationMenu>
             <NavigationMenuList>
               <MenuItem to="/" icon={Home}>Home</MenuItem>
-              <MenuItem to="/articles" icon={BookOpen}>Articles</MenuItem>
+              <MenuItem to="/articles" icon={BookOpen}>Future-Insights</MenuItem>
               <MenuItem to="/collaborate" icon={Users}>Collaborate</MenuItem>
               <MenuItem to="/about" icon={User}>About</MenuItem>
             </NavigationMenuList>
