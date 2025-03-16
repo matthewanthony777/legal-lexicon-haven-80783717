@@ -43,7 +43,8 @@ export async function getAllArticles(): Promise<ArticleMetadata[]> {
     return articles.map(article => ({
       title: article.title,
       date: article.date,
-      author: article.author || 'Unknown',
+      // The Article type from lib/articles.ts might not have author, so provide a default
+      author: 'Unknown',
       description: article.excerpt || '',
       slug: article.slug,
       category: 'uncategorized',
