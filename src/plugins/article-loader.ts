@@ -3,8 +3,10 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { Article } from '../types/article';
 import { createArticleFromFrontMatter } from './front-matter-utils';
+import path from 'path';
 
-const localArticlesDirectory = './src/content/articles';
+// Use a consistent path that will work in both development and production
+const localArticlesDirectory = path.resolve('./src/content/articles');
 
 /**
  * Loads all articles from the local content directories
@@ -20,11 +22,11 @@ export function getAllArticlesData(): Article[] {
         .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
         .filter(fileName => !fileName.toLowerCase().includes('readme'));
       
-      console.log(`Found ${localArticleFiles.length} local article files`);
+      console.log(`Found ${localArticleFiles.length} local article files:`, localArticleFiles);
       
       localArticleFiles.forEach(fileName => {
         const slug = fileName.replace(/\.(mdx|md)$/, '');
-        const fullPath = `${localArticlesDirectory}/${fileName}`;
+        const fullPath = path.join(localArticlesDirectory, fileName);
         const fileContents = fs.readFileSync(fullPath, 'utf8');
         
         // Use consistent front matter parsing

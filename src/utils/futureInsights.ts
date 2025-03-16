@@ -1,6 +1,5 @@
 
 import { Article, ArticleMetadata } from '@/types/article';
-import { articles } from 'virtual:mdx-data';
 import { getAllArticles } from '@/utils/articles';
 
 // Function to determine if an article is a future insight
@@ -12,9 +11,9 @@ export const isFutureInsightsArticle = (article: ArticleMetadata): boolean => {
   
   // Check for specific tags: 'future', 'legal tech', 'legal innovation', etc.
   const futureTags = ['future', 'legal tech', 'legal innovation', 'ai law', 'law tech'];
-  return article.tags.some(tag => 
+  return article.tags?.some(tag => 
     futureTags.includes(tag.toLowerCase())
-  );
+  ) || false;
 };
 
 // In-memory cache
@@ -34,65 +33,26 @@ export const getAllFutureInsights = async (): Promise<ArticleMetadata[]> => {
   }
   
   try {
-    // First try to fetch from GitHub API
-    console.log('Attempting to fetch from GitHub API...');
-    const apiArticles = await getAllArticles();
+    // Fetch from local articles via getAllArticles
+    console.log('Attempting to fetch articles...');
+    const allArticles = await getAllArticles();
     
-    if (apiArticles && apiArticles.length > 0) {
-      console.log(`Found ${apiArticles.length} articles from API`);
-      const futureArticles = apiArticles.filter(isFutureInsightsArticle);
-      console.log(`Filtered to ${futureArticles.length} future insights from API`);
+    if (allArticles && allArticles.length > 0) {
+      console.log(`Found ${allArticles.length} articles total`);
+      const futureArticles = allArticles.filter(isFutureInsightsArticle);
+      console.log(`Filtered to ${futureArticles.length} future insights`);
       
-      if (futureArticles.length > 0) {
-        futureInsightsCache = futureArticles;
-        lastFetchTime = now;
-        return futureArticles;
-      }
+      futureInsightsCache = futureArticles;
+      lastFetchTime = now;
+      return futureArticles;
     }
     
-    // If API fetch failed or returned no future insights, use virtual:mdx-data
-    console.log('Falling back to local MDX data');
-    const localArticles = articles || [];
-    console.log(`Found ${localArticles.length} articles from local MDX data`);
-    
-    // Convert to ArticleMetadata[] to ensure type compatibility
-    const localArticlesMetadata: ArticleMetadata[] = localArticles.map(article => ({
-      title: article.title,
-      date: article.date,
-      author: article.author || 'Unknown',
-      description: article.excerpt || '',
-      slug: article.slug,
-      category: 'uncategorized',
-      tags: article.tags || [],
-    }));
-    
-    const futureMdxArticles = localArticlesMetadata.filter(isFutureInsightsArticle);
-    console.log(`Filtered to ${futureMdxArticles.length} future insights from local MDX data`);
-    
-    futureInsightsCache = futureMdxArticles;
-    lastFetchTime = now;
-    return futureMdxArticles;
+    // If no articles found, return empty array
+    console.log('No articles found for future insights');
+    return [];
   } catch (error) {
     console.error('Error fetching future insights:', error);
-    
-    // Last fallback: use virtual:mdx-data
-    console.log('Error occurred, using local MDX data as final fallback');
-    const localArticles = articles || [];
-    
-    // Convert to ArticleMetadata[] to ensure type compatibility
-    const localArticlesMetadata: ArticleMetadata[] = localArticles.map(article => ({
-      title: article.title,
-      date: article.date,
-      author: article.author || 'Unknown',
-      description: article.excerpt || '',
-      slug: article.slug,
-      category: 'uncategorized',
-      tags: article.tags || [],
-    }));
-    
-    const futureMdxArticles = localArticlesMetadata.filter(isFutureInsightsArticle);
-    
-    return futureMdxArticles;
+    return [];
   }
 };
 
@@ -103,7 +63,10 @@ export const getFutureInsightBySlug = async (slug: string): Promise<Article | un
     if (futureInsightsCache) {
       const cachedArticle = futureInsightsCache.find(article => article.slug === slug);
       if (cachedArticle) {
-        // Convert ArticleMetadata to Article by adding content property
+        // Convert ArticleMetadata to Article by adding content property if needed
+        if ('content' in cachedArticle) {
+          return cachedArticle as Article;
+        }
         return {
           ...cachedArticle,
           content: ''  // Add empty content to satisfy the Article type
@@ -117,7 +80,10 @@ export const getFutureInsightBySlug = async (slug: string): Promise<Article | un
     
     if (!article) return undefined;
     
-    // Convert ArticleMetadata to Article
+    // Convert ArticleMetadata to Article if needed
+    if ('content' in article) {
+      return article as Article;
+    }
     return {
       ...article,
       content: ''  // Add empty content to satisfy the Article type
@@ -136,6 +102,8 @@ export const getLatestFutureInsights = async (count: number = 5): Promise<Articl
 
 // Remove the "future" tag from articles when displaying
 export const removeFutureTag = (article: Article | ArticleMetadata): Article | ArticleMetadata => {
+  if (!article.tags) return article;
+  
   return {
     ...article,
     tags: article.tags.filter(tag => tag.toLowerCase() !== 'future')
