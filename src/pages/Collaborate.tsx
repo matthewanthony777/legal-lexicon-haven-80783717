@@ -8,10 +8,10 @@ import { supabase } from "@/integrations/supabase/client";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase, Pen, Users } from "lucide-react";
-
 const Collaborate = () => {
-  const { toast } = useToast();
-  
+  const {
+    toast
+  } = useToast();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -56,9 +56,7 @@ const Collaborate = () => {
       });
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
+  return <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       <main className="container mx-auto px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto space-y-12 mt-16">
@@ -117,7 +115,7 @@ const Collaborate = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 border rounded-lg bg-card space-y-4">
-            <h2 className="text-2xl font-semibold mb-4">Share Your Vision</h2>
+            <h2 className="mb-4 font-semibold text-center text-2xl">Start the Conversation</h2>
             
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium">
@@ -135,13 +133,7 @@ const Collaborate = () => {
 
             <div className="space-y-2">
               <label htmlFor="vision" className="text-sm font-medium">Your Current Position & Challenges</label>
-              <Textarea 
-                id="vision" 
-                name="vision" 
-                required 
-                placeholder="Share your current role, key challenges, and what traditional advice has failed to address..." 
-                className="min-h-[120px]" 
-              />
+              <Textarea id="vision" name="vision" required placeholder="Share your current role, key challenges, and what traditional advice has failed to address..." className="min-h-[120px]" />
             </div>
 
             <div className="space-y-2">
@@ -158,8 +150,6 @@ const Collaborate = () => {
         </div>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Collaborate;
