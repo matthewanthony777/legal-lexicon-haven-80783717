@@ -18,6 +18,7 @@ export const getAllFutureInsights = (): Article[] => {
             tag.toLowerCase().includes('future') || 
             tag.toLowerCase().includes('ai') || 
             tag.toLowerCase().includes('tech') ||
+            tag.toLowerCase().includes('legal') ||
             tag.toLowerCase().includes('legal tech')
         );
         
@@ -43,6 +44,7 @@ export const getFutureInsightBySlug = (slug: string): Article | undefined => {
             tag.toLowerCase().includes('future') || 
             tag.toLowerCase().includes('ai') || 
             tag.toLowerCase().includes('tech') ||
+            tag.toLowerCase().includes('legal') ||
             tag.toLowerCase().includes('legal tech')
         );
         
