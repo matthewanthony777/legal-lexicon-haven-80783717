@@ -8,10 +8,10 @@ import { supabase } from "@/integrations/supabase/client";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase, Pen, Users } from "lucide-react";
-
 const Collaborate = () => {
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -20,21 +20,31 @@ const Collaborate = () => {
     const email = formData.get('email') as string;
     const vision = formData.get('vision') as string;
     const support = formData.get('support') as string;
-
     try {
-      console.log("Sending form data:", { name, email, vision, support });
-      const { data, error } = await supabase.functions.invoke('send-email', {
-        body: { name, email, vision, support }
+      console.log("Sending form data:", {
+        name,
+        email,
+        vision,
+        support
       });
-
+      const {
+        data,
+        error
+      } = await supabase.functions.invoke('send-email', {
+        body: {
+          name,
+          email,
+          vision,
+          support
+        }
+      });
       if (error) {
         console.error('Supabase function error:', error);
         throw error;
       }
-
       toast({
         title: "Vision shared!",
-        description: "Thank you for sharing your vision with us. We'll be in touch soon.",
+        description: "Thank you for sharing your vision with us. We'll be in touch soon."
       });
       form.reset();
     } catch (error) {
@@ -42,13 +52,11 @@ const Collaborate = () => {
       toast({
         title: "Error",
         description: "Failed to send your vision. Please try again later.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
-  return (
-    <div className="min-h-screen bg-background flex flex-col">
+  return <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       <main className="container mx-auto px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto space-y-12 mt-16">
@@ -116,51 +124,26 @@ const Collaborate = () => {
               <label htmlFor="name" className="text-sm font-medium">
                 Name
               </label>
-              <Input
-                id="name"
-                name="name"
-                required
-                placeholder="Your name"
-              />
+              <Input id="name" name="name" required placeholder="Your name" />
             </div>
 
             <div className="space-y-2">
               <label htmlFor="email" className="text-sm font-medium">
                 Email address
               </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                placeholder="your.email@example.com"
-              />
+              <Input id="email" name="email" type="email" required placeholder="your.email@example.com" />
             </div>
 
             <div className="space-y-2">
-              <label htmlFor="vision" className="text-sm font-medium">
-                Tell Us About Your Journey
-              </label>
-              <Textarea
-                id="vision"
-                name="vision"
-                required
-                placeholder="Share your ideas and journey with us..."
-                className="min-h-[120px]"
-              />
+              <label htmlFor="vision" className="text-sm font-medium">Your Current Position & Challenges</label>
+              <Textarea id="vision" name="vision" required placeholder="Share your ideas and journey with us..." className="min-h-[120px]" />
             </div>
 
             <div className="space-y-2">
               <label htmlFor="support" className="text-sm font-medium">
                 What kind of support are you looking for?
               </label>
-              <Textarea
-                id="support"
-                name="support"
-                required
-                placeholder="Tell us about your goals and how we can help..."
-                className="min-h-[120px]"
-              />
+              <Textarea id="support" name="support" required placeholder="Tell us about your goals and how we can help..." className="min-h-[120px]" />
             </div>
 
             <Button type="submit" className="w-full">
@@ -170,8 +153,6 @@ const Collaborate = () => {
         </div>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Collaborate;
