@@ -18,7 +18,7 @@ const Index = () => {
           {/* Hero section */}
           <Hero onOpenNewsletter={() => setIsNewsletterModalOpen(true)} />
 
-          {/* Feature boxes section */}
+          {/* Feature boxes section - now has margin-top in its component */}
           <FeatureBoxes />
         </div>
       </main>
