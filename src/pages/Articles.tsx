@@ -58,7 +58,8 @@ const Articles = () => {
         setIsRateLimited(true);
         setError("GitHub API rate limit exceeded. We're showing sample content in the meantime.");
         toast({
-          variant: "warning",
+          // Changed from "warning" to "default" to fix the type error
+          variant: "default",
           title: "GitHub API rate limit exceeded",
           description: "Showing sample content instead. Try again later or configure a GitHub token.",
         });
