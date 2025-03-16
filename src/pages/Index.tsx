@@ -87,7 +87,7 @@ const Index = () => {
             </div>
             
             {/* Right side - Video */}
-            <div className="relative rounded-xl overflow-hidden shadow-xl h-[350px] md:h-[400px] order-1 md:order-2">
+            <div className="relative rounded-xl overflow-hidden shadow-xl h-[250px] md:h-[300px] order-1 md:order-2">
               <div className="absolute inset-0 bg-black/40 z-10"></div>
               <video 
                 className="w-full h-full object-cover"
@@ -102,93 +102,99 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Three feature boxes section - moved up by placing in same container */}
-          <div className="py-2 bg-muted/20 rounded-xl">
+          {/* Three feature boxes section with only icons initially visible */}
+          <div className="py-0 bg-muted/20 rounded-xl mt-0">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Box 1: Legal Innovation Mastery */}
-              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group">
+              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-32 hover:h-auto">
                 <CardContent className="p-6 space-y-4">
-                  <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors mx-auto">
                     <LightbulbIcon className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold font-archivo">Legal Innovation Mastery</h3>
-                  <p className="text-lg font-playfair">Transform your legal practice through cutting-edge technology</p>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Stay ahead with cutting-edge legal tech analysis</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Master AI tools reshaping the legal landscape</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Transform traditional legal processes with innovative methodologies</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Access exclusive insights on emerging legal technologies</span>
-                    </li>
-                  </ul>
+                  <div className="invisible group-hover:visible transition-all duration-300">
+                    <h3 className="text-2xl font-bold font-archivo text-center">Legal Innovation Mastery</h3>
+                    <p className="text-lg font-playfair text-center mt-2">Transform your legal practice through cutting-edge technology</p>
+                    <ul className="space-y-2 text-sm mt-4">
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Stay ahead with cutting-edge legal tech analysis</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Master AI tools reshaping the legal landscape</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Transform traditional legal processes with innovative methodologies</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Access exclusive insights on emerging legal technologies</span>
+                      </li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
 
               {/* Box 2: Future-Proof Career Architecture */}
-              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group">
+              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-32 hover:h-auto">
                 <CardContent className="p-6 space-y-4">
-                  <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors mx-auto">
                     <GraduationCap className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold font-archivo">Future-Proof Career Architecture</h3>
-                  <p className="text-lg font-playfair">Build a resilient legal career that thrives in disruption</p>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Design a career path immune to market disruption</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Develop essential future skills before they become mandatory</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Position yourself as an innovation leader in your organization</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Create a personal brand that attracts high-value opportunities</span>
-                    </li>
-                  </ul>
+                  <div className="invisible group-hover:visible transition-all duration-300">
+                    <h3 className="text-2xl font-bold font-archivo text-center">Future-Proof Career Architecture</h3>
+                    <p className="text-lg font-playfair text-center mt-2">Build a resilient legal career that thrives in disruption</p>
+                    <ul className="space-y-2 text-sm mt-4">
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Design a career path immune to market disruption</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Develop essential future skills before they become mandatory</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Position yourself as an innovation leader in your organization</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Create a personal brand that attracts high-value opportunities</span>
+                      </li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
 
               {/* Box 3: Strategic Media Intelligence */}
-              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group">
+              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-32 hover:h-auto">
                 <CardContent className="p-6 space-y-4">
-                  <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors mx-auto">
                     <Film className="h-8 w-8 text-primary" />
                   </div>
-                  <h3 className="text-2xl font-bold font-archivo">Strategic Media Intelligence</h3>
-                  <p className="text-lg font-playfair">Gain unique legal insights through media analysis</p>
-                  <ul className="space-y-2 text-sm">
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Decode legal futures through film, TV and literature analysis</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Apply fiction-inspired strategies to real-world legal challenges</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Connect theoretical concepts with practical legal applications</span>
-                    </li>
-                    <li className="flex items-start">
-                      <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                      <span>Gain unique perspectives that differentiate you from peers</span>
-                    </li>
-                  </ul>
+                  <div className="invisible group-hover:visible transition-all duration-300">
+                    <h3 className="text-2xl font-bold font-archivo text-center">Strategic Media Intelligence</h3>
+                    <p className="text-lg font-playfair text-center mt-2">Gain unique legal insights through media analysis</p>
+                    <ul className="space-y-2 text-sm mt-4">
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Decode legal futures through film, TV and literature analysis</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Apply fiction-inspired strategies to real-world legal challenges</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Connect theoretical concepts with practical legal applications</span>
+                      </li>
+                      <li className="flex items-start">
+                        <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
+                        <span>Gain unique perspectives that differentiate you from peers</span>
+                      </li>
+                    </ul>
+                  </div>
                 </CardContent>
               </Card>
             </div>
