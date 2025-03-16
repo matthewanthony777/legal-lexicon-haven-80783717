@@ -17,12 +17,14 @@ export const getAllFutureInsights = (): Article[] => {
         const hasFutureTag = article.tags && article.tags.some(tag => 
             tag.toLowerCase().includes('future') || 
             tag.toLowerCase().includes('ai') || 
-            tag.toLowerCase().includes('tech')
+            tag.toLowerCase().includes('tech') ||
+            tag.toLowerCase().includes('legal tech')
         );
         
         const hasFutureTitle = article.title.toLowerCase().includes('future') || 
                               article.title.toLowerCase().includes('ai') || 
-                              article.title.toLowerCase().includes('tech');
+                              article.title.toLowerCase().includes('tech') ||
+                              article.title.toLowerCase().includes('legal');
                               
         return hasFutureTag || hasFutureTitle;
     }) || [];
@@ -40,12 +42,14 @@ export const getFutureInsightBySlug = (slug: string): Article | undefined => {
         const hasFutureTag = article.tags && article.tags.some(tag => 
             tag.toLowerCase().includes('future') || 
             tag.toLowerCase().includes('ai') || 
-            tag.toLowerCase().includes('tech')
+            tag.toLowerCase().includes('tech') ||
+            tag.toLowerCase().includes('legal tech')
         );
         
         const hasFutureTitle = article.title.toLowerCase().includes('future') || 
                               article.title.toLowerCase().includes('ai') || 
-                              article.title.toLowerCase().includes('tech');
+                              article.title.toLowerCase().includes('tech') ||
+                              article.title.toLowerCase().includes('legal');
                               
         return hasFutureTag || hasFutureTitle;
     });

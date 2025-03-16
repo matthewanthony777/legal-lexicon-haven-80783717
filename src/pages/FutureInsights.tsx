@@ -23,6 +23,18 @@ const FutureInsights = () => {
     return matchesSearch;
   });
 
+  // Function to filter out 'future' tag from article tags
+  const filterFutureTags = (article: any) => {
+    if (!article.tags) return article;
+    
+    return {
+      ...article,
+      tags: article.tags.filter((tag: string) => 
+        !tag.toLowerCase().includes('future')
+      )
+    };
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
@@ -48,7 +60,7 @@ const FutureInsights = () => {
           ) : (
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {filteredInsights.map((insight) => (
-                <ArticleCard key={insight.slug} article={insight} />
+                <ArticleCard key={insight.slug} article={filterFutureTags(insight)} />
               ))}
             </div>
           )}
