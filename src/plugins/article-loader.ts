@@ -8,6 +8,7 @@ import { createArticleFromFrontMatter } from './front-matter-utils';
 
 const articlesDirectory = path.join(process.cwd(), 'content/articles');
 const careerInsightsDirectory = path.join(process.cwd(), 'content/career-insights');
+const futureInsightsDirectory = path.join(process.cwd(), 'content/future-insights');
 
 /**
  * Loads all articles and career insights from the content directories
@@ -25,6 +26,11 @@ export function getAllArticlesData(): Article[] {
     
     const careerInsightFiles = fs.existsSync(careerInsightsDirectory) 
       ? fs.readdirSync(careerInsightsDirectory)
+        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
+      : [];
+
+    const futureInsightFiles = fs.existsSync(futureInsightsDirectory) 
+      ? fs.readdirSync(futureInsightsDirectory)
         .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
       : [];
 
@@ -61,7 +67,25 @@ export function getAllArticlesData(): Article[] {
       );
     });
 
-    return [...articles, ...careerInsights].sort((a, b) => 
+    const futureInsights = futureInsightFiles.map(fileName => {
+      const slug = fileName.replace(/\.(mdx|md)$/, '');
+      const fullPath = path.join(futureInsightsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      
+      // Use consistent front matter parsing
+      const { data, content } = matter(fileContents);
+
+      // Mark this as a future article
+      const articleData = { ...data, category: 'future' };
+
+      return createArticleFromFrontMatter(
+        slug,
+        processMarkdown(content),
+        articleData
+      );
+    });
+
+    return [...articles, ...careerInsights, ...futureInsights].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
   } catch (error) {

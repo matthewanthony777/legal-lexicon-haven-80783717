@@ -12,6 +12,8 @@ import Collaborate from "./pages/Collaborate";
 import AboutUs from "./pages/AboutUs";
 import CareerInsights from "./pages/CareerInsights";
 import CareerInsightDetail from "./pages/CareerInsightDetail";
+import FutureInsights from "./pages/FutureInsights";
+import FutureInsightDetail from "./pages/FutureInsightDetail";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,8 @@ const App = () => (
             <Route path="/about" element={<AboutUs />} />
             <Route path="/career-insights" element={<CareerInsights />} />
             <Route path="/career-insights/:slug" element={<CareerInsightDetail />} />
+            <Route path="/future-insights" element={<FutureInsights />} />
+            <Route path="/future-insights/:slug" element={<FutureInsightDetail />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
