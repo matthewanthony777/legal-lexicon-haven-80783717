@@ -1,0 +1,43 @@
+
+[
+  {
+    "slug": "ex-machina-film",
+    "title": "Ex Machina: The Human Element in AI",
+    "description": "An analysis of how Ex Machina explores the boundary between human and artificial intelligence",
+    "date": "2023-10-15",
+    "author": "The Screen Scholar",
+    "category": "Film Analysis",
+    "tags": ["ai", "science-fiction", "film-analysis"],
+    "coverImage": "/nosferatu.jpeg"
+  },
+  {
+    "slug": "tenet-article-inversion",
+    "title": "Tenet: Nolan's Temporal Inversion Explained",
+    "description": "Decoding the complex time mechanics in Christopher Nolan's Tenet",
+    "date": "2023-09-20",
+    "author": "The Screen Scholar",
+    "category": "Film Analysis",
+    "tags": ["christopher-nolan", "time-travel", "film-analysis"],
+    "coverVideo": "/tenet-edit.MP4"
+  },
+  {
+    "slug": "nosferatu-movie-rb",
+    "title": "Nosferatu: The Enduring Influence of German Expressionism",
+    "description": "Examining how the visual language of Nosferatu shaped horror cinema",
+    "date": "2023-08-05",
+    "author": "The Screen Scholar",
+    "category": "Film History",
+    "tags": ["horror", "german-expressionism", "silent-film"],
+    "coverImage": "/nosferatu.jpeg"
+  },
+  {
+    "slug": "harry-potter-iv",
+    "title": "Harry Potter and the Goblet of Fire: Adaptation Analysis",
+    "description": "Comparing the book and film versions of the fourth Harry Potter installment",
+    "date": "2023-07-12",
+    "author": "The Screen Scholar",
+    "category": "Adaptation",
+    "tags": ["harry-potter", "book-adaptation", "fantasy"],
+    "coverImage": "/placeholder.svg"
+  }
+]

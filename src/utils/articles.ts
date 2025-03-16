@@ -1,9 +1,8 @@
 
 import { processApiError } from './error-handling';
-import { fetchAllArticles as fetchAllArticlesFromGitHub } from './github';
 import { Article, ArticleMetadata } from '@/types/article';
 import { getAllArticlesData } from '@/plugins/article-loader';
-import { articles } from '@/lib/articles';
+import fallbackArticles from '../data/fallback-articles.json';
 
 /**
  * Get all articles, prioritizing local files over API requests
@@ -29,27 +28,16 @@ export async function getAllArticles(): Promise<ArticleMetadata[]> {
       }));
     }
     
-    // If no local articles, try GitHub API
-    console.log('No local articles found, trying GitHub API');
-    const githubArticles = await fetchAllArticlesFromGitHub();
-    console.log(`Successfully loaded ${githubArticles.length} articles from GitHub API`);
-    return githubArticles;
+    // If no local articles, use fallback
+    console.log('No local articles found, using fallback articles');
+    return fallbackArticles as ArticleMetadata[];
   } catch (error) {
     console.error('Error in getAllArticles:', error);
     processApiError(error);
     
-    // Last resort fallback - use inline hardcoded articles from lib/articles.ts
-    console.warn('Using fallback hardcoded articles');
-    return articles.map(article => ({
-      title: article.title,
-      date: article.date,
-      // The Article type from lib/articles.ts might not have author, so provide a default
-      author: 'Unknown',
-      description: article.excerpt || '',
-      slug: article.slug,
-      category: 'uncategorized',
-      tags: article.tags || [],
-    }));
+    // Last resort fallback - use fallback articles
+    console.warn('Using fallback articles due to error');
+    return fallbackArticles as ArticleMetadata[];
   }
 }
 
