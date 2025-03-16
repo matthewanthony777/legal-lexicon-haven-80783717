@@ -1,85 +1,84 @@
-import { Article } from '@/types/article';
-import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
+import { processApiError } from './error-handling';
+import { getAllArticles as fetchAllArticlesFromGitHub } from './github';
+import { Article, ArticleMetadata } from '@/types/article';
+import { getAllArticlesData } from '@/plugins/article-loader';
+import { articles } from '@/lib/articles';
 
-// In-memory cache for articles to avoid refetching
-let articlesCache: Article[] | null = null;
-let lastFetchTime: number = 0;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
-
-export const getAllArticles = async (): Promise<Article[]> => {
-    const now = Date.now();
+/**
+ * Get all articles, prioritizing local files over API requests
+ */
+export async function getAllArticles(): Promise<ArticleMetadata[]> {
+  try {
+    console.log('Fetching articles from local files first');
+    // First try to get articles from local files
+    const localArticles = getAllArticlesData();
     
-    // Return cached articles if they exist and cache hasn't expired
-    if (articlesCache && now - lastFetchTime < CACHE_DURATION) {
-        console.log('Using cached articles', { count: articlesCache.length, age: (now - lastFetchTime) / 1000 + 's' });
-        return articlesCache;
+    if (localArticles && localArticles.length > 0) {
+      console.log(`Successfully loaded ${localArticles.length} articles from local files`);
+      return localArticles;
     }
     
-    try {
-        console.log('Fetching all articles from GitHub');
-        const articles = await fetchAllArticles();
-        
-        if (articles.length > 0) {
-            console.log(`Successfully loaded ${articles.length} articles`);
-            articlesCache = articles;
-            lastFetchTime = now;
-        } else {
-            console.warn('No articles were returned from GitHub');
-        }
-        
-        return articles;
-    } catch (error) {
-        console.error('Error getting all articles:', error);
-        // Return cached articles as fallback if available, even if expired
-        if (articlesCache) {
-            console.log('Returning expired cached articles as fallback');
-            return articlesCache;
-        }
-        return [];
+    // If no local articles, try GitHub API
+    console.log('No local articles found, trying GitHub API');
+    const articles = await fetchAllArticlesFromGitHub();
+    console.log(`Successfully loaded ${articles.length} articles from GitHub API`);
+    return articles;
+  } catch (error) {
+    console.error('Error in getAllArticles:', error);
+    processApiError(error);
+    
+    // Last resort fallback - use inline hardcoded articles from lib/articles.ts
+    console.warn('Using fallback hardcoded articles');
+    return articles;
+  }
+}
+
+/**
+ * Get a specific article by slug
+ */
+export async function getArticleBySlug(slug: string): Promise<Article | undefined> {
+  try {
+    // Get all articles first
+    const allArticles = await getAllArticles();
+    
+    // Find the article with matching slug
+    const article = allArticles.find(article => article.slug === slug);
+    
+    if (!article) {
+      console.warn(`Article with slug "${slug}" not found`);
+      return undefined;
     }
-};
+    
+    return article as Article;
+  } catch (error) {
+    console.error(`Error getting article by slug "${slug}":`, error);
+    processApiError(error);
+    return undefined;
+  }
+}
 
-export const getArticleBySlug = async (slug: string): Promise<Article | undefined> => {
-    try {
-        // First check the cache
-        if (articlesCache) {
-            console.log(`Checking cache for article: ${slug}`);
-            const cachedArticle = articlesCache.find(article => article.slug === slug);
-            if (cachedArticle) {
-                console.log(`Found article in cache: ${slug}`);
-                return cachedArticle;
-            }
-        }
-        
-        // If not in cache, fetch directly
-        console.log(`Fetching article directly: ${slug}`);
-        const article = await fetchArticleBySlug(slug);
-        return article || undefined;
-    } catch (error) {
-        console.error(`Error getting article by slug ${slug}:`, error);
-        return undefined;
+/**
+ * Get articles filtered by tag
+ */
+export async function getArticlesByTag(tag: string): Promise<ArticleMetadata[]> {
+  const allArticles = await getAllArticles();
+  return allArticles.filter(article => 
+    article.tags && article.tags.includes(tag)
+  );
+}
+
+/**
+ * Get all unique tags from all articles
+ */
+export async function getAllTags(): Promise<string[]> {
+  const allArticles = await getAllArticles();
+  const tags = new Set<string>();
+  
+  allArticles.forEach(article => {
+    if (article.tags) {
+      article.tags.forEach(tag => tags.add(tag));
     }
-};
-
-export const getLatestArticles = async (count: number = 5): Promise<Article[]> => {
-    const articles = await getAllArticles();
-    return articles.slice(0, count);
-};
-
-export const getArticlesByCategory = async (category: string): Promise<Article[]> => {
-    const articles = await getAllArticles();
-    return articles.filter(article => 
-        article.category && article.category.toLowerCase() === category.toLowerCase()
-    );
-};
-
-export const getAllCategories = async (): Promise<string[]> => {
-    const articles = await getAllArticles();
-    const categories = new Set<string>();
-    articles.forEach(article => {
-        if (article.category) {
-            categories.add(article.category);
-        }
-    });
-    return Array.from(categories);
-};
+  });
+  
+  return Array.from(tags);
+}

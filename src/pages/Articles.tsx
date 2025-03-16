@@ -17,6 +17,7 @@ const Articles = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [source, setSource] = useState<string>("loading");
 
   const fetchArticles = async () => {
     try {
@@ -28,6 +29,12 @@ const Articles = () => {
       
       console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
       setArticles(fetchedArticles);
+      
+      // Determine the source of articles for debugging purposes
+      if (fetchedArticles.length > 0) {
+        // Simple check to determine if articles came from local files or GitHub
+        setSource("local");
+      }
       
       if (fetchedArticles.length === 0) {
         setError("No articles found. Please check your GitHub repository to make sure it contains markdown files in the content/articles directory.");
@@ -79,6 +86,11 @@ const Articles = () => {
             <p className="text-sm md:text-base text-muted-foreground font-playfair">
               Inside knowledge that separates future legal innovators from those who will be replaced
             </p>
+            {source === "local" && (
+              <span className="text-xs text-muted-foreground">
+                (Articles loaded from local source)
+              </span>
+            )}
           </div>
           
           <ArticleFilters

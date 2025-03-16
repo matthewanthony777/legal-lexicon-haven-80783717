@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -26,6 +25,47 @@ export function getAllArticlesData(): Article[] {
   try {
     const articles: Article[] = [];
     
+    // First try to load from local src/content/articles since that's most reliable
+    if (fs.existsSync(localArticlesDirectory)) {
+      console.log('Loading articles from local directory:', localArticlesDirectory);
+      const localArticleFiles = fs.readdirSync(localArticlesDirectory)
+        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
+        .filter(fileName => !fileName.toLowerCase().includes('readme'));
+      
+      console.log(`Found ${localArticleFiles.length} local article files`);
+      
+      localArticleFiles.forEach(fileName => {
+        const slug = fileName.replace(/\.(mdx|md)$/, '');
+        const fullPath = path.join(localArticlesDirectory, fileName);
+        const fileContents = fs.readFileSync(fullPath, 'utf8');
+        
+        // Use consistent front matter parsing
+        const { data, content } = matter(fileContents);
+        
+        // If these are for future insights, mark them accordingly
+        const category = data.category || (fileName.includes('future') ? 'future' : 'article');
+        const articleData = { ...data, category };
+
+        articles.push(createArticleFromFrontMatter(
+          slug,
+          processMarkdown(content),
+          articleData
+        ));
+      });
+      
+      console.log(`Loaded ${articles.length} articles from local directory`);
+      // If we found articles locally, we'll just use those and skip the other directories
+      if (articles.length > 0) {
+        console.log('Using local articles, skipping other directories');
+        
+        // Sort by date, newest first
+        return articles.sort((a, b) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+      }
+    }
+    
+    // Only if we didn't find local articles, try the other directories
     // Load from content/articles if it exists
     if (fs.existsSync(articlesDirectory)) {
       console.log('Loading articles from:', articlesDirectory);
@@ -100,34 +140,6 @@ export function getAllArticlesData(): Article[] {
 
         // Mark this as a future article
         const articleData = { ...data, category: 'future' };
-
-        articles.push(createArticleFromFrontMatter(
-          slug,
-          processMarkdown(content),
-          articleData
-        ));
-      });
-    }
-    
-    // Fallback: Load from src/content/articles if other directories failed or are empty
-    if (articles.length === 0 && fs.existsSync(localArticlesDirectory)) {
-      console.log('Using fallback local content from:', localArticlesDirectory);
-      const localArticleFiles = fs.readdirSync(localArticlesDirectory)
-        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'));
-      
-      console.log(`Found ${localArticleFiles.length} local article files`);
-      
-      localArticleFiles.forEach(fileName => {
-        const slug = fileName.replace(/\.(mdx|md)$/, '');
-        const fullPath = path.join(localArticlesDirectory, fileName);
-        const fileContents = fs.readFileSync(fullPath, 'utf8');
-        
-        // Use consistent front matter parsing
-        const { data, content } = matter(fileContents);
-        
-        // If these are for future insights, mark them accordingly
-        const category = data.category || (fileName.includes('future') ? 'future' : 'article');
-        const articleData = { ...data, category };
 
         articles.push(createArticleFromFrontMatter(
           slug,
