@@ -143,9 +143,7 @@ const Collaborate = () => {
               <Textarea id="support" name="support" required placeholder="Tell us about your goals and how we can help..." className="min-h-[120px]" />
             </div>
 
-            <Button type="submit" className="w-full">
-              Join Our Community
-            </Button>
+            <Button type="submit" className="w-full">Start the Conversation</Button>
           </form>
         </div>
       </main>
