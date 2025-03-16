@@ -12,14 +12,23 @@ export function mdxDataPlugin(): Plugin {
 
   return {
     name: 'vite-plugin-mdx-data',
+    
+    configResolved(config) {
+      console.log('Vite MDX plugin initialized');
+      console.log('Root directory:', config.root);
+    },
+    
     resolveId(id) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId
       }
     },
+    
     load(id) {
       if (id === resolvedVirtualModuleId) {
+        console.log('Loading virtual MDX data module');
         const articles = getAllArticlesData();
+        console.log(`Loaded ${articles.length} articles into virtual module`);
         return `export const articles = ${JSON.stringify(articles)}`
       }
     }

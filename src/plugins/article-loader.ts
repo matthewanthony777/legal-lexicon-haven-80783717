@@ -6,8 +6,17 @@ import { Article } from '../types/article';
 import { processMarkdown } from './markdown-processor';
 import { createArticleFromFrontMatter } from './front-matter-utils';
 
-const articlesDirectory = path.join(process.cwd(), 'content/articles');
-const futureInsightsDirectory = path.join(process.cwd(), 'content/future-insights');
+// Define path constants more clearly
+const contentDirectory = path.join(process.cwd(), 'content');
+const articlesDirectory = path.join(contentDirectory, 'articles');
+const futureInsightsDirectory = path.join(contentDirectory, 'future-insights');
+
+// Log directory existence for debugging
+console.log('Content directory exists:', fs.existsSync(contentDirectory));
+console.log('Articles directory exists:', fs.existsSync(articlesDirectory));
+console.log('Future Insights directory exists:', fs.existsSync(futureInsightsDirectory));
+console.log('Articles directory path:', articlesDirectory);
+console.log('Future Insights directory path:', futureInsightsDirectory);
 
 /**
  * Helper function to load MDX files from a directory
@@ -18,9 +27,18 @@ function loadMdxFiles(directory: string, defaultCategory: string): Article[] {
     return [];
   }
 
-  return fs.readdirSync(directory)
-    .filter(fileName => (fileName.endsWith('.mdx') || fileName.endsWith('.md')) && fileName !== 'README.md')
-    .map(fileName => {
+  try {
+    const files = fs.readdirSync(directory);
+    console.log(`Found ${files.length} files in ${directory}: ${files.join(', ')}`);
+    
+    const mdxFiles = files.filter(fileName => 
+      (fileName.endsWith('.mdx') || fileName.endsWith('.md')) && 
+      fileName !== 'README.md'
+    );
+    
+    console.log(`Found ${mdxFiles.length} MDX/MD files in ${directory}: ${mdxFiles.join(', ')}`);
+    
+    return mdxFiles.map(fileName => {
       const slug = fileName.replace(/\.(mdx|md)$/, '');
       const fullPath = path.join(directory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
@@ -28,11 +46,18 @@ function loadMdxFiles(directory: string, defaultCategory: string): Article[] {
       // Use consistent front matter parsing
       const { data, content } = matter(fileContents);
       
+      // Log parsed front matter for debugging
+      console.log(`Parsed ${fileName} - title: ${data.title}, category: ${data.category || defaultCategory}`);
+      
       // Ensure category is set
       const articleData = { ...data, category: data.category || defaultCategory };
       
       return createArticleFromFrontMatter(slug, processMarkdown(content), articleData);
     });
+  } catch (error) {
+    console.error(`Error loading files from ${directory}:`, error);
+    return [];
+  }
 }
 
 /**
@@ -72,9 +97,16 @@ export function getAllArticlesData(): Article[] {
     });
 
     // Combine all articles and sort by date
-    return [...processedArticles, ...futureInsights].sort((a, b) => 
+    const allArticles = [...processedArticles, ...futureInsights].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
+    
+    console.log('All articles after processing:');
+    allArticles.forEach(article => {
+      console.log(`- ${article.slug} (category: ${article.category}, tags: ${article.tags?.join(', ')})`);
+    });
+    
+    return allArticles;
   } catch (error) {
     console.error('Error loading articles:', error);
     return [];

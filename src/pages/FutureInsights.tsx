@@ -13,6 +13,9 @@ const FutureInsights = () => {
   
   useEffect(() => {
     console.log(`Found ${allInsights.length} future insights to display`);
+    if (allInsights.length > 0) {
+      console.log('First insight:', JSON.stringify(allInsights[0], null, 2));
+    }
   }, [allInsights]);
 
   const filteredInsights = allInsights.filter((insight) => {
