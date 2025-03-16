@@ -1,23 +1,62 @@
-
 import { Briefcase, Route, Code, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useEffect, useRef, useState } from "react";
 
 const AboutUs = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.addEventListener('loadeddata', () => {
+        setIsVideoLoaded(true);
+      });
+    }
+    
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener('loadeddata', () => {
+          setIsVideoLoaded(true);
+        });
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-black/90 flex flex-col">
       <Navigation />
       <main className="flex-1 px-4 py-12">
         <div className="max-w-[900px] mx-auto">
-          <header className="mb-12 text-center">
-            <h1 className="text-3xl md:text-4xl font-bold font-playfair text-white mb-4">OUR EXPERTISE</h1>
-            <p className="text-xl md:text-2xl text-white/90 italic font-playfair">
-              Accessing the Hidden Pathways Others Can&apos;t See
-            </p>
-          </header>
+          <div className="relative rounded-xl overflow-hidden mb-12">
+            <div className={`absolute inset-0 bg-black ${isVideoLoaded ? 'bg-opacity-70' : 'bg-opacity-100'} z-10 transition-opacity duration-500`}></div>
+            
+            <AspectRatio ratio={16/9} className="w-full">
+              <video 
+                ref={videoRef}
+                className="w-full h-full object-cover"
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+              >
+                <source src="/cinema-about-edit.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </AspectRatio>
+            
+            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center">
+              <h1 className="text-3xl md:text-4xl font-bold font-playfair text-white mb-4">OUR EXPERTISE</h1>
+              <p className="text-xl md:text-2xl text-white/90 italic font-playfair">
+                Accessing the Hidden Pathways Others Can&apos;t See
+              </p>
+            </div>
+          </div>
 
           <div className="prose prose-invert max-w-none mb-10">
             <p className="text-lg leading-relaxed mb-8">
