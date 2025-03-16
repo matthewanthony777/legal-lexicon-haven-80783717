@@ -1,13 +1,14 @@
+
 import { Article } from '@/types/article';
 import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
 
 // In-memory cache for articles to avoid refetching
-let articlesCache: Article[] | null = null;
+export let articlesCache: Article[] | null = null;
 let lastFetchTime: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
 // Sample articles to use as fallback content when API fails
-const sampleArticles: Article[] = [
+export const sampleArticles: Article[] = [
   {
     slug: 'understanding-contract-law',
     title: 'Understanding the Basics of Contract Law',
@@ -39,6 +40,15 @@ const sampleArticles: Article[] = [
     content: '## Top Legal Tech Innovations of 2024\n\nThe legal industry is increasingly embracing technology to improve efficiency, accuracy, and client service.'
   }
 ];
+
+// Helper function to get cache for other modules
+export const getCache = (): Article[] | null => {
+    const now = Date.now();
+    if (articlesCache && now - lastFetchTime < CACHE_DURATION) {
+        return articlesCache;
+    }
+    return null;
+};
 
 export const getAllArticles = async (): Promise<Article[]> => {
     const now = Date.now();
