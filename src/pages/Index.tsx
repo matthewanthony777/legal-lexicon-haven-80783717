@@ -6,8 +6,12 @@ import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import NewsletterModal from "@/components/NewsletterModal";
 
 const Index = () => {
+  const [isNewsletterModalOpen, setIsNewsletterModalOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
@@ -30,7 +34,12 @@ const Index = () => {
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="group">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="group"
+                  onClick={() => setIsNewsletterModalOpen(true)}
+                >
                   Newsletter
                   <Mail className="ml-2 h-4 w-4 transition-transform group-hover:scale-110" />
                 </Button>
@@ -186,6 +195,12 @@ const Index = () => {
         </div>
       </main>
       <Footer />
+      
+      {/* Newsletter Modal */}
+      <NewsletterModal 
+        isOpen={isNewsletterModalOpen} 
+        onClose={() => setIsNewsletterModalOpen(false)} 
+      />
     </div>
   );
 };
