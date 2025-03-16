@@ -1,8 +1,6 @@
 
-import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getCareerInsightBySlug } from "@/utils/careerInsights";
-import { Article } from "@/types/article";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowLeft } from "lucide-react";
@@ -10,74 +8,17 @@ import { Link } from "react-router-dom";
 import MDXRenderer from "@/components/MDXRenderer";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { toast } from "@/components/ui/use-toast";
 
 const CareerInsightDetail = () => {
   const { slug } = useParams();
-  const [insight, setInsight] = useState<Article | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const insight = getCareerInsightBySlug(slug || "");
 
-  useEffect(() => {
-    const fetchInsight = async () => {
-      try {
-        setLoading(true);
-        if (!slug) {
-          setError("No article slug provided");
-          return;
-        }
-        
-        const fetchedInsight = await getCareerInsightBySlug(slug);
-        
-        if (fetchedInsight) {
-          setInsight(fetchedInsight);
-        } else {
-          setError("Career insight not found");
-          toast({
-            variant: "destructive",
-            title: "Article not found",
-            description: "The requested article could not be loaded."
-          });
-        }
-      } catch (err) {
-        console.error("Error fetching career insight:", err);
-        setError("Failed to load article");
-        toast({
-          variant: "destructive",
-          title: "Error loading article",
-          description: "Please try again later."
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchInsight();
-  }, [slug]);
-
-  if (loading) {
+  if (!insight) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
-        <div className="container mx-auto px-4 py-8 flex-1 text-center mt-16">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-muted rounded w-1/4 mx-auto"></div>
-            <div className="h-12 bg-muted rounded w-3/4 mx-auto"></div>
-            <div className="h-4 bg-muted rounded w-1/2 mx-auto"></div>
-            <div className="h-64 bg-muted rounded w-full mx-auto"></div>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (error || !insight) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Navigation />
-        <div className="container mx-auto px-4 py-8 flex-1 text-center mt-16">
-          <h1 className="text-2xl font-bold font-playfair">{error || "Career insight not found"}</h1>
+        <div className="container mx-auto px-4 py-8 flex-1 text-center">
+          <h1 className="text-2xl font-bold font-playfair">Career insight not found</h1>
           <Link to="/career-insights">
             <Button className="mt-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
