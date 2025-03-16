@@ -11,12 +11,15 @@ import ArticleLoadingState from "@/components/ArticleLoadingState";
 import ArticleErrorState from "@/components/ArticleErrorState";
 import ArticleEmptyState from "@/components/ArticleEmptyState";
 import SocialMediaLinks from "@/components/SocialMediaLinks";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isRateLimited, setIsRateLimited] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -27,6 +30,7 @@ const Articles = () => {
     try {
       setLoading(true);
       setError(null);
+      setIsRateLimited(false);
       
       // Load articles without showing toast immediately for better UX
       const fetchedArticles = await getAllArticles();
@@ -35,21 +39,37 @@ const Articles = () => {
       setArticles(fetchedArticles);
       
       if (fetchedArticles.length === 0) {
-        setError("No articles found. Please check your GitHub repository to make sure it contains markdown files in the content/articles directory.");
+        setError("No articles found. Please check your GitHub repository configuration.");
         toast({
           variant: "destructive",
           title: "No articles found",
           description: "Check GitHub repository configuration",
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error fetching articles:", err);
-      setError("Failed to load articles. Check browser console for details.");
-      toast({
-        variant: "destructive",
-        title: "Error loading articles",
-        description: "See console for technical details",
-      });
+      
+      // Check if the error is due to rate limiting
+      const isRateLimitError = 
+        err.message?.includes("rate limit") || 
+        err.message?.includes("API rate limit exceeded");
+      
+      if (isRateLimitError) {
+        setIsRateLimited(true);
+        setError("GitHub API rate limit exceeded. We're showing sample content in the meantime.");
+        toast({
+          variant: "warning",
+          title: "GitHub API rate limit exceeded",
+          description: "Showing sample content instead. Try again later or configure a GitHub token.",
+        });
+      } else {
+        setError("Failed to load articles. Check browser console for details.");
+        toast({
+          variant: "destructive",
+          title: "Error loading articles",
+          description: "See console for technical details",
+        });
+      }
     } finally {
       setLoading(false);
     }
@@ -90,7 +110,26 @@ const Articles = () => {
             onSearchChange={setSearchQuery}
           />
 
-          {error && <ArticleErrorState error={error} onRetry={handleRetry} />}
+          {isRateLimited && (
+            <div className="bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 p-4 rounded-md mb-4">
+              <h3 className="font-medium text-amber-800 dark:text-amber-300">GitHub API Rate Limit Exceeded</h3>
+              <p className="text-amber-700 dark:text-amber-400 text-sm mt-1">
+                We're showing sample content while waiting for the API rate limit to reset. 
+                To fix this permanently, consider adding a GitHub token in your environment variables.
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={handleRetry} 
+                className="mt-2 bg-amber-100 dark:bg-amber-900 border-amber-200 dark:border-amber-800"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          )}
+
+          {error && !isRateLimited && <ArticleErrorState error={error} onRetry={handleRetry} />}
 
           {loading ? (
             <ArticleLoadingState />
