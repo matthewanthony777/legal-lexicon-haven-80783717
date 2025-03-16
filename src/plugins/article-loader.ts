@@ -27,20 +27,37 @@ export function getAllArticlesData(): Article[] {
       localArticleFiles.forEach(fileName => {
         const slug = fileName.replace(/\.(mdx|md)$/, '');
         const fullPath = path.join(localArticlesDirectory, fileName);
-        const fileContents = fs.readFileSync(fullPath, 'utf8');
         
-        // Use consistent front matter parsing
-        const { data, content } = matter(fileContents);
-        
-        // If these are for future insights, mark them accordingly
-        const category = data.category || (fileName.includes('future') ? 'future' : 'article');
-        const articleData = { ...data, category };
+        try {
+          const fileContents = fs.readFileSync(fullPath, 'utf8');
+          
+          // Use consistent front matter parsing
+          const { data, content } = matter(fileContents);
+          
+          // Check if this is a future insight by looking at category or filename
+          const isFutureInsight = 
+            data.category?.toLowerCase() === 'future' || 
+            fileName.toLowerCase().includes('future') ||
+            (data.tags && data.tags.some((tag: string) => 
+              tag.toLowerCase().includes('future') || 
+              tag.toLowerCase().includes('legal tech') ||
+              tag.toLowerCase().includes('legal innovation')
+            ));
+          
+          // Set category to 'future' for future insights
+          const category = isFutureInsight ? 'future' : (data.category || 'article');
+          const articleData = { ...data, category };
 
-        articles.push(createArticleFromFrontMatter(
-          slug,
-          content,
-          articleData
-        ));
+          articles.push(createArticleFromFrontMatter(
+            slug,
+            content,
+            articleData
+          ));
+          
+          console.log(`Successfully loaded article: ${slug} (Category: ${category})`);
+        } catch (err) {
+          console.error(`Error processing article file ${fileName}:`, err);
+        }
       });
       
       console.log(`Loaded ${articles.length} articles from local directory`);

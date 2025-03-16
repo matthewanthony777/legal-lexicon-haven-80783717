@@ -15,6 +15,15 @@ export async function getAllArticles(): Promise<ArticleMetadata[]> {
     
     if (localArticles && localArticles.length > 0) {
       console.log(`Successfully loaded ${localArticles.length} articles from local files`);
+      // Log a sample article to help with debugging
+      if (localArticles.length > 0) {
+        console.log('Sample article:', {
+          title: localArticles[0].title,
+          slug: localArticles[0].slug,
+          category: localArticles[0].category || 'none',
+          tags: localArticles[0].tags || []
+        });
+      }
       return localArticles;
     }
     

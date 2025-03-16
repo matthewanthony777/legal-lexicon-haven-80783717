@@ -12,7 +12,7 @@ export const isFutureInsightsArticle = (article: ArticleMetadata): boolean => {
   // Check for specific tags: 'future', 'legal tech', 'legal innovation', etc.
   const futureTags = ['future', 'legal tech', 'legal innovation', 'ai law', 'law tech'];
   return article.tags?.some(tag => 
-    futureTags.includes(tag.toLowerCase())
+    futureTags.some(futureTag => tag.toLowerCase().includes(futureTag))
   ) || false;
 };
 
@@ -34,13 +34,30 @@ export const getAllFutureInsights = async (): Promise<ArticleMetadata[]> => {
   
   try {
     // Fetch from local articles via getAllArticles
-    console.log('Attempting to fetch articles...');
+    console.log('Attempting to fetch articles for future insights...');
     const allArticles = await getAllArticles();
     
     if (allArticles && allArticles.length > 0) {
       console.log(`Found ${allArticles.length} articles total`);
+      
+      // Log all categories to help debug
+      const categories = allArticles.map(article => article.category);
+      console.log('Article categories:', categories);
+      
       const futureArticles = allArticles.filter(isFutureInsightsArticle);
       console.log(`Filtered to ${futureArticles.length} future insights`);
+      
+      // Log future insights for debugging
+      if (futureArticles.length > 0) {
+        console.log('Future insights found:', futureArticles.map(a => ({
+          title: a.title,
+          slug: a.slug,
+          category: a.category,
+          tags: a.tags
+        })));
+      } else {
+        console.log('No future insights found in articles');
+      }
       
       futureInsightsCache = futureArticles;
       lastFetchTime = now;
