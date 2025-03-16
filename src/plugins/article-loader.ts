@@ -6,107 +6,64 @@ import { Article } from '../types/article';
 import { processMarkdown } from './markdown-processor';
 import { createArticleFromFrontMatter } from './front-matter-utils';
 
-// Define path constants more clearly
-const contentDirectory = path.join(process.cwd(), 'content');
-const articlesDirectory = path.join(contentDirectory, 'articles');
-const futureInsightsDirectory = path.join(contentDirectory, 'future-insights');
-
-// Log directory existence for debugging
-console.log('Content directory exists:', fs.existsSync(contentDirectory));
-console.log('Articles directory exists:', fs.existsSync(articlesDirectory));
-console.log('Future Insights directory exists:', fs.existsSync(futureInsightsDirectory));
-console.log('Articles directory path:', articlesDirectory);
-console.log('Future Insights directory path:', futureInsightsDirectory);
+const articlesDirectory = path.join(process.cwd(), 'content/articles');
+const careerInsightsDirectory = path.join(process.cwd(), 'content/career-insights');
 
 /**
- * Helper function to load MDX files from a directory
+ * Loads all articles and career insights from the content directories
  */
-function loadMdxFiles(directory: string, defaultCategory: string): Article[] {
-  if (!fs.existsSync(directory)) {
-    console.warn(`Directory not found: ${directory}`);
-    return [];
-  }
-
+export function getAllArticlesData(): Article[] {
   try {
-    const files = fs.readdirSync(directory);
-    console.log(`Found ${files.length} files in ${directory}: ${files.join(', ')}`);
+    // Check if articles directory exists
+    if (!fs.existsSync(articlesDirectory)) {
+      console.warn('Articles directory not found at:', articlesDirectory);
+      return [];
+    }
     
-    const mdxFiles = files.filter(fileName => 
-      (fileName.endsWith('.mdx') || fileName.endsWith('.md')) && 
-      fileName !== 'README.md'
-    );
+    const articleFiles = fs.readdirSync(articlesDirectory)
+      .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'));
     
-    console.log(`Found ${mdxFiles.length} MDX/MD files in ${directory}: ${mdxFiles.join(', ')}`);
-    
-    return mdxFiles.map(fileName => {
+    const careerInsightFiles = fs.existsSync(careerInsightsDirectory) 
+      ? fs.readdirSync(careerInsightsDirectory)
+        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
+      : [];
+
+    const articles = articleFiles.map(fileName => {
       const slug = fileName.replace(/\.(mdx|md)$/, '');
-      const fullPath = path.join(directory, fileName);
+      const fullPath = path.join(articlesDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       
       // Use consistent front matter parsing
       const { data, content } = matter(fileContents);
-      
-      // Log parsed front matter for debugging
-      console.log(`Parsed ${fileName} - title: ${data.title}, category: ${data.category || defaultCategory}`);
-      
-      // Ensure category is set
-      const articleData = { ...data, category: data.category || defaultCategory };
-      
-      return createArticleFromFrontMatter(slug, processMarkdown(content), articleData);
-    });
-  } catch (error) {
-    console.error(`Error loading files from ${directory}:`, error);
-    return [];
-  }
-}
 
-/**
- * Loads all articles and future insights from the content directories
- */
-export function getAllArticlesData(): Article[] {
-  try {
-    console.log(`Loading articles from ${articlesDirectory}`);
-    console.log(`Loading future insights from ${futureInsightsDirectory}`);
-    
-    // Load articles from regular articles directory
-    const articles = loadMdxFiles(articlesDirectory, 'article');
-    
-    // Load articles from future insights directory
-    const futureInsights = loadMdxFiles(futureInsightsDirectory, 'future');
-    
-    console.log(`Loaded ${articles.length} articles and ${futureInsights.length} future insights`);
-
-    // Process regular articles to see if any should be categorized as future insights
-    const processedArticles = articles.map(article => {
-      // Check if this article should be categorized as a future insight
-      const isFutureInsight = 
-        (article.tags && 
-         Array.isArray(article.tags) && 
-         article.tags.some(tag => 
-           tag.toLowerCase().includes('future') || 
-           tag.toLowerCase().includes('ai') || 
-           tag.toLowerCase().includes('tech') ||
-           tag.toLowerCase().includes('legal')));
-      
-      // If it's related to future insights, mark it as such
-      if (isFutureInsight) {
-        return { ...article, category: 'future' };
-      }
-      
-      return article;
+      return createArticleFromFrontMatter(
+        slug,
+        processMarkdown(content),
+        data
+      );
     });
 
-    // Combine all articles and sort by date
-    const allArticles = [...processedArticles, ...futureInsights].sort((a, b) => 
+    const careerInsights = careerInsightFiles.map(fileName => {
+      const slug = fileName.replace(/\.(mdx|md)$/, '');
+      const fullPath = path.join(careerInsightsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      
+      // Use consistent front matter parsing
+      const { data, content } = matter(fileContents);
+
+      // Mark this as a career article
+      const articleData = { ...data, category: 'career' };
+
+      return createArticleFromFrontMatter(
+        slug,
+        processMarkdown(content),
+        articleData
+      );
+    });
+
+    return [...articles, ...careerInsights].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-    
-    console.log('All articles after processing:');
-    allArticles.forEach(article => {
-      console.log(`- ${article.slug} (category: ${article.category}, tags: ${article.tags?.join(', ')})`);
-    });
-    
-    return allArticles;
   } catch (error) {
     console.error('Error loading articles:', error);
     return [];

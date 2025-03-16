@@ -1,8 +1,6 @@
 
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { getFutureInsightBySlug } from "@/utils/futureInsights";
-import { Article } from "@/types/article";
+import { getCareerInsightBySlug } from "@/utils/careerInsights";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowLeft } from "lucide-react";
@@ -11,47 +9,20 @@ import MDXRenderer from "@/components/MDXRenderer";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
-const FutureInsightDetail = () => {
+const CareerInsightDetail = () => {
   const { slug } = useParams();
-  const [insight, setInsight] = useState<Article | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const insight = getCareerInsightBySlug(slug || "");
 
-  useEffect(() => {
-    if (slug) {
-      const fetchedInsight = getFutureInsightBySlug(slug);
-      setInsight(fetchedInsight);
-      setLoading(false);
-      if (!fetchedInsight) {
-        setError("Future insight not found");
-      }
-    }
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Navigation />
-        <div className="container mx-auto px-4 py-8 flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-lg font-playfair">Loading future insight...</p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  if (error || !insight) {
+  if (!insight) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
         <div className="container mx-auto px-4 py-8 flex-1 text-center">
-          <h1 className="text-2xl font-bold font-playfair">Future insight not found</h1>
-          <Link to="/future-insights">
+          <h1 className="text-2xl font-bold font-playfair">Career insight not found</h1>
+          <Link to="/career-insights">
             <Button className="mt-4">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Future Insights
+              Back to Career Insights
             </Button>
           </Link>
         </div>
@@ -64,10 +35,10 @@ const FutureInsightDetail = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       <article className="container mx-auto px-4 py-4 md:py-8 max-w-3xl mt-16 flex-1">
-        <Link to="/future-insights">
+        <Link to="/career-insights">
           <Button variant="ghost" className="mb-4 md:mb-8">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Future Insights
+            Back to Career Insights
           </Button>
         </Link>
         
@@ -103,4 +74,4 @@ const FutureInsightDetail = () => {
   );
 };
 
-export default FutureInsightDetail;
+export default CareerInsightDetail;
