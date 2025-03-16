@@ -102,16 +102,16 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Three feature boxes section with only icons initially visible */}
+          {/* Three feature boxes section with all content permanently visible */}
           <div className="py-0 bg-muted/20 rounded-xl mt-0">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Box 1: Legal Innovation Mastery */}
-              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-32 hover:h-auto">
+              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1">
                 <CardContent className="p-6 space-y-4">
                   <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors mx-auto">
                     <LightbulbIcon className="h-8 w-8 text-primary" />
                   </div>
-                  <div className="invisible group-hover:visible transition-all duration-300">
+                  <div>
                     <h3 className="text-2xl font-bold font-archivo text-center">Legal Innovation Mastery</h3>
                     <p className="text-lg font-playfair text-center mt-2">Transform your legal practice through cutting-edge technology</p>
                     <ul className="space-y-2 text-sm mt-4">
@@ -137,12 +137,12 @@ const Index = () => {
               </Card>
 
               {/* Box 2: Future-Proof Career Architecture */}
-              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-32 hover:h-auto">
+              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1">
                 <CardContent className="p-6 space-y-4">
                   <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors mx-auto">
                     <GraduationCap className="h-8 w-8 text-primary" />
                   </div>
-                  <div className="invisible group-hover:visible transition-all duration-300">
+                  <div>
                     <h3 className="text-2xl font-bold font-archivo text-center">Future-Proof Career Architecture</h3>
                     <p className="text-lg font-playfair text-center mt-2">Build a resilient legal career that thrives in disruption</p>
                     <ul className="space-y-2 text-sm mt-4">
@@ -168,12 +168,12 @@ const Index = () => {
               </Card>
 
               {/* Box 3: Strategic Media Intelligence */}
-              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group overflow-hidden h-32 hover:h-auto">
+              <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1">
                 <CardContent className="p-6 space-y-4">
                   <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors mx-auto">
                     <Film className="h-8 w-8 text-primary" />
                   </div>
-                  <div className="invisible group-hover:visible transition-all duration-300">
+                  <div>
                     <h3 className="text-2xl font-bold font-archivo text-center">Strategic Media Intelligence</h3>
                     <p className="text-lg font-playfair text-center mt-2">Gain unique legal insights through media analysis</p>
                     <ul className="space-y-2 text-sm mt-4">
