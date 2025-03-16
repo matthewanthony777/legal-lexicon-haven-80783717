@@ -16,14 +16,24 @@ export async function getAllArticles(): Promise<ArticleMetadata[]> {
     
     if (localArticles && localArticles.length > 0) {
       console.log(`Successfully loaded ${localArticles.length} articles from local files`);
-      return localArticles as ArticleMetadata[];
+      return localArticles.map(article => ({
+        title: article.title,
+        date: article.date,
+        author: article.author || 'Unknown',
+        description: article.description || '',
+        slug: article.slug,
+        category: article.category || 'uncategorized',
+        tags: article.tags || [],
+        coverImage: article.coverImage,
+        coverVideo: article.coverVideo
+      }));
     }
     
     // If no local articles, try GitHub API
     console.log('No local articles found, trying GitHub API');
-    const articles = await fetchAllArticlesFromGitHub();
-    console.log(`Successfully loaded ${articles.length} articles from GitHub API`);
-    return articles;
+    const githubArticles = await fetchAllArticlesFromGitHub();
+    console.log(`Successfully loaded ${githubArticles.length} articles from GitHub API`);
+    return githubArticles;
   } catch (error) {
     console.error('Error in getAllArticles:', error);
     processApiError(error);

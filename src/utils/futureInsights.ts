@@ -129,13 +129,13 @@ export const getFutureInsightBySlug = async (slug: string): Promise<Article | un
 };
 
 // Get the latest future insights
-export const getLatestFutureInsights = async (count: number = 5): Promise<Article[]> => {
+export const getLatestFutureInsights = async (count: number = 5): Promise<ArticleMetadata[]> => {
   const futureInsights = await getAllFutureInsights();
   return futureInsights.slice(0, count);
 };
 
 // Remove the "future" tag from articles when displaying
-export const removeFutureTag = (article: Article): Article => {
+export const removeFutureTag = (article: Article | ArticleMetadata): Article | ArticleMetadata => {
   return {
     ...article,
     tags: article.tags.filter(tag => tag.toLowerCase() !== 'future')

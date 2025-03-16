@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { getAllArticles } from "@/utils/articles";
-import { Article, ArticleMetadata } from "@/types/article";
+import { ArticleMetadata } from "@/types/article";
 import ArticleCard from "@/components/ArticleCard";
 import Navigation from "@/components/Navigation";
 import ArticleFilters from "@/components/ArticleFilters";
