@@ -20,15 +20,10 @@ const Articles = () => {
 
   const fetchArticles = async () => {
     try {
-      console.log("Fetching articles in Articles component");
       setLoading(true);
       setError(null);
       
-      // Show simpler loading toast
-      toast({
-        title: "Loading articles...",
-      });
-      
+      // Load articles without showing toast immediately for better UX
       const fetchedArticles = await getAllArticles();
       
       console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
@@ -40,11 +35,6 @@ const Articles = () => {
           variant: "destructive",
           title: "No articles found",
           description: "Check GitHub repository configuration",
-        });
-      } else {
-        toast({
-          title: "Articles loaded",
-          description: `Successfully loaded ${fetchedArticles.length} articles`,
         });
       }
     } catch (err) {
@@ -73,6 +63,9 @@ const Articles = () => {
   });
 
   const handleRetry = () => {
+    toast({
+      title: "Refreshing articles...",
+    });
     fetchArticles();
   };
 
