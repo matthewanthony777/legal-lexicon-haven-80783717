@@ -18,6 +18,11 @@ const Articles = () => {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const fetchArticles = async () => {
     try {
       setLoading(true);

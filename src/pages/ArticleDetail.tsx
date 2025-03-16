@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getArticleBySlug } from "@/utils/articles";
@@ -15,6 +16,15 @@ const ArticleDetail = () => {
   const [article, setArticle] = useState<Article | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    // Disable browser's automatic scroll restoration
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+  }, [slug]); // Re-run when slug changes
 
   useEffect(() => {
     const fetchArticle = async () => {
@@ -93,7 +103,7 @@ const ArticleDetail = () => {
         </Link>
         
         <div className="space-y-4 md:space-y-6">
-          {article.coverVideo && isVideoFile(article.coverVideo) && (
+          {article?.coverVideo && isVideoFile(article.coverVideo) && (
             <div className="w-full aspect-video rounded-lg overflow-hidden">
               <video 
                 src={article.coverVideo} 
@@ -103,7 +113,7 @@ const ArticleDetail = () => {
             </div>
           )}
           
-          {article.coverImage && isImageFile(article.coverImage) && (
+          {article?.coverImage && isImageFile(article.coverImage) && (
             <div className="w-full aspect-video rounded-lg overflow-hidden">
               <img 
                 src={article.coverImage} 
@@ -117,16 +127,16 @@ const ArticleDetail = () => {
             <div className="flex items-center space-x-2">
               <Calendar className="w-4 h-4 text-muted-foreground" />
               <time className="text-sm text-muted-foreground">
-                {new Date(article.date).toLocaleDateString()}
+                {article && new Date(article.date).toLocaleDateString()}
               </time>
             </div>
-            <h1 className="text-2xl md:text-4xl font-bold">{article.title}</h1>
+            <h1 className="text-2xl md:text-4xl font-bold">{article?.title}</h1>
             <div className="flex items-center space-x-2">
               <span className="text-muted-foreground">By</span>
-              <span className="font-medium">{article.author}</span>
+              <span className="font-medium">{article?.author}</span>
             </div>
             <div className="flex flex-wrap gap-2">
-              {article.tags && article.tags.map(tag => (
+              {article?.tags && article.tags.map(tag => (
                 <Badge key={tag} variant="secondary">
                   {tag}
                 </Badge>
@@ -135,7 +145,7 @@ const ArticleDetail = () => {
           </div>
           
           <div className="mt-8 prose dark:prose-invert max-w-none leading-relaxed">
-            <MDXRenderer content={article.content} />
+            {article?.content && <MDXRenderer content={article.content} />}
           </div>
         </div>
       </article>

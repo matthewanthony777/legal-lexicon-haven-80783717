@@ -37,10 +37,16 @@ const ArticleCard = ({ article }: ArticleCardProps) => {
   // Check if article has minimal required metadata
   const hasMinimalMetadata = article.title && article.title !== 'Untitled Article';
   const warningMessage = hasMinimalMetadata ? null : "This article may have missing or incomplete metadata";
+  
+  // Handle click to ensure proper scroll behavior
+  const handleArticleClick = () => {
+    // Will scroll to top on the next page
+    window.scrollTo(0, 0);
+  };
 
   return (
     <Card className={`group hover:shadow-lg transition-shadow duration-300 ${!hasMinimalMetadata ? 'border-yellow-400' : ''}`}>
-      <Link to={`/articles/${article.slug}`}>
+      <Link to={`/articles/${article.slug}`} onClick={handleArticleClick}>
         <div className="w-full aspect-video rounded-t-lg overflow-hidden">
           {coverVideo ? (
             <video
