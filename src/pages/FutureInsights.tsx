@@ -41,7 +41,8 @@ const FutureInsights = () => {
 
           {filteredInsights.length === 0 ? (
             <ArticleEmptyState 
-              message="No future insights found matching your criteria." 
+              searchQuery={searchQuery}
+              message="No future insights found matching your criteria."
               suggestion="Try broadening your search or check back later for new content."
             />
           ) : (
