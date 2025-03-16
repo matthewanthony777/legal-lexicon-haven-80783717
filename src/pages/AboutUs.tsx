@@ -72,8 +72,8 @@ const AboutUs = () => {
                 muted 
                 playsInline
                 preload="auto"
-                fetchpriority="high"
                 aria-hidden="true"
+                // Removed the fetchpriority attribute as it's not supported in TypeScript's HTML video element types
               >
                 <source src="/cinema-about-edit.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
