@@ -1,3 +1,4 @@
+
 import { Briefcase, Route, Code, Film } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -10,22 +11,44 @@ import { useEffect, useRef, useState } from "react";
 const AboutUs = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
   useEffect(() => {
     const videoElement = videoRef.current;
-    if (videoElement) {
-      videoElement.addEventListener('loadeddata', () => {
-        setIsVideoLoaded(true);
-      });
-    }
     
-    return () => {
-      if (videoElement) {
-        videoElement.removeEventListener('loadeddata', () => {
-          setIsVideoLoaded(true);
-        });
-      }
-    };
+    // Add preload hint to help browser prioritize the video
+    const preloadLink = document.createElement('link');
+    preloadLink.rel = 'preload';
+    preloadLink.href = '/cinema-about-edit.mp4';
+    preloadLink.as = 'video';
+    preloadLink.type = 'video/mp4';
+    document.head.appendChild(preloadLink);
+    
+    if (videoElement) {
+      // Event listeners with proper cleanup
+      const handleLoadedData = () => setIsVideoLoaded(true);
+      const handlePlaying = () => setIsVideoPlaying(true);
+      const handleWaiting = () => setIsVideoPlaying(false);
+      
+      videoElement.addEventListener('loadeddata', handleLoadedData);
+      videoElement.addEventListener('playing', handlePlaying);
+      videoElement.addEventListener('waiting', handleWaiting);
+      
+      // Start loading the video
+      videoElement.load();
+      
+      return () => {
+        // Clean up all event listeners
+        videoElement.removeEventListener('loadeddata', handleLoadedData);
+        videoElement.removeEventListener('playing', handlePlaying);
+        videoElement.removeEventListener('waiting', handleWaiting);
+        
+        // Clean up preload hint
+        if (document.head.contains(preloadLink)) {
+          document.head.removeChild(preloadLink);
+        }
+      };
+    }
   }, []);
 
   return (
@@ -34,7 +57,11 @@ const AboutUs = () => {
       <main className="flex-1 px-4 py-12">
         <div className="max-w-[900px] mx-auto">
           <div className="relative rounded-xl overflow-hidden mb-12">
-            <div className={`absolute inset-0 bg-black ${isVideoLoaded ? 'bg-opacity-70' : 'bg-opacity-100'} z-10 transition-opacity duration-500`}></div>
+            <div 
+              className={`absolute inset-0 bg-black transition-opacity duration-500 ${
+                isVideoLoaded && isVideoPlaying ? 'bg-opacity-70' : 'bg-opacity-100'
+              } z-10`}
+            ></div>
             
             <AspectRatio ratio={16/9} className="w-full">
               <video 
@@ -44,6 +71,9 @@ const AboutUs = () => {
                 loop 
                 muted 
                 playsInline
+                preload="auto"
+                fetchpriority="high"
+                aria-hidden="true"
               >
                 <source src="/cinema-about-edit.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
