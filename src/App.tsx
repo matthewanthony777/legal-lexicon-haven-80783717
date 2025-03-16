@@ -10,6 +10,8 @@ import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
 import Collaborate from "./pages/Collaborate";
 import AboutUs from "./pages/AboutUs";
+import CareerInsights from "./pages/CareerInsights";
+import CareerInsightDetail from "./pages/CareerInsightDetail";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const App = () => (
             <Route path="/articles/:slug" element={<ArticleDetail />} />
             <Route path="/collaborate" element={<Collaborate />} />
             <Route path="/about" element={<AboutUs />} />
+            <Route path="/career-insights" element={<CareerInsights />} />
+            <Route path="/career-insights/:slug" element={<CareerInsightDetail />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

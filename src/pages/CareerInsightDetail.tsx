@@ -1,6 +1,8 @@
 
 import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { getCareerInsightBySlug } from "@/utils/careerInsights";
+import { Article } from "@/types/article";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, ArrowLeft } from "lucide-react";
@@ -11,9 +13,36 @@ import Footer from "@/components/Footer";
 
 const CareerInsightDetail = () => {
   const { slug } = useParams();
-  const insight = getCareerInsightBySlug(slug || "");
+  const [insight, setInsight] = useState<Article | undefined>(undefined);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!insight) {
+  useEffect(() => {
+    if (slug) {
+      const fetchedInsight = getCareerInsightBySlug(slug);
+      setInsight(fetchedInsight);
+      setLoading(false);
+      if (!fetchedInsight) {
+        setError("Career insight not found");
+      }
+    }
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col">
+        <Navigation />
+        <div className="container mx-auto px-4 py-8 flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-lg font-playfair">Loading career insight...</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !insight) {
     return (
       <div className="min-h-screen bg-background flex flex-col">
         <Navigation />
