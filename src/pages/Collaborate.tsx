@@ -8,10 +8,10 @@ import { supabase } from "@/integrations/supabase/client";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Briefcase, Pen, Users } from "lucide-react";
+
 const Collaborate = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -56,7 +56,9 @@ const Collaborate = () => {
       });
     }
   };
-  return <div className="min-h-screen bg-background flex flex-col">
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
       <Navigation />
       <main className="container mx-auto px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto space-y-12 mt-16">
@@ -68,7 +70,6 @@ const Collaborate = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Career Transition Card */}
             <Card className="bg-card animate-[fade-in_0.6s_ease-out,scale-in_0.4s_ease-out] hover:scale-105 transition-transform duration-300">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -84,7 +85,6 @@ const Collaborate = () => {
               </CardContent>
             </Card>
 
-            {/* Creative Development Card */}
             <Card className="bg-card animate-[fade-in_0.6s_ease-out,scale-in_0.4s_ease-out] hover:scale-105 transition-transform duration-300 delay-[150ms]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -100,7 +100,6 @@ const Collaborate = () => {
               </CardContent>
             </Card>
 
-            {/* Community Support Card */}
             <Card className="bg-card animate-[fade-in_0.6s_ease-out,scale-in_0.4s_ease-out] hover:scale-105 transition-transform duration-300 delay-[300ms]">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -136,7 +135,13 @@ const Collaborate = () => {
 
             <div className="space-y-2">
               <label htmlFor="vision" className="text-sm font-medium">Your Current Position & Challenges</label>
-              <Textarea id="vision" name="vision" required placeholder="Share your ideas and journey with us..." className="min-h-[120px]" />
+              <Textarea 
+                id="vision" 
+                name="vision" 
+                required 
+                placeholder="Share your current role, key challenges, and what traditional advice has failed to address..." 
+                className="min-h-[120px]" 
+              />
             </div>
 
             <div className="space-y-2">
@@ -153,6 +158,8 @@ const Collaborate = () => {
         </div>
       </main>
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Collaborate;
