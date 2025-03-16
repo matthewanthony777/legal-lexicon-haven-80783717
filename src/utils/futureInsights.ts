@@ -1,10 +1,10 @@
 
-import { Article } from '@/types/article';
+import { Article, ArticleMetadata } from '@/types/article';
 import { articles } from 'virtual:mdx-data';
 import { getAllArticles } from '@/utils/articles';
 
 // Function to determine if an article is a future insight
-export const isFutureInsightsArticle = (article: Article): boolean => {
+export const isFutureInsightsArticle = (article: ArticleMetadata): boolean => {
   // Check if article has the 'future' category
   if (article.category?.toLowerCase() === 'future') {
     return true;
@@ -18,12 +18,12 @@ export const isFutureInsightsArticle = (article: Article): boolean => {
 };
 
 // In-memory cache
-let futureInsightsCache: Article[] | null = null;
+let futureInsightsCache: ArticleMetadata[] | null = null;
 let lastFetchTime: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Get all future insights articles
-export const getAllFutureInsights = async (): Promise<Article[]> => {
+export const getAllFutureInsights = async (): Promise<ArticleMetadata[]> => {
   console.log('Fetching future insights...');
   
   const now = Date.now();
@@ -55,7 +55,18 @@ export const getAllFutureInsights = async (): Promise<Article[]> => {
     const localArticles = articles || [];
     console.log(`Found ${localArticles.length} articles from local MDX data`);
     
-    const futureMdxArticles = localArticles.filter(isFutureInsightsArticle);
+    // Convert to ArticleMetadata[] to ensure type compatibility
+    const localArticlesMetadata: ArticleMetadata[] = localArticles.map(article => ({
+      title: article.title,
+      date: article.date,
+      author: article.author || 'Unknown',
+      description: article.excerpt || '',
+      slug: article.slug,
+      category: 'uncategorized',
+      tags: article.tags || [],
+    }));
+    
+    const futureMdxArticles = localArticlesMetadata.filter(isFutureInsightsArticle);
     console.log(`Filtered to ${futureMdxArticles.length} future insights from local MDX data`);
     
     futureInsightsCache = futureMdxArticles;
@@ -67,7 +78,19 @@ export const getAllFutureInsights = async (): Promise<Article[]> => {
     // Last fallback: use virtual:mdx-data
     console.log('Error occurred, using local MDX data as final fallback');
     const localArticles = articles || [];
-    const futureMdxArticles = localArticles.filter(isFutureInsightsArticle);
+    
+    // Convert to ArticleMetadata[] to ensure type compatibility
+    const localArticlesMetadata: ArticleMetadata[] = localArticles.map(article => ({
+      title: article.title,
+      date: article.date,
+      author: article.author || 'Unknown',
+      description: article.excerpt || '',
+      slug: article.slug,
+      category: 'uncategorized',
+      tags: article.tags || [],
+    }));
+    
+    const futureMdxArticles = localArticlesMetadata.filter(isFutureInsightsArticle);
     
     return futureMdxArticles;
   }
@@ -80,13 +103,25 @@ export const getFutureInsightBySlug = async (slug: string): Promise<Article | un
     if (futureInsightsCache) {
       const cachedArticle = futureInsightsCache.find(article => article.slug === slug);
       if (cachedArticle) {
-        return cachedArticle;
+        // Convert ArticleMetadata to Article by adding content property
+        return {
+          ...cachedArticle,
+          content: ''  // Add empty content to satisfy the Article type
+        };
       }
     }
     
     // Get all future insights and look for the one with matching slug
     const futureInsights = await getAllFutureInsights();
-    return futureInsights.find(article => article.slug === slug);
+    const article = futureInsights.find(article => article.slug === slug);
+    
+    if (!article) return undefined;
+    
+    // Convert ArticleMetadata to Article
+    return {
+      ...article,
+      content: ''  // Add empty content to satisfy the Article type
+    };
   } catch (error) {
     console.error(`Error getting future insight by slug ${slug}:`, error);
     return undefined;

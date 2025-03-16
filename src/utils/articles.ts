@@ -1,5 +1,6 @@
+
 import { processApiError } from './error-handling';
-import { getAllArticles as fetchAllArticlesFromGitHub } from './github';
+import { fetchAllArticles as fetchAllArticlesFromGitHub } from './github';
 import { Article, ArticleMetadata } from '@/types/article';
 import { getAllArticlesData } from '@/plugins/article-loader';
 import { articles } from '@/lib/articles';
@@ -15,7 +16,7 @@ export async function getAllArticles(): Promise<ArticleMetadata[]> {
     
     if (localArticles && localArticles.length > 0) {
       console.log(`Successfully loaded ${localArticles.length} articles from local files`);
-      return localArticles;
+      return localArticles as ArticleMetadata[];
     }
     
     // If no local articles, try GitHub API
@@ -29,7 +30,15 @@ export async function getAllArticles(): Promise<ArticleMetadata[]> {
     
     // Last resort fallback - use inline hardcoded articles from lib/articles.ts
     console.warn('Using fallback hardcoded articles');
-    return articles;
+    return articles.map(article => ({
+      title: article.title,
+      date: article.date,
+      author: article.author || 'Unknown',
+      description: article.excerpt || '',
+      slug: article.slug,
+      category: 'uncategorized',
+      tags: article.tags || [],
+    }));
   }
 }
 
@@ -42,14 +51,22 @@ export async function getArticleBySlug(slug: string): Promise<Article | undefine
     const allArticles = await getAllArticles();
     
     // Find the article with matching slug
-    const article = allArticles.find(article => article.slug === slug);
+    const articleMetadata = allArticles.find(article => article.slug === slug);
     
-    if (!article) {
+    if (!articleMetadata) {
       console.warn(`Article with slug "${slug}" not found`);
       return undefined;
     }
     
-    return article as Article;
+    // Convert ArticleMetadata to Article if it doesn't have content
+    if (!('content' in articleMetadata)) {
+      return {
+        ...articleMetadata,
+        content: '' // Add empty content to satisfy Article type
+      };
+    }
+    
+    return articleMetadata as Article;
   } catch (error) {
     console.error(`Error getting article by slug "${slug}":`, error);
     processApiError(error);

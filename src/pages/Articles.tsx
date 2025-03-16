@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { getAllArticles } from "@/utils/articles";
-import { Article } from "@/types/article";
+import { Article, ArticleMetadata } from "@/types/article";
 import ArticleCard from "@/components/ArticleCard";
 import Navigation from "@/components/Navigation";
 import ArticleFilters from "@/components/ArticleFilters";
@@ -13,7 +13,7 @@ import ArticleEmptyState from "@/components/ArticleEmptyState";
 import SocialMediaLinks from "@/components/SocialMediaLinks";
 
 const Articles = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<ArticleMetadata[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
