@@ -102,8 +102,8 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Three feature boxes section */}
-        <div className="container mx-auto px-4 py-16 bg-muted/20">
+        {/* Three feature boxes section - adjusted top spacing by reducing py-16 to py-8 */}
+        <div className="container mx-auto px-4 py-8 bg-muted/20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Box 1: Legal Innovation Mastery */}
             <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group">
