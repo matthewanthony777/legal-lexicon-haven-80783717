@@ -40,7 +40,7 @@ const FeatureBoxes = () => {
   ];
 
   return (
-    <div className="py-0 bg-muted/20 rounded-xl mt-12">
+    <div className="py-0 bg-muted/20 rounded-xl mt-24">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {featureData.map((feature, index) => (
           <FeatureBox 
