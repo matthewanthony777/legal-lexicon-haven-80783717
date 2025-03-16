@@ -29,6 +29,9 @@ export function getAllArticlesData(): Article[] {
       : [];
 
     const articles = articleFiles.map(fileName => {
+      // Skip README.md files
+      if (fileName === 'README.md') return null;
+      
       const slug = fileName.replace(/\.(mdx|md)$/, '');
       const fullPath = path.join(articlesDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
@@ -36,14 +39,33 @@ export function getAllArticlesData(): Article[] {
       // Use consistent front matter parsing
       const { data, content } = matter(fileContents);
 
-      return createArticleFromFrontMatter(
-        slug,
-        processMarkdown(content),
-        data
-      );
-    });
+      // Check if this article should be categorized as a future insight
+      // by looking for specific tags or categories in frontmatter
+      const isFutureInsight = 
+        (data.category && 
+         (data.category.toLowerCase().includes('future') || 
+          data.category.toLowerCase().includes('ai') || 
+          data.category.toLowerCase().includes('tech'))) ||
+        (data.tags && 
+         Array.isArray(data.tags) && 
+         data.tags.some(tag => 
+           tag.toLowerCase().includes('future') || 
+           tag.toLowerCase().includes('ai') || 
+           tag.toLowerCase().includes('tech')));
+
+      // If it's related to future insights, mark it as such
+      if (isFutureInsight) {
+        const articleData = { ...data, category: 'future' };
+        return createArticleFromFrontMatter(slug, processMarkdown(content), articleData);
+      }
+      
+      return createArticleFromFrontMatter(slug, processMarkdown(content), data);
+    }).filter(Boolean); // Remove null entries (README.md)
 
     const futureInsights = futureInsightFiles.map(fileName => {
+      // Skip README.md files
+      if (fileName === 'README.md') return null;
+      
       const slug = fileName.replace(/\.(mdx|md)$/, '');
       const fullPath = path.join(futureInsightsDirectory, fileName);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
@@ -54,12 +76,10 @@ export function getAllArticlesData(): Article[] {
       // Mark this as a future article
       const articleData = { ...data, category: 'future' };
 
-      return createArticleFromFrontMatter(
-        slug,
-        processMarkdown(content),
-        articleData
-      );
-    });
+      return createArticleFromFrontMatter(slug, processMarkdown(content), articleData);
+    }).filter(Boolean); // Remove null entries (README.md)
+
+    console.log(`Loaded ${articles.length} articles and ${futureInsights.length} future insights`);
 
     return [...articles, ...futureInsights].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()

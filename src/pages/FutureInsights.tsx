@@ -1,14 +1,19 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getAllFutureInsights } from "@/utils/futureInsights";
 import ArticleCard from "@/components/ArticleCard";
 import Navigation from "@/components/Navigation";
 import ArticleFilters from "@/components/ArticleFilters";
+import ArticleEmptyState from "@/components/ArticleEmptyState";
 import Footer from "@/components/Footer";
 
 const FutureInsights = () => {
   const allInsights = getAllFutureInsights();
   const [searchQuery, setSearchQuery] = useState("");
+  
+  useEffect(() => {
+    console.log(`Found ${allInsights.length} future insights to display`);
+  }, [allInsights]);
 
   const filteredInsights = allInsights.filter((insight) => {
     const matchesSearch = 
@@ -35,9 +40,10 @@ const FutureInsights = () => {
           />
 
           {filteredInsights.length === 0 ? (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">No insights found matching your criteria.</p>
-            </div>
+            <ArticleEmptyState 
+              message="No future insights found matching your criteria." 
+              suggestion="Try broadening your search or check back later for new content."
+            />
           ) : (
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {filteredInsights.map((insight) => (
