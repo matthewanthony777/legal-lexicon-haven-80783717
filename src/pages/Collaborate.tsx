@@ -115,7 +115,7 @@ const Collaborate = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 border rounded-lg bg-card space-y-4">
-            <h2 className="mb-4 font-semibold text-center text-2xl">Start the Conversation</h2>
+            <h2 className="mb-4 font-semibold text-center text-2xl">Connect with Trials &amp; Tribulations</h2>
             
             <div className="space-y-2">
               <label htmlFor="name" className="text-sm font-medium">
