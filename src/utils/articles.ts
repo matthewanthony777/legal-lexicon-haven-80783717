@@ -15,17 +15,7 @@ export async function getAllArticles(): Promise<ArticleMetadata[]> {
     
     if (localArticles && localArticles.length > 0) {
       console.log(`Successfully loaded ${localArticles.length} articles from local files`);
-      return localArticles.map(article => ({
-        title: article.title,
-        date: article.date,
-        author: article.author || 'Unknown',
-        description: article.description || '',
-        slug: article.slug,
-        category: article.category || 'uncategorized',
-        tags: article.tags || [],
-        coverImage: article.coverImage,
-        coverVideo: article.coverVideo
-      }));
+      return localArticles;
     }
     
     // If no local articles, use fallback
