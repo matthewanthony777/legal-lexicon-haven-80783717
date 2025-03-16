@@ -70,7 +70,7 @@ const NewsletterModal = ({ isOpen, onClose }: NewsletterModalProps) => {
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold mb-2">Join Our Newsletter</h2>
           <p className="text-muted-foreground">
-            Stay updated with the latest insights on law and technology
+            Stay updated with the latest insights
           </p>
         </div>
         
