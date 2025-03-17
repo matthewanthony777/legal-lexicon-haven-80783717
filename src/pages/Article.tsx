@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -9,13 +10,17 @@ import { ArrowLeft } from 'lucide-react';
 const Article = () => {
   const { slug } = useParams();
   
-  const { data: article, isLoading } = useQuery({
+  const { data: article, isLoading, error } = useQuery({
     queryKey: ['article', slug],
     queryFn: () => getArticle(slug || ''),
   });
 
   if (isLoading) {
     return <div className="container py-8">Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="container py-8">Error loading article: {(error as Error).message}</div>;
   }
 
   if (!article) {
