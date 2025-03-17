@@ -5,7 +5,6 @@ import Footer from "@/components/Footer";
 import NewsletterModal from "@/components/NewsletterModal";
 import HeroSection from "@/components/home/HeroSection";
 import FeatureBoxesSection from "@/components/home/FeatureBoxesSection";
-import ProfessionCTA from "@/components/home/ProfessionCTA";
 
 const Index = () => {
   const [isNewsletterModalOpen, setIsNewsletterModalOpen] = useState(false);
@@ -19,9 +18,6 @@ const Index = () => {
 
         {/* Feature boxes section */}
         <FeatureBoxesSection />
-        
-        {/* Profession CTA section */}
-        <ProfessionCTA />
       </main>
       <Footer />
       
