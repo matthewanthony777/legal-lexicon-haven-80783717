@@ -1,5 +1,6 @@
 
 import { getAllArticlesData } from '@/plugins/article-loader';
+import { Article as PluginArticle } from '@/types/article';
 
 // Define the Article interface locally without importing
 export interface Article {
@@ -14,7 +15,7 @@ export interface Article {
 /**
  * Map the article data from plugin to match our local interface
  */
-function mapArticleData(article: any): Article {
+function mapArticleData(article: PluginArticle): Article {
   return {
     slug: article.slug,
     title: article.title,
