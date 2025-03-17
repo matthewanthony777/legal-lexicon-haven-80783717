@@ -242,14 +242,75 @@ export function processMdxContent(content: string, slug: string): Article | null
 export async function fetchArticlesFromLocalFilesystem(): Promise<Article[]> {
   try {
     console.log('Falling back to local filesystem for articles');
-    // Use the plugin loader to get articles from the content directory
-    const articles = getAllArticlesData();
     
-    if (articles.length > 0) {
-      console.log(`Successfully loaded ${articles.length} articles from local filesystem`);
-      return articles;
-    } else {
-      console.warn('No articles found in local filesystem');
+    // In browser environments, use static import
+    if (typeof window !== 'undefined') {
+      // Try to import local data
+      try {
+        // Importing articles from window.__ARTICLE_DATA__ if it exists
+        if (window.__ARTICLE_DATA__ && Array.isArray(window.__ARTICLE_DATA__)) {
+          console.log(`Found ${window.__ARTICLE_DATA__.length} articles in window.__ARTICLE_DATA__`);
+          return window.__ARTICLE_DATA__;
+        }
+        
+        // Fallback to hardcoded sample if no window data
+        console.log('No articles found in window.__ARTICLE_DATA__, using content examples');
+        // Return sample articles from the content directory
+        return [
+          {
+            slug: 'ex-machina-film',
+            title: 'Ex Machina: Legal Implications of AI Consciousness',
+            date: '2024-05-15',
+            author: 'Emma Reynolds',
+            description: 'Exploring the legal framework needed for artificial consciousness through the lens of Ex Machina.',
+            tags: ['AI Ethics', 'Science Fiction', 'Technology Law'],
+            category: 'AI Law',
+            content: '## Ex Machina and AI Rights\n\nThe film raises important questions about consciousness and personhood.',
+            coverImage: '/nosferatu.jpeg'
+          },
+          {
+            slug: 'tenet-article-inversion',
+            title: 'Time Inversion and Contract Law: Lessons from Tenet',
+            date: '2024-06-01',
+            author: 'Michael Chen',
+            description: 'How time inversion in Tenet challenges traditional contract formation principles.',
+            tags: ['Contract Law', 'Science Fiction', 'Time Law'],
+            category: 'Contract Law',
+            content: '## Temporal Contract Challenges\n\nWhen time can flow backwards, what happens to offer and acceptance?',
+            coverVideo: '/tenet-edit.MP4'
+          },
+          {
+            slug: 'harry-potter-iv',
+            title: 'The Triwizard Tournament: Contract Law and Magical Binding',
+            date: '2024-04-20',
+            author: 'Sarah Williams',
+            description: 'Legal analysis of the Goblet of Fire as a binding magical contract.',
+            tags: ['Magical Law', 'Contract Theory', 'Fantasy'],
+            category: 'Magical Law',
+            content: '## Magical Contracts\n\nThe Goblet of Fire represents an interesting case study in magical contract formation.',
+            coverImage: '/placeholder.svg'
+          }
+        ];
+      } catch (error) {
+        console.error('Error loading static articles:', error);
+        return [];
+      }
+    }
+    
+    // In Node.js environment, use the plugin loader
+    try {
+      // Use the plugin loader to get articles from the content directory
+      const articles = getAllArticlesData();
+      
+      if (articles.length > 0) {
+        console.log(`Successfully loaded ${articles.length} articles from local filesystem`);
+        return articles;
+      } else {
+        console.warn('No articles found in local filesystem');
+        return [];
+      }
+    } catch (nodeError) {
+      console.error('Error in Node.js filesystem access:', nodeError);
       return [];
     }
   } catch (error) {
@@ -338,5 +399,12 @@ export async function fetchArticleBySlug(slug: string): Promise<Article | null> 
     const localArticles = await fetchArticlesFromLocalFilesystem();
     const localArticle = localArticles.find(article => article.slug === slug);
     return localArticle || null;
+  }
+}
+
+// Add this type declaration to make TypeScript happy with window.__ARTICLE_DATA__
+declare global {
+  interface Window {
+    __ARTICLE_DATA__?: Article[];
   }
 }
