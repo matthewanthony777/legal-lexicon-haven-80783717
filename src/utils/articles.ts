@@ -1,5 +1,5 @@
 import { Article } from '@/types/article';
-import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
+import { fetchAllArticles, fetchArticleBySlug, fetchArticlesFromLocalFilesystem } from '@/utils/github';
 
 // In-memory cache for articles to avoid refetching
 let articlesCache: Article[] | null = null;
@@ -24,7 +24,15 @@ export const getAllArticles = async (): Promise<Article[]> => {
             articlesCache = articles;
             lastFetchTime = now;
         } else {
-            console.warn('No articles were returned from GitHub');
+            console.warn('No articles were returned from GitHub or local filesystem');
+            // Try local filesystem as last resort if GitHub returned empty
+            const localArticles = await fetchArticlesFromLocalFilesystem();
+            if (localArticles.length > 0) {
+                console.log(`Loaded ${localArticles.length} articles from local filesystem`);
+                articlesCache = localArticles;
+                lastFetchTime = now;
+                return localArticles;
+            }
         }
         
         return articles;
@@ -35,7 +43,15 @@ export const getAllArticles = async (): Promise<Article[]> => {
             console.log('Returning expired cached articles as fallback');
             return articlesCache;
         }
-        return [];
+        
+        // As a last resort, try local filesystem
+        console.log('Attempting to load from local filesystem as last resort');
+        const localArticles = await fetchArticlesFromLocalFilesystem();
+        if (localArticles.length > 0) {
+            articlesCache = localArticles;
+            lastFetchTime = now;
+        }
+        return localArticles;
     }
 };
 
@@ -57,7 +73,10 @@ export const getArticleBySlug = async (slug: string): Promise<Article | undefine
         return article || undefined;
     } catch (error) {
         console.error(`Error getting article by slug ${slug}:`, error);
-        return undefined;
+        // Try local filesystem as last resort
+        console.log(`Trying local filesystem for article: ${slug}`);
+        const localArticles = await fetchArticlesFromLocalFilesystem();
+        return localArticles.find(article => article.slug === slug);
     }
 };
 

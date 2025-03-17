@@ -1,8 +1,8 @@
-
 import matter from 'gray-matter';
 import { Base64 } from 'js-base64';
 import { Article, GitHubFile } from '@/types/article';
 import { GITHUB_CONFIG } from '@/config/github';
+import { getAllArticlesData } from '@/plugins/article-loader';
 
 // Base URL for GitHub API requests
 const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.articlesPath}`;
@@ -236,6 +236,29 @@ export function processMdxContent(content: string, slug: string): Article | null
 }
 
 /**
+ * Fetches articles from the local filesystem using the plugin loader
+ * Used as fallback when GitHub API fails
+ */
+export async function fetchArticlesFromLocalFilesystem(): Promise<Article[]> {
+  try {
+    console.log('Falling back to local filesystem for articles');
+    // Use the plugin loader to get articles from the content directory
+    const articles = getAllArticlesData();
+    
+    if (articles.length > 0) {
+      console.log(`Successfully loaded ${articles.length} articles from local filesystem`);
+      return articles;
+    } else {
+      console.warn('No articles found in local filesystem');
+      return [];
+    }
+  } catch (error) {
+    console.error('Error fetching articles from local filesystem:', error);
+    return [];
+  }
+}
+
+/**
  * Fetch all articles from GitHub repository
  */
 export async function fetchAllArticles(): Promise<Article[]> {
@@ -243,21 +266,8 @@ export async function fetchAllArticles(): Promise<Article[]> {
     const mdxFiles = await fetchMdxFilesList();
     
     if (mdxFiles.length === 0) {
-      console.log('No MDX files found, falling back to local content');
-      
-      // Fallback to local content for development
-      return [
-        {
-          slug: 'sample-article',
-          title: 'Sample Article',
-          date: new Date().toISOString(),
-          author: 'The Screen Scholar',
-          description: 'This is a sample article for development.',
-          tags: ['sample', 'development'],
-          category: 'development',
-          content: '## This is a sample article\n\nThis content is shown when GitHub API requests fail.'
-        }
-      ];
+      console.log('No MDX files found in GitHub, falling back to local filesystem');
+      return await fetchArticlesFromLocalFilesystem();
     }
     
     const articles: Article[] = [];
@@ -265,7 +275,7 @@ export async function fetchAllArticles(): Promise<Article[]> {
     // Filter out README.md files
     const contentFiles = mdxFiles.filter(file => !file.toLowerCase().includes('readme'));
     
-    console.log(`Processing ${contentFiles.length} content files...`);
+    console.log(`Processing ${contentFiles.length} content files from GitHub...`);
     
     for (const filename of contentFiles) {
       console.log(`Fetching content for ${filename}`);
@@ -291,11 +301,12 @@ export async function fetchAllArticles(): Promise<Article[]> {
       }
     }
     
-    console.log(`Successfully processed ${articles.length} articles`);
+    console.log(`Successfully processed ${articles.length} articles from GitHub`);
     return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
-    console.error('Error fetching all articles:', error);
-    return [];
+    console.error('Error fetching all articles from GitHub:', error);
+    console.log('Falling back to local filesystem');
+    return await fetchArticlesFromLocalFilesystem();
   }
 }
 
@@ -311,12 +322,21 @@ export async function fetchArticleBySlug(slug: string): Promise<Article | null> 
     }
     
     if (!content) {
-      return null;
+      console.log(`Article ${slug} not found on GitHub, trying local filesystem`);
+      // Try to get the article from local filesystem
+      const localArticles = await fetchArticlesFromLocalFilesystem();
+      const localArticle = localArticles.find(article => article.slug === slug);
+      return localArticle || null;
     }
     
     return processMdxContent(content, slug);
   } catch (error) {
-    console.error(`Error fetching article for slug ${slug}:`, error);
-    return null;
+    console.error(`Error fetching article for slug ${slug} from GitHub:`, error);
+    console.log(`Trying to get ${slug} from local filesystem`);
+    
+    // Try to get the article from local filesystem
+    const localArticles = await fetchArticlesFromLocalFilesystem();
+    const localArticle = localArticles.find(article => article.slug === slug);
+    return localArticle || null;
   }
 }
