@@ -1,5 +1,5 @@
 import { Article } from '@/types/article';
-import { fetchAllArticles, fetchArticleBySlug, fetchArticlesFromLocalFilesystem } from '@/utils/github';
+import { fetchAllArticles, fetchArticleBySlug, getWindowArticleData } from '@/utils/github';
 
 // In-memory cache for articles to avoid refetching
 let articlesCache: Article[] | null = null;
@@ -23,35 +23,33 @@ export const getAllArticles = async (): Promise<Article[]> => {
             console.log(`Successfully loaded ${articles.length} articles`);
             articlesCache = articles;
             lastFetchTime = now;
+            return articles;
         } else {
-            console.warn('No articles were returned from GitHub or local filesystem');
-            // Try local filesystem as last resort if GitHub returned empty
-            const localArticles = await fetchArticlesFromLocalFilesystem();
-            if (localArticles.length > 0) {
-                console.log(`Loaded ${localArticles.length} articles from local filesystem`);
-                articlesCache = localArticles;
+            console.warn('No articles were returned from GitHub');
+            
+            // Check if we have any sample articles in window.__ARTICLE_DATA__
+            const windowArticles = getWindowArticleData();
+            if (windowArticles.length > 0) {
+                console.log(`Found ${windowArticles.length} sample articles in window.__ARTICLE_DATA__`);
+                articlesCache = windowArticles;
                 lastFetchTime = now;
-                return localArticles;
+                return windowArticles;
             }
+            
+            // If all else fails, return an empty array
+            return [];
         }
-        
-        return articles;
     } catch (error) {
         console.error('Error getting all articles:', error);
+        
         // Return cached articles as fallback if available, even if expired
         if (articlesCache) {
             console.log('Returning expired cached articles as fallback');
             return articlesCache;
         }
         
-        // As a last resort, try local filesystem
-        console.log('Attempting to load from local filesystem as last resort');
-        const localArticles = await fetchArticlesFromLocalFilesystem();
-        if (localArticles.length > 0) {
-            articlesCache = localArticles;
-            lastFetchTime = now;
-        }
-        return localArticles;
+        // As a last resort, try window.__ARTICLE_DATA__
+        return getWindowArticleData();
     }
 };
 
@@ -73,10 +71,11 @@ export const getArticleBySlug = async (slug: string): Promise<Article | undefine
         return article || undefined;
     } catch (error) {
         console.error(`Error getting article by slug ${slug}:`, error);
-        // Try local filesystem as last resort
-        console.log(`Trying local filesystem for article: ${slug}`);
-        const localArticles = await fetchArticlesFromLocalFilesystem();
-        return localArticles.find(article => article.slug === slug);
+        
+        // Try window.__ARTICLE_DATA__ as last resort
+        console.log(`Trying window.__ARTICLE_DATA__ for article: ${slug}`);
+        const windowArticles = getWindowArticleData();
+        return windowArticles.find(article => article.slug === slug);
     }
 };
 
