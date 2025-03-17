@@ -1,12 +1,13 @@
-import { articles } from 'virtual:mdx-data';
+
+import { getCareerInsightsArticles, getArticleBySlug } from '@/utils/local-articles';
 import { Article } from '@/types/article';
 
 export const getAllCareerInsights = (): Article[] => {
-    return articles?.filter(article => article.category === 'career') || [];
+    return getCareerInsightsArticles();
 };
 
 export const getCareerInsightBySlug = (slug: string): Article | undefined => {
-    return articles?.find(article => article.slug === slug && article.category === 'career');
+    return getArticleBySlug(slug);
 };
 
 export const getLatestCareerInsights = (count: number = 5): Article[] => {

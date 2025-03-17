@@ -5,8 +5,8 @@ export interface ArticleMetadata {
   author: string;
   description: string;
   slug: string;
-  category: string;
-  tags: string[];
+  category?: string;
+  tags?: string[];
   coverImage?: string;
   coverVideo?: string;
 }
