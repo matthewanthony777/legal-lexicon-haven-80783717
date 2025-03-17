@@ -6,7 +6,7 @@ export interface ArticleMetadata {
   description: string;
   slug: string;
   category?: string; // Make category optional to match Article type
-  tags: string[];
+  tags?: string[]; // Make tags optional to match Article type
   coverImage?: string;
   coverVideo?: string;
 }
