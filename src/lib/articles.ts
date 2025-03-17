@@ -12,18 +12,35 @@ export interface Article {
 }
 
 /**
+ * Map the article data from plugin to match our local interface
+ */
+function mapArticleData(article: any): Article {
+  return {
+    slug: article.slug,
+    title: article.title,
+    date: article.date,
+    // Use description as excerpt or provide a fallback
+    excerpt: article.description || '',
+    content: article.content,
+    tags: article.tags || [],
+  };
+}
+
+/**
  * Get a specific article by slug
  */
 export async function getArticle(slug: string): Promise<Article | undefined> {
   const articles = getAllArticlesData();
-  return articles.find(article => article.slug === slug);
+  const article = articles.find(article => article.slug === slug);
+  return article ? mapArticleData(article) : undefined;
 }
 
 /**
  * Get all articles
  */
 export async function getAllArticles(): Promise<Article[]> {
-  return getAllArticlesData();
+  const articles = getAllArticlesData();
+  return articles.map(mapArticleData);
 }
 
 /**
@@ -31,7 +48,9 @@ export async function getAllArticles(): Promise<Article[]> {
  */
 export async function getArticlesByTag(tag: string): Promise<Article[]> {
   const articles = getAllArticlesData();
-  return articles.filter(article => article.tags.includes(tag));
+  return articles
+    .filter(article => article.tags.includes(tag))
+    .map(mapArticleData);
 }
 
 /**
