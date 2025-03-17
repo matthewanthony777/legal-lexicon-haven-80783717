@@ -17,7 +17,7 @@ const ProfessionCTA = () => {
           variant="outline"
           asChild
         >
-          <Link to="/about" className="flex flex-col items-center space-y-2">
+          <Link to="/about#" className="flex flex-col items-center space-y-2">
             <Briefcase className="h-8 w-8 mb-2 transition-transform group-hover:scale-110" />
             <span>Legal Mind</span>
           </Link>
@@ -28,7 +28,7 @@ const ProfessionCTA = () => {
           variant="outline"
           asChild
         >
-          <Link to="/about" className="flex flex-col items-center space-y-2">
+          <Link to="/about#" className="flex flex-col items-center space-y-2">
             <Code className="h-8 w-8 mb-2 transition-transform group-hover:scale-110" />
             <span>Technology Expert</span>
           </Link>
@@ -39,7 +39,7 @@ const ProfessionCTA = () => {
           variant="outline"
           asChild
         >
-          <Link to="/about" className="flex flex-col items-center space-y-2">
+          <Link to="/about#" className="flex flex-col items-center space-y-2">
             <Film className="h-8 w-8 mb-2 transition-transform group-hover:scale-110" />
             <span>Media Professional</span>
           </Link>
