@@ -1,6 +1,5 @@
-
 import Navigation from "@/components/Navigation";
-import { Youtube, Instagram, ArrowRight, Mail, LightbulbIcon, GraduationCap, Film } from "lucide-react";
+import { Youtube, Instagram, ArrowRight, Mail, LightbulbIcon, GraduationCap, Film, BookText, Zap, Crosshair, Brain, Shield, Eye, BarChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TikTokIcon from "@/components/icons/TikTokIcon";
 import Footer from "@/components/Footer";
@@ -105,88 +104,88 @@ const Index = () => {
         {/* Three feature boxes section - adjusted top spacing by reducing py-16 to py-8 */}
         <div className="container mx-auto px-4 py-8 bg-muted/20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Box 1: Legal Innovation Mastery */}
+            {/* Box 1: Strategic Innovation Mastery™ */}
             <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <LightbulbIcon className="h-8 w-8 text-primary" />
+                  <Brain className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold font-archivo">Legal Innovation Mastery</h3>
-                <p className="text-lg font-playfair">Transform your legal practice through cutting-edge technology</p>
+                <h3 className="text-2xl font-bold font-archivo">Strategic Innovation Mastery™</h3>
+                <p className="text-lg font-playfair">Transform your expertise into unmatched market advantage</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Stay ahead with cutting-edge legal tech analysis</span>
+                    <span>Master emerging technologies reshaping professional landscapes</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Master AI tools reshaping the legal landscape</span>
+                    <span>Develop unique methodologies that create competitive immunity</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Transform traditional legal processes with innovative methodologies</span>
+                    <span>Position yourself at high-value intersection points others overlook</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Access exclusive insights on emerging legal technologies</span>
+                    <span>Access exclusive insights on innovation patterns before they become obvious</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
 
-            {/* Box 2: Future-Proof Career Architecture */}
+            {/* Box 2: Future-Proof Career Architecture™ */}
             <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <GraduationCap className="h-8 w-8 text-primary" />
+                  <Shield className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold font-archivo">Future-Proof Career Architecture</h3>
-                <p className="text-lg font-playfair">Build a resilient legal career that thrives in disruption</p>
+                <h3 className="text-2xl font-bold font-archivo">Future-Proof Career Architecture™</h3>
+                <p className="text-lg font-playfair">Build a resilient career that thrives in disruption</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Design a career path immune to market disruption</span>
+                    <span>Design career paths immune to market and technological disruption</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Develop essential future skills before they become mandatory</span>
+                    <span>Develop essential skills & capabilities before they become mandatory</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Position yourself as an innovation leader in your organization</span>
+                    <span>Position yourself as an innovation leader in your field</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Create a personal brand that attracts high-value opportunities</span>
+                    <span>Create a brand that attracts high-value opportunities</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
 
-            {/* Box 3: Strategic Media Intelligence */}
+            {/* Box 3: Strategic Media Intelligence™ */}
             <Card className="border-t-4 border-t-primary transition-all hover:shadow-lg hover:-translate-y-1 group">
               <CardContent className="p-6 space-y-4">
                 <div className="bg-primary/10 p-3 rounded-full w-14 h-14 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                  <Film className="h-8 w-8 text-primary" />
+                  <Eye className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold font-archivo">Strategic Media Intelligence</h3>
-                <p className="text-lg font-playfair">Gain unique legal insights through media analysis</p>
+                <h3 className="text-2xl font-bold font-archivo">Strategic Media Intelligence™</h3>
+                <p className="text-lg font-playfair">Gain unique insights through media and cultural analysis</p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Decode legal futures through film, TV and literature analysis</span>
+                    <span>Decode future trends through legal, technology, media, film, and literature analysis</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Apply fiction-inspired strategies to real-world legal challenges</span>
+                    <span>Apply narrative-derived strategies to real-world professional challenges</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Connect theoretical concepts with practical legal applications</span>
+                    <span>Connect theoretical concepts with practical applications</span>
                   </li>
                   <li className="flex items-start">
                     <ArrowRight className="h-4 w-4 mr-2 mt-1 text-primary" />
-                    <span>Gain unique perspectives that differentiate you from peers</span>
+                    <span>Gain perspectives that differentiate you from peers</span>
                   </li>
                 </ul>
               </CardContent>
