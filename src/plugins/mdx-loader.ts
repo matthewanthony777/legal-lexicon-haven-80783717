@@ -19,20 +19,7 @@ export function mdxDataPlugin(): Plugin {
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        console.log('Loading MDX data for virtual module...');
         const articles = getAllArticlesData();
-        console.log(`Loaded ${articles.length} articles for virtual module`);
-        
-        // Log the first few articles to help with debugging
-        if (articles.length > 0) {
-          console.log('First article:', {
-            title: articles[0].title,
-            slug: articles[0].slug,
-            category: articles[0].category || 'none',
-            tags: articles[0].tags || []
-          });
-        }
-        
         return `export const articles = ${JSON.stringify(articles)}`
       }
     }
