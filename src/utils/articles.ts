@@ -1,7 +1,8 @@
-import { Article } from '@/types/article';
-import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
 
-// In-memory cache for articles to avoid refetching
+import { getAllArticlesData } from '@/plugins/article-loader';
+import { Article } from '@/types/article';
+
+// In-memory cache for articles to avoid reprocessing files
 let articlesCache: Article[] | null = null;
 let lastFetchTime: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
@@ -16,15 +17,16 @@ export const getAllArticles = async (): Promise<Article[]> => {
     }
     
     try {
-        console.log('Fetching all articles from GitHub');
-        const articles = await fetchAllArticles();
+        console.log('Loading articles from local content directory');
+        // Use the article loader which reads from the filesystem
+        const articles = getAllArticlesData();
         
         if (articles.length > 0) {
-            console.log(`Successfully loaded ${articles.length} articles`);
+            console.log(`Successfully loaded ${articles.length} articles from local content`);
             articlesCache = articles;
             lastFetchTime = now;
         } else {
-            console.warn('No articles were returned from GitHub');
+            console.warn('No articles were found in the content directory');
         }
         
         return articles;
@@ -41,20 +43,19 @@ export const getAllArticles = async (): Promise<Article[]> => {
 
 export const getArticleBySlug = async (slug: string): Promise<Article | undefined> => {
     try {
-        // First check the cache
-        if (articlesCache) {
-            console.log(`Checking cache for article: ${slug}`);
-            const cachedArticle = articlesCache.find(article => article.slug === slug);
-            if (cachedArticle) {
-                console.log(`Found article in cache: ${slug}`);
-                return cachedArticle;
-            }
-        }
+        // First check the cache or load all articles
+        const articles = await getAllArticles();
         
-        // If not in cache, fetch directly
-        console.log(`Fetching article directly: ${slug}`);
-        const article = await fetchArticleBySlug(slug);
-        return article || undefined;
+        console.log(`Looking for article with slug: ${slug}`);
+        const article = articles.find(article => article.slug === slug);
+        
+        if (article) {
+            console.log(`Found article: ${article.title}`);
+            return article;
+        } else {
+            console.log(`Article with slug "${slug}" not found`);
+            return undefined;
+        }
     } catch (error) {
         console.error(`Error getting article by slug ${slug}:`, error);
         return undefined;

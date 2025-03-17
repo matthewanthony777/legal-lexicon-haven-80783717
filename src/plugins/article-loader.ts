@@ -21,12 +21,16 @@ export function getAllArticlesData(): Article[] {
     }
     
     const articleFiles = fs.readdirSync(articlesDirectory)
-      .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'));
+      .filter(fileName => (fileName.endsWith('.mdx') || fileName.endsWith('.md')) && 
+              fileName !== 'README.md');
     
     const careerInsightFiles = fs.existsSync(careerInsightsDirectory) 
       ? fs.readdirSync(careerInsightsDirectory)
-        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
+        .filter(fileName => (fileName.endsWith('.mdx') || fileName.endsWith('.md')) && 
+                fileName !== 'README.md')
       : [];
+
+    console.log(`Found ${articleFiles.length} article files and ${careerInsightFiles.length} career insight files`);
 
     const articles = articleFiles.map(fileName => {
       const slug = fileName.replace(/\.(mdx|md)$/, '');
@@ -61,11 +65,22 @@ export function getAllArticlesData(): Article[] {
       );
     });
 
-    return [...articles, ...careerInsights].sort((a, b) => 
+    const allArticles = [...articles, ...careerInsights].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
+    
+    console.log(`Processed ${allArticles.length} total articles`);
+    return allArticles;
   } catch (error) {
     console.error('Error loading articles:', error);
     return [];
   }
+}
+
+/**
+ * Gets a specific article by slug
+ */
+export function getArticleBySlug(slug: string): Article | undefined {
+  const allArticles = getAllArticlesData();
+  return allArticles.find(article => article.slug === slug);
 }

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { getAllArticles } from "@/utils/articles";
 import { Article } from "@/types/article";
@@ -23,18 +22,17 @@ const Articles = () => {
       setLoading(true);
       setError(null);
       
-      // Load articles without showing toast immediately for better UX
       const fetchedArticles = await getAllArticles();
       
       console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
       setArticles(fetchedArticles);
       
       if (fetchedArticles.length === 0) {
-        setError("No articles found. Please check your GitHub repository to make sure it contains markdown files in the content/articles directory.");
+        setError("No articles found. Please check your content/articles directory to make sure it contains markdown files.");
         toast({
           variant: "destructive",
           title: "No articles found",
-          description: "Check GitHub repository configuration",
+          description: "Check content directory structure and files",
         });
       }
     } catch (err) {
@@ -57,7 +55,7 @@ const Articles = () => {
   const filteredArticles = articles.filter((article) => {
     const matchesSearch = 
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.description.toLowerCase().includes(searchQuery.toLowerCase());
+      (article.description && article.description.toLowerCase().includes(searchQuery.toLowerCase()));
     
     return matchesSearch;
   });
