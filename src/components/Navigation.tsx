@@ -45,19 +45,23 @@ const Navigation = () => {
     <nav className="border-b shadow-sm shadow-[#0000001a]">
       <div className="container flex h-16 items-center px-4">
         {isMobile ? (
-          <>
+          <div className="flex justify-center w-full">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon">
                   <Menu className="h-6 w-6" />
                   <span className="sr-only">Toggle menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[240px] sm:w-[300px]">
+              <SheetContent 
+                side="top" 
+                className="w-full sm:max-w-md mx-auto bg-background/85 backdrop-blur-sm pt-12 rounded-b-xl"
+                style={{ left: '50%', transform: 'translateX(-50%)', right: 'auto' }}
+              >
                 <MobileMenu />
               </SheetContent>
             </Sheet>
-          </>
+          </div>
         ) : (
           <NavigationMenu>
             <NavigationMenuList>
