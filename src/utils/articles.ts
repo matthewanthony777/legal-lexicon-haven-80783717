@@ -27,12 +27,16 @@ export const getAllArticles = async (): Promise<Article[]> => {
         } else {
             console.warn('No articles were returned from GitHub');
             
-            // Check if we have any sample articles in window.__ARTICLE_DATA__
+            // Check if we have any cache even if expired
+            if (articlesCache) {
+                console.log('Using expired cache as fallback');
+                return articlesCache;
+            }
+            
+            // Try getting window data
             const windowArticles = getWindowArticleData();
             if (windowArticles.length > 0) {
                 console.log(`Found ${windowArticles.length} sample articles in window.__ARTICLE_DATA__`);
-                articlesCache = windowArticles;
-                lastFetchTime = now;
                 return windowArticles;
             }
             
@@ -49,7 +53,13 @@ export const getAllArticles = async (): Promise<Article[]> => {
         }
         
         // As a last resort, try window.__ARTICLE_DATA__
-        return getWindowArticleData();
+        const windowArticles = getWindowArticleData();
+        if (windowArticles.length > 0) {
+            return windowArticles;
+        }
+        
+        // No fallbacks available
+        return [];
     }
 };
 
