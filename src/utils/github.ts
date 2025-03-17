@@ -1,19 +1,11 @@
+
 import matter from 'gray-matter';
 import { Base64 } from 'js-base64';
 import { Article, GitHubFile } from '@/types/article';
 import { GITHUB_CONFIG } from '@/config/github';
-import { articles as localArticles } from 'virtual:mdx-data';
 
 // Base URL for GitHub API requests
 const GITHUB_API_BASE = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.articlesPath}`;
-
-/**
- * Get articles from local content (vite virtual module)
- */
-export function getLocalArticles(): Article[] {
-  console.log(`Using local articles: ${localArticles?.length || 0} articles available`);
-  return localArticles || [];
-}
 
 /**
  * Fetch a list of all MDX files in the specified GitHub repository directory
@@ -244,23 +236,16 @@ export function processMdxContent(content: string, slug: string): Article | null
 }
 
 /**
- * Fetch all articles from GitHub repository with local fallback
+ * Fetch all articles from GitHub repository
  */
 export async function fetchAllArticles(): Promise<Article[]> {
   try {
-    console.log('Attempting to fetch articles from GitHub API');
     const mdxFiles = await fetchMdxFilesList();
     
     if (mdxFiles.length === 0) {
-      console.log('No MDX files found via GitHub API, falling back to local content');
-      const localContent = getLocalArticles();
-      if (localContent.length > 0) {
-        console.log(`Using ${localContent.length} articles from local content`);
-        return localContent;
-      }
+      console.log('No MDX files found, falling back to local content');
       
-      // Fallback to sample article if both GitHub and local content fail
-      console.log('No local content found, using sample article');
+      // Fallback to local content for development
       return [
         {
           slug: 'sample-article',
@@ -306,39 +291,19 @@ export async function fetchAllArticles(): Promise<Article[]> {
       }
     }
     
-    console.log(`Successfully processed ${articles.length} articles from GitHub`);
+    console.log(`Successfully processed ${articles.length} articles`);
     return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
-    console.error('Error fetching articles from GitHub:', error);
-    
-    // Try local content as fallback
-    const localContent = getLocalArticles();
-    if (localContent.length > 0) {
-      console.log(`Falling back to ${localContent.length} local articles after GitHub API error`);
-      return localContent;
-    }
-    
+    console.error('Error fetching all articles:', error);
     return [];
   }
 }
 
 /**
- * Fetch a specific article by slug from GitHub repository with local fallback
+ * Fetch a specific article by slug from GitHub repository
  */
 export async function fetchArticleBySlug(slug: string): Promise<Article | null> {
   try {
-    console.log(`Fetching article with slug: ${slug}`);
-    
-    // First try to find it in local content
-    const localContent = getLocalArticles();
-    const localArticle = localContent.find(article => article.slug === slug);
-    if (localArticle) {
-      console.log(`Found article ${slug} in local content`);
-      return localArticle;
-    }
-    
-    console.log(`Article ${slug} not found in local content, trying GitHub API`);
-    
     // Try both .md and .mdx extensions
     let content = await fetchMdxFileContent(`${slug}.mdx`);
     if (!content) {
@@ -346,22 +311,12 @@ export async function fetchArticleBySlug(slug: string): Promise<Article | null> 
     }
     
     if (!content) {
-      console.log(`Article ${slug} not found via GitHub API`);
       return null;
     }
     
     return processMdxContent(content, slug);
   } catch (error) {
     console.error(`Error fetching article for slug ${slug}:`, error);
-    
-    // Try local content as fallback for specific article
-    const localContent = getLocalArticles();
-    const localArticle = localContent.find(article => article.slug === slug);
-    if (localArticle) {
-      console.log(`Falling back to local content for article ${slug} after GitHub API error`);
-      return localArticle;
-    }
-    
     return null;
   }
 }

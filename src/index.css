@@ -119,16 +119,13 @@
 }
 
 /* Code block styling */
-.code-block {
+.code-block-wrapper {
   position: relative;
-  margin: 1.5rem 0;
+  margin: 1rem 0;
   overflow: hidden;
   border-radius: 0.5rem;
   background-color: #1a1a1a;
   border: 1px solid #333;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Roboto Mono', monospace;
-  padding: 16px;
-  overflow-x: auto;
 }
 
 .code-language-label {
@@ -167,12 +164,6 @@ code {
   border-radius: 0.25rem;
   font-size: 0.9em;
   border: 1px solid #333;
-}
-
-/* Special text styling */
-.special-text {
-  font-style: normal;
-  display: inline-block;
 }
 
 /* Python specific syntax highlighting */
@@ -286,7 +277,6 @@ ol.list-decimal li {
 .markdown-content h4,
 .markdown-content h5,
 .markdown-content h6 {
-  scroll-margin-top: 100px; /* For anchor links */
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
   line-height: 1.2;

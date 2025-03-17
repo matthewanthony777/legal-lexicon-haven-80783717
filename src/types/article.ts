@@ -5,15 +5,14 @@ export interface ArticleMetadata {
   author: string;
   description: string;
   slug: string;
-  category?: string; // Make category optional to match Article type
-  tags?: string[]; // Make tags optional to match Article type
+  category: string;
+  tags: string[];
   coverImage?: string;
   coverVideo?: string;
 }
 
 export interface Article extends ArticleMetadata {
   content: string;
-  rawContent?: string;
 }
 
 export interface GitHubFile {

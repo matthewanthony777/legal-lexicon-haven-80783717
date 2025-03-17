@@ -1,6 +1,5 @@
-
 import { Article } from '@/types/article';
-import { fetchAllArticles, fetchArticleBySlug, getLocalArticles } from '@/utils/github';
+import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
 
 // In-memory cache for articles to avoid refetching
 let articlesCache: Article[] | null = null;
@@ -17,25 +16,15 @@ export const getAllArticles = async (): Promise<Article[]> => {
     }
     
     try {
-        // First try to load local content as it's faster
-        const localArticles = getLocalArticles();
-        if (localArticles.length > 0) {
-            console.log(`Successfully loaded ${localArticles.length} articles from local content`);
-            articlesCache = localArticles;
-            lastFetchTime = now;
-            return localArticles;
-        }
-        
-        // If local content is empty, try GitHub API
-        console.log('No local articles found, fetching from GitHub');
+        console.log('Fetching all articles from GitHub');
         const articles = await fetchAllArticles();
         
         if (articles.length > 0) {
-            console.log(`Successfully loaded ${articles.length} articles from GitHub`);
+            console.log(`Successfully loaded ${articles.length} articles`);
             articlesCache = articles;
             lastFetchTime = now;
         } else {
-            console.warn('No articles were returned from GitHub or local content');
+            console.warn('No articles were returned from GitHub');
         }
         
         return articles;
@@ -62,15 +51,7 @@ export const getArticleBySlug = async (slug: string): Promise<Article | undefine
             }
         }
         
-        // Then check local content
-        const localArticles = getLocalArticles();
-        const localArticle = localArticles.find(article => article.slug === slug);
-        if (localArticle) {
-            console.log(`Found article in local content: ${slug}`);
-            return localArticle;
-        }
-        
-        // If not in cache or local content, fetch directly
+        // If not in cache, fetch directly
         console.log(`Fetching article directly: ${slug}`);
         const article = await fetchArticleBySlug(slug);
         return article || undefined;

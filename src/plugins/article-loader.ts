@@ -6,16 +6,14 @@ import { Article } from '../types/article';
 import { processMarkdown } from './markdown-processor';
 import { createArticleFromFrontMatter } from './front-matter-utils';
 
-// Use path.resolve to ensure absolute paths
-const articlesDirectory = path.resolve(process.cwd(), 'content/articles');
+const articlesDirectory = path.join(process.cwd(), 'content/articles');
+const careerInsightsDirectory = path.join(process.cwd(), 'content/career-insights');
 
 /**
- * Loads all articles from the content directory
+ * Loads all articles and career insights from the content directories
  */
 export function getAllArticlesData(): Article[] {
   try {
-    console.log('Loading local articles from:', articlesDirectory);
-    
     // Check if articles directory exists
     if (!fs.existsSync(articlesDirectory)) {
       console.warn('Articles directory not found at:', articlesDirectory);
@@ -23,11 +21,13 @@ export function getAllArticlesData(): Article[] {
     }
     
     const articleFiles = fs.readdirSync(articlesDirectory)
-      .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
-      .filter(fileName => !fileName.toLowerCase().includes('readme'));
+      .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'));
     
-    console.log(`Found ${articleFiles.length} article files:`, articleFiles);
-      
+    const careerInsightFiles = fs.existsSync(careerInsightsDirectory) 
+      ? fs.readdirSync(careerInsightsDirectory)
+        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
+      : [];
+
     const articles = articleFiles.map(fileName => {
       const slug = fileName.replace(/\.(mdx|md)$/, '');
       const fullPath = path.join(articlesDirectory, fileName);
@@ -35,8 +35,6 @@ export function getAllArticlesData(): Article[] {
       
       // Use consistent front matter parsing
       const { data, content } = matter(fileContents);
-      
-      console.log(`Processing article: ${slug} with category: ${data.category || 'uncategorized'}`);
 
       return createArticleFromFrontMatter(
         slug,
@@ -45,14 +43,29 @@ export function getAllArticlesData(): Article[] {
       );
     });
 
-    const allArticles = [...articles].sort((a, b) => 
+    const careerInsights = careerInsightFiles.map(fileName => {
+      const slug = fileName.replace(/\.(mdx|md)$/, '');
+      const fullPath = path.join(careerInsightsDirectory, fileName);
+      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      
+      // Use consistent front matter parsing
+      const { data, content } = matter(fileContents);
+
+      // Mark this as a career article
+      const articleData = { ...data, category: 'career' };
+
+      return createArticleFromFrontMatter(
+        slug,
+        processMarkdown(content),
+        articleData
+      );
+    });
+
+    return [...articles, ...careerInsights].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
-    
-    console.log(`Total articles loaded: ${allArticles.length}`);
-    return allArticles;
   } catch (error) {
-    console.error('Error loading local articles:', error);
+    console.error('Error loading articles:', error);
     return [];
   }
 }
