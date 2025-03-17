@@ -1,5 +1,5 @@
 
-import { getArticleBySlug as getLoaderArticleBySlug, getAllArticlesData, getArticlesByCategory, getAllTags } from '@/plugins/article-loader';
+import { getArticleBySlug as getLoaderArticleBySlug, getAllArticlesData, getArticlesByCategory as getLoaderArticlesByCategory, getAllTags } from '@/plugins/article-loader';
 import { Article } from '@/types/article';
 
 // In-memory cache for dynamic requests (separate from build-time cache)
@@ -107,6 +107,7 @@ export const getArticlesByTag = async (tag: string): Promise<Article[]> => {
  */
 export const getArticlesByCategory = async (category: string): Promise<Article[]> => {
     try {
+        // Using local implementation instead of imported one for consistency with caching
         const articles = await getAllArticles();
         return articles.filter(article => 
             article.category && article.category.toLowerCase() === category.toLowerCase()
