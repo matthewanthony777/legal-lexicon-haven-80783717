@@ -1,7 +1,7 @@
-import { Article } from '@/types/article';
+
 import { getAllArticlesData } from '@/plugins/article-loader';
 
-// Interfaces remain the same
+// Define the Article interface locally without importing
 export interface Article {
   slug: string;
   title: string;
