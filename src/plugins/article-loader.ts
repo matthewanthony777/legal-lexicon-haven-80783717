@@ -8,15 +8,13 @@ import { createArticleFromFrontMatter } from './front-matter-utils';
 
 // Use path.resolve to ensure absolute paths
 const articlesDirectory = path.resolve(process.cwd(), 'content/articles');
-const careerInsightsDirectory = path.resolve(process.cwd(), 'content/career-insights');
 
 /**
- * Loads all articles and career insights from the content directories
+ * Loads all articles from the content directory
  */
 export function getAllArticlesData(): Article[] {
   try {
     console.log('Loading local articles from:', articlesDirectory);
-    console.log('Loading local career insights from:', careerInsightsDirectory);
     
     // Check if articles directory exists
     if (!fs.existsSync(articlesDirectory)) {
@@ -29,15 +27,7 @@ export function getAllArticlesData(): Article[] {
       .filter(fileName => !fileName.toLowerCase().includes('readme'));
     
     console.log(`Found ${articleFiles.length} article files:`, articleFiles);
-    
-    const careerInsightFiles = fs.existsSync(careerInsightsDirectory) 
-      ? fs.readdirSync(careerInsightsDirectory)
-        .filter(fileName => fileName.endsWith('.mdx') || fileName.endsWith('.md'))
-        .filter(fileName => !fileName.toLowerCase().includes('readme'))
-      : [];
       
-    console.log(`Found ${careerInsightFiles.length} career insight files:`, careerInsightFiles);
-
     const articles = articleFiles.map(fileName => {
       const slug = fileName.replace(/\.(mdx|md)$/, '');
       const fullPath = path.join(articlesDirectory, fileName);
@@ -55,27 +45,7 @@ export function getAllArticlesData(): Article[] {
       );
     });
 
-    const careerInsights = careerInsightFiles.map(fileName => {
-      const slug = fileName.replace(/\.(mdx|md)$/, '');
-      const fullPath = path.join(careerInsightsDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
-      
-      // Use consistent front matter parsing
-      const { data, content } = matter(fileContents);
-
-      // Mark this as a career article
-      const articleData = { ...data, category: 'career' };
-      
-      console.log(`Processing career insight: ${slug}`);
-
-      return createArticleFromFrontMatter(
-        slug,
-        processMarkdown(content),
-        articleData
-      );
-    });
-
-    const allArticles = [...articles, ...careerInsights].sort((a, b) => 
+    const allArticles = [...articles].sort((a, b) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
     );
     

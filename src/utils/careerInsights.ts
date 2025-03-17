@@ -4,6 +4,7 @@ import { Article } from '@/types/article';
 
 export const getAllCareerInsights = (): Article[] => {
     console.log(`Filtering career insights from ${articles?.length || 0} local articles`);
+    // Only look for articles with category set to 'career'
     const careerInsights = articles?.filter(article => article.category === 'career') || [];
     console.log(`Found ${careerInsights.length} career insights`);
     return careerInsights;
