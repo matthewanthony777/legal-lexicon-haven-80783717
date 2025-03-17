@@ -5,7 +5,7 @@ export interface ArticleMetadata {
   author: string;
   description: string;
   slug: string;
-  category: string;
+  category?: string; // Make category optional to match Article type
   tags: string[];
   coverImage?: string;
   coverVideo?: string;
@@ -13,6 +13,7 @@ export interface ArticleMetadata {
 
 export interface Article extends ArticleMetadata {
   content: string;
+  rawContent?: string;
 }
 
 export interface GitHubFile {
