@@ -1,12 +1,15 @@
 
-import { getAllArticlesData } from '@/plugins/article-loader';
+import { getArticleBySlug as getLoaderArticleBySlug, getAllArticlesData, getArticlesByCategory, getAllTags } from '@/plugins/article-loader';
 import { Article } from '@/types/article';
 
-// In-memory cache for articles to avoid reprocessing files
+// In-memory cache for dynamic requests (separate from build-time cache)
 let articlesCache: Article[] | null = null;
 let lastFetchTime: number = 0;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
 
+/**
+ * Gets all articles with caching and error handling
+ */
 export const getAllArticles = async (): Promise<Article[]> => {
     const now = Date.now();
     
@@ -41,9 +44,18 @@ export const getAllArticles = async (): Promise<Article[]> => {
     }
 };
 
+/**
+ * Gets a specific article by slug with error handling
+ */
 export const getArticleBySlug = async (slug: string): Promise<Article | undefined> => {
     try {
-        // First check the cache or load all articles
+        // First check if we can get the article directly without loading all
+        const directArticle = getLoaderArticleBySlug(slug);
+        if (directArticle) {
+            return directArticle;
+        }
+        
+        // If not found directly, check the cache or load all articles
         const articles = await getAllArticles();
         
         console.log(`Looking for article with slug: ${slug}`);
@@ -62,25 +74,76 @@ export const getArticleBySlug = async (slug: string): Promise<Article | undefine
     }
 };
 
+/**
+ * Gets the latest articles with error handling
+ */
 export const getLatestArticles = async (count: number = 5): Promise<Article[]> => {
-    const articles = await getAllArticles();
-    return articles.slice(0, count);
+    try {
+        const articles = await getAllArticles();
+        return articles.slice(0, count);
+    } catch (error) {
+        console.error(`Error getting latest ${count} articles:`, error);
+        return [];
+    }
 };
 
+/**
+ * Gets articles by category with error handling
+ */
+export const getArticlesByTag = async (tag: string): Promise<Article[]> => {
+    try {
+        const articles = await getAllArticles();
+        return articles.filter(article => 
+            article.tags && article.tags.includes(tag)
+        );
+    } catch (error) {
+        console.error(`Error getting articles by tag ${tag}:`, error);
+        return [];
+    }
+};
+
+/**
+ * Gets articles by category with error handling
+ */
 export const getArticlesByCategory = async (category: string): Promise<Article[]> => {
-    const articles = await getAllArticles();
-    return articles.filter(article => 
-        article.category && article.category.toLowerCase() === category.toLowerCase()
-    );
+    try {
+        const articles = await getAllArticles();
+        return articles.filter(article => 
+            article.category && article.category.toLowerCase() === category.toLowerCase()
+        );
+    } catch (error) {
+        console.error(`Error getting articles by category ${category}:`, error);
+        return [];
+    }
 };
 
+/**
+ * Gets all unique categories from articles with error handling
+ */
 export const getAllCategories = async (): Promise<string[]> => {
-    const articles = await getAllArticles();
-    const categories = new Set<string>();
-    articles.forEach(article => {
-        if (article.category) {
-            categories.add(article.category);
-        }
-    });
-    return Array.from(categories);
+    try {
+        const articles = await getAllArticles();
+        const categories = new Set<string>();
+        articles.forEach(article => {
+            if (article.category) {
+                categories.add(article.category);
+            }
+        });
+        return Array.from(categories);
+    } catch (error) {
+        console.error('Error getting all categories:', error);
+        return [];
+    }
+};
+
+/**
+ * Gets all unique tags from articles with error handling
+ */
+export const getAllTagsAsync = async (): Promise<string[]> => {
+    try {
+        return getAllTags();
+    } catch (error) {
+        console.error('Error getting all tags:', error);
+        return [];
+    }
 };
