@@ -1,28 +1,17 @@
 
-import { articles } from 'virtual:mdx-data';
-import { Article } from '@/types/article';
+import { Article, getCareerArticles, getArticleBySlug } from './local-articles';
 
-export const getAllCareerInsights = (): Article[] => {
-    console.log(`Filtering career insights from ${articles?.length || 0} local articles`);
-    // Only look for articles with category set to 'career'
-    const careerInsights = articles?.filter(article => article.category === 'career') || [];
-    console.log(`Found ${careerInsights.length} career insights`);
-    return careerInsights;
-};
+export function getAllCareerInsights(): Article[] {
+  return getCareerArticles();
+}
 
-export const getCareerInsightBySlug = (slug: string): Article | undefined => {
-    console.log(`Looking for career insight with slug: ${slug}`);
-    const insight = articles?.find(article => article.slug === slug && article.category === 'career');
-    if (insight) {
-        console.log(`Found career insight: ${insight.title}`);
-    } else {
-        console.log(`Career insight not found with slug: ${slug}`);
-    }
-    return insight;
-};
-
-export const getLatestCareerInsights = (count: number = 5): Article[] => {
-    const allInsights = getAllCareerInsights();
-    console.log(`Returning ${Math.min(count, allInsights.length)} latest career insights`);
-    return allInsights.slice(0, count);
-};
+export function getCareerInsightBySlug(slug: string): Article | undefined {
+  const article = getArticleBySlug(slug);
+  
+  // Only return if it's a career article
+  if (article && (article.category === 'career' || (article.tags && article.tags.includes('Career')))) {
+    return article;
+  }
+  
+  return undefined;
+}
