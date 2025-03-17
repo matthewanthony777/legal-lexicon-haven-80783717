@@ -23,24 +23,23 @@ const Articles = () => {
       setLoading(true);
       setError(null);
       
-      // Load articles from GitHub
+      // Load articles without showing toast immediately for better UX
       const fetchedArticles = await getAllArticles();
       
       console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
+      setArticles(fetchedArticles);
       
       if (fetchedArticles.length === 0) {
-        setError("No articles found. Please try again later.");
+        setError("No articles found. Please check your GitHub repository to make sure it contains markdown files in the content/articles directory.");
         toast({
           variant: "destructive",
-          title: "No articles available",
-          description: "Could not fetch articles from GitHub. Please check your GitHub configuration or try again later.",
+          title: "No articles found",
+          description: "Check GitHub repository configuration",
         });
-      } else {
-        setArticles(fetchedArticles);
       }
     } catch (err) {
       console.error("Error fetching articles:", err);
-      setError("Failed to load articles. Please check your GitHub configuration or try again later.");
+      setError("Failed to load articles. Check browser console for details.");
       toast({
         variant: "destructive",
         title: "Error loading articles",

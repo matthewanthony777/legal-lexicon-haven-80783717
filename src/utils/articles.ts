@@ -1,4 +1,3 @@
-
 import { Article } from '@/types/article';
 import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
 
@@ -24,27 +23,18 @@ export const getAllArticles = async (): Promise<Article[]> => {
             console.log(`Successfully loaded ${articles.length} articles`);
             articlesCache = articles;
             lastFetchTime = now;
-            return articles;
         } else {
             console.warn('No articles were returned from GitHub');
-            
-            // Check if we have any cache even if expired
-            if (articlesCache) {
-                console.log('Using expired cache as fallback');
-                return articlesCache;
-            }
-            
-            return [];
         }
+        
+        return articles;
     } catch (error) {
         console.error('Error getting all articles:', error);
-        
         // Return cached articles as fallback if available, even if expired
         if (articlesCache) {
             console.log('Returning expired cached articles as fallback');
             return articlesCache;
         }
-        
         return [];
     }
 };

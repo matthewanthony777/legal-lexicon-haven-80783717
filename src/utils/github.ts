@@ -243,8 +243,21 @@ export async function fetchAllArticles(): Promise<Article[]> {
     const mdxFiles = await fetchMdxFilesList();
     
     if (mdxFiles.length === 0) {
-      console.log('No MDX files found in GitHub');
-      return [];
+      console.log('No MDX files found, falling back to local content');
+      
+      // Fallback to local content for development
+      return [
+        {
+          slug: 'sample-article',
+          title: 'Sample Article',
+          date: new Date().toISOString(),
+          author: 'The Screen Scholar',
+          description: 'This is a sample article for development.',
+          tags: ['sample', 'development'],
+          category: 'development',
+          content: '## This is a sample article\n\nThis content is shown when GitHub API requests fail.'
+        }
+      ];
     }
     
     const articles: Article[] = [];
@@ -252,7 +265,7 @@ export async function fetchAllArticles(): Promise<Article[]> {
     // Filter out README.md files
     const contentFiles = mdxFiles.filter(file => !file.toLowerCase().includes('readme'));
     
-    console.log(`Processing ${contentFiles.length} content files from GitHub...`);
+    console.log(`Processing ${contentFiles.length} content files...`);
     
     for (const filename of contentFiles) {
       console.log(`Fetching content for ${filename}`);
@@ -278,10 +291,10 @@ export async function fetchAllArticles(): Promise<Article[]> {
       }
     }
     
-    console.log(`Successfully processed ${articles.length} articles from GitHub`);
+    console.log(`Successfully processed ${articles.length} articles`);
     return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
-    console.error('Error fetching all articles from GitHub:', error);
+    console.error('Error fetching all articles:', error);
     return [];
   }
 }
@@ -298,13 +311,12 @@ export async function fetchArticleBySlug(slug: string): Promise<Article | null> 
     }
     
     if (!content) {
-      console.log(`Article ${slug} not found on GitHub`);
       return null;
     }
     
     return processMdxContent(content, slug);
   } catch (error) {
-    console.error(`Error fetching article for slug ${slug} from GitHub:`, error);
+    console.error(`Error fetching article for slug ${slug}:`, error);
     return null;
   }
 }
