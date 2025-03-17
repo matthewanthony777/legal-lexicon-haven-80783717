@@ -236,19 +236,6 @@ export function processMdxContent(content: string, slug: string): Article | null
 }
 
 /**
- * Gets articles from the window.__ARTICLE_DATA__ global variable
- * This is the fallback mechanism for browser environments
- */
-export function getWindowArticleData(): Article[] {
-  if (typeof window !== 'undefined' && window.__ARTICLE_DATA__ && Array.isArray(window.__ARTICLE_DATA__)) {
-    console.log(`Found ${window.__ARTICLE_DATA__.length} articles in window.__ARTICLE_DATA__`);
-    return window.__ARTICLE_DATA__;
-  }
-  console.warn('No window.__ARTICLE_DATA__ found');
-  return [];
-}
-
-/**
  * Fetch all articles from GitHub repository
  */
 export async function fetchAllArticles(): Promise<Article[]> {
@@ -256,8 +243,8 @@ export async function fetchAllArticles(): Promise<Article[]> {
     const mdxFiles = await fetchMdxFilesList();
     
     if (mdxFiles.length === 0) {
-      console.log('No MDX files found in GitHub, falling back to window.__ARTICLE_DATA__');
-      return getWindowArticleData();
+      console.log('No MDX files found in GitHub');
+      return [];
     }
     
     const articles: Article[] = [];
@@ -295,8 +282,7 @@ export async function fetchAllArticles(): Promise<Article[]> {
     return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
     console.error('Error fetching all articles from GitHub:', error);
-    console.log('Falling back to window.__ARTICLE_DATA__');
-    return getWindowArticleData();
+    return [];
   }
 }
 
@@ -312,28 +298,13 @@ export async function fetchArticleBySlug(slug: string): Promise<Article | null> 
     }
     
     if (!content) {
-      console.log(`Article ${slug} not found on GitHub, checking window.__ARTICLE_DATA__`);
-      // Try to get the article from window.__ARTICLE_DATA__
-      const windowArticles = getWindowArticleData();
-      const windowArticle = windowArticles.find(article => article.slug === slug);
-      return windowArticle || null;
+      console.log(`Article ${slug} not found on GitHub`);
+      return null;
     }
     
     return processMdxContent(content, slug);
   } catch (error) {
     console.error(`Error fetching article for slug ${slug} from GitHub:`, error);
-    console.log(`Trying to get ${slug} from window.__ARTICLE_DATA__`);
-    
-    // Try to get the article from window.__ARTICLE_DATA__
-    const windowArticles = getWindowArticleData();
-    const windowArticle = windowArticles.find(article => article.slug === slug);
-    return windowArticle || null;
-  }
-}
-
-// Add this type declaration to make TypeScript happy with window.__ARTICLE_DATA__
-declare global {
-  interface Window {
-    __ARTICLE_DATA__?: Article[];
+    return null;
   }
 }

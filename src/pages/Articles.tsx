@@ -11,66 +11,41 @@ import ArticleLoadingState from "@/components/ArticleLoadingState";
 import ArticleErrorState from "@/components/ArticleErrorState";
 import ArticleEmptyState from "@/components/ArticleEmptyState";
 import SocialMediaLinks from "@/components/SocialMediaLinks";
-import { useMockArticles } from "@/hooks/useMockArticles";
 
 const Articles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const { getExampleArticles } = useMockArticles();
 
   const fetchArticles = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // Load articles from GitHub or fall back to local content
+      // Load articles from GitHub
       const fetchedArticles = await getAllArticles();
       
       console.log(`Fetched ${fetchedArticles.length} articles in Articles component`);
       
       if (fetchedArticles.length === 0) {
-        // If no articles from GitHub or content directory, use mock data
-        const mockArticles = getExampleArticles();
-        setArticles(mockArticles);
-        
-        if (mockArticles.length > 0) {
-          toast({
-            title: "Using example articles",
-            description: "GitHub API rate limit exceeded. Displaying example content.",
-          });
-        } else {
-          setError("No articles found. Please try again later.");
-          toast({
-            variant: "destructive",
-            title: "No articles available",
-            description: "Could not fetch articles from any source",
-          });
-        }
+        setError("No articles found. Please try again later.");
+        toast({
+          variant: "destructive",
+          title: "No articles available",
+          description: "Could not fetch articles from GitHub. Please check your GitHub configuration or try again later.",
+        });
       } else {
         setArticles(fetchedArticles);
       }
     } catch (err) {
       console.error("Error fetching articles:", err);
-      
-      // Try to get example articles as a last resort
-      const exampleArticles = getExampleArticles();
-      
-      if (exampleArticles.length > 0) {
-        setArticles(exampleArticles);
-        toast({
-          title: "Using example articles",
-          description: "Error loading from GitHub. Displaying example content.",
-        });
-      } else {
-        setError("Failed to load articles. Check browser console for details.");
-        toast({
-          variant: "destructive",
-          title: "Error loading articles",
-          description: "See console for technical details",
-        });
-      }
+      setError("Failed to load articles. Please check your GitHub configuration or try again later.");
+      toast({
+        variant: "destructive",
+        title: "Error loading articles",
+        description: "See console for technical details",
+      });
     } finally {
       setLoading(false);
     }

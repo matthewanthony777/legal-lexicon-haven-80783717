@@ -1,5 +1,6 @@
+
 import { Article } from '@/types/article';
-import { fetchAllArticles, fetchArticleBySlug, getWindowArticleData } from '@/utils/github';
+import { fetchAllArticles, fetchArticleBySlug } from '@/utils/github';
 
 // In-memory cache for articles to avoid refetching
 let articlesCache: Article[] | null = null;
@@ -33,14 +34,6 @@ export const getAllArticles = async (): Promise<Article[]> => {
                 return articlesCache;
             }
             
-            // Try getting window data
-            const windowArticles = getWindowArticleData();
-            if (windowArticles.length > 0) {
-                console.log(`Found ${windowArticles.length} sample articles in window.__ARTICLE_DATA__`);
-                return windowArticles;
-            }
-            
-            // If all else fails, return an empty array
             return [];
         }
     } catch (error) {
@@ -52,13 +45,6 @@ export const getAllArticles = async (): Promise<Article[]> => {
             return articlesCache;
         }
         
-        // As a last resort, try window.__ARTICLE_DATA__
-        const windowArticles = getWindowArticleData();
-        if (windowArticles.length > 0) {
-            return windowArticles;
-        }
-        
-        // No fallbacks available
         return [];
     }
 };
@@ -81,11 +67,7 @@ export const getArticleBySlug = async (slug: string): Promise<Article | undefine
         return article || undefined;
     } catch (error) {
         console.error(`Error getting article by slug ${slug}:`, error);
-        
-        // Try window.__ARTICLE_DATA__ as last resort
-        console.log(`Trying window.__ARTICLE_DATA__ for article: ${slug}`);
-        const windowArticles = getWindowArticleData();
-        return windowArticles.find(article => article.slug === slug);
+        return undefined;
     }
 };
 
